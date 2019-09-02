@@ -8,6 +8,9 @@ if __name__ == "__main__":
     print("x is")
     print(x)
     # please insert cutout code here.
+    
+    foobar.square(x)
+    
     # your code done now.
 
 
