@@ -1,0 +1,20 @@
+numpy
+unitgrade
+matplotlib
+sympy
+gym
+pyglet  # Contained in gym, but used in gridworld/pacman rendering
+tqdm
+seaborn
+cvxopt
+osqp
+PyQt5
+gym_minigrid
+PIL
+git+git://github.com/ibrahim-elshar/gym-windy-gridworlds.git
+cvxpy # install instructions https://www.cvxpy.org/install/
+# cvxpy # Problematic requirements (fails on windows).
+# pybox2d # (Apparently cannnot be found. Where is this even being used?)
+# pathos # Multithreading for LMPC; deprecating for now; try to remove this dependency (requires Visual C++ 14).
+# git+https://github.com/openai/baselines.git Deprecate for now.
+# gym[box2d] # I think we might need this for the lunar lander.
