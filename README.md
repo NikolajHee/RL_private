@@ -1,29 +1,28 @@
 # 02465 Introduction to reinforcement learning and control theory
-
 This repository contains code for 02465, introduction to machine learning and control theory.
 
 ## Reading material
 See DTU Learn for reading material, exercise instructions, and lectures handouts. 
 
 # Installation guide
-The installation involves two steps. First, you need to install the source code itself, and then you will possibly miss external dependencies required to use certain features of openai Gym.
-Complete the installation of the toolbox first, then install the dependencies as needed and based on your OS (Windows/Linux/OS-X).
+The installation involves two steps. First, you need to install the source code itself, and then you will possibly miss some external dependencies required to use certain features of openai Gym.
+Complete the installation of the toolbox first, then install the dependencies as needed during the course based on your OS (Windows/Linux/OS-X).
 
 ## Course toolbox installation
 The software toolbox for the course can be found in the `irlc` subdirectory and is distributed as a python package. 
 
  - **For details on using the software, please see the two videos on DTU Learn under 'Videos'. Please do this, and install the software, before the first lecture/exercise session.**
 
-If you are stuck with an exercise, please do not hesitate to contact me for a solution. Likewise if you would like the code for one of the in-class demos. 
-
 ### Unitgrade
 In order to create the assignments you need unitgrade: https://lab.compute.dtu.dk/tuhe/unitgrade
-Full installation instructions are provided in the second of the abovementioned videos on DTU Learn or the online installattion guide but it should be as simple as:
+Full installation instructions are provided through DTU Learn, but it should be as simple as:
 ```
-pip install git+https://git@gitlab.compute.dtu.dk/tuhe/unitgrade.git   
-pip install git+https://git@gitlab.compute.dtu.dk/tuhe/unitgrade.git --upgrade 
+pip install unitgrade   
 ```
-The later option is for upgrading.
+In case there is a new version you can upgrade using:
+```
+pip install unitgrade --upgrade --no-cache
+```
 
 ## External dependencies
 I will provide instructions on how to do this in windows, since Linux and OS-X is much simpler and the error messages from Gym will explain what you should do (furthermore I don't have OS-X).
