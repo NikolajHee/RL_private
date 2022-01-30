@@ -10,7 +10,7 @@ cvxopt
 osqp
 PyQt5
 gym_minigrid
-PIL
+pillow
 git+git://github.com/ibrahim-elshar/gym-windy-gridworlds.git
 cvxpy # install instructions https://www.cvxpy.org/install/
 # cvxpy # Problematic requirements (fails on windows).
