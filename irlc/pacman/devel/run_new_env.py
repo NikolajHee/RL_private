@@ -1,12 +1,12 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
-from irlc import VideoMonitor, train, Agent, PlayWrapper
-from irlc.ex03.pacman_problem_foodsearch import GymFoodSearchProblem
-from irlc.ex03.pacman_problem_foodsearch_astar import foodHeuristic
-from irlc.ex03.pacman_problem_positionsearch import GymPositionSearchProblem
-from irlc.ex03.pacsearch_agents import AStarAgent
+from irlc import Agent, PlayWrapper
+from irlc.ex03multisearch.pacman_problem_foodsearch import GymFoodSearchProblem
+from irlc.ex03multisearch.pacman_problem_foodsearch_astar import foodHeuristic
+from irlc.ex03multisearch.pacman_problem_positionsearch import GymPositionSearchProblem
+from irlc.ex03multisearch.pacsearch_agents import AStarAgent
 from irlc.pacman.devel.new_pacman_environment import NewPacmanEnvironment
 from irlc.ex01.agent import train
-from irlc.berkley.p4ghostbusters.gym_inference_agent import BusterInferenceAgent, GreedyBustersAgent
+from irlc.berkley.p4ghostbusters.gym_inference_agent import BusterInferenceAgent
 from irlc.utils.video_monitor import VideoMonitor
 from irlc.pacman import layout
 import warnings

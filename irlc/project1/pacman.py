@@ -1,7 +1,7 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 from collections import defaultdict
 from irlc import train
-from irlc.ex01.dp_model import DPModel
+from irlc.ex02.dp_model import DPModel
 from irlc.ex02.dp import DP_stochastic
 from irlc.ex02.dp_agent import DynamicalProgrammingAgent
 from irlc.pacman.pacman_environment import GymPacmanEnvironment
@@ -19,8 +19,8 @@ east2 = """
 
 SS2tiny = """
 %%%%%%
-% P  %
-%G G.%
+%.P  %
+% GG.%
 %%%%%%
 """
 
@@ -33,7 +33,7 @@ SS0tiny = """
 
 SS1tiny = """
 %%%%%%
-% P  %
+%.P  %
 %  G.%
 %%%%%%
 """
@@ -94,14 +94,14 @@ def get_future_states(x, N):
     return state_spaces
 
 def win_probability(map, N=10): 
-    # TODO: 3 lines missing.
+    # TODO: 4 lines missing.
     raise NotImplementedError("Return the chance of winning the given map within N steps or less.")
-    return -J[0][env.reset()]
+    return win_probability
 
 def shortest_path(map, N=10): 
-    # TODO: 7 lines missing.
+    # TODO: 8 lines missing.
     raise NotImplementedError("Return the cost of the shortest path, the list of actions taken, and the list of states.")
-    return J[0][env.reset()], list(traj.action), list(traj.state)
+    return cost, actions, states
 
 
 def no_ghosts():
@@ -147,7 +147,6 @@ def one_ghost():
     wp = []
     for n in range(5):
         wp.append(win_probability(SS1tiny, N=n))
-
     print(wp)
     print(win_probability(SS1tiny, N=12))
 

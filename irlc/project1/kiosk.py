@@ -8,13 +8,13 @@ your main problem is to build appropriate DPModel-classes to represent the diffe
 References:
   [Her21] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2021.
 """
-from irlc.ex01.dp_model import DPModel
+from irlc.ex02.dp_model import DPModel
 from irlc.ex02.dp import DP_stochastic
 import matplotlib.pyplot as plt
 from scipy.stats import binom
-from irlc.ex03.gym_builder import DP2Gym
-from irlc.ex02.dp_agent import DynamicalProgrammingAgent
-from irlc import train, savepdf
+# from irlc.ex03.gym_builder import DP2Gym
+# from irlc.ex02.dp_agent import DynamicalProgrammingAgent
+from irlc import savepdf
 import numpy as np
 
 def plot_policy(pi, title, pdf):
@@ -44,19 +44,19 @@ def warmup_actions():
 
 def solve_kiosk_1(): 
     # TODO: 1 lines missing.
-    raise NotImplementedError("Implement function body")
+    raise NotImplementedError("Return cost and policy here (same format as DP_stochastic)")
 
 def solve_kiosk_2(): 
     # TODO: 1 lines missing.
-    raise NotImplementedError("Implement function body")
+    raise NotImplementedError("Return cost and policy here (same format as DP_stochastic)")
 
 def solve_kiosk_3(): 
     # TODO: 1 lines missing.
-    raise NotImplementedError("Implement function body")
+    raise NotImplementedError("Return cost and policy here (same format as DP_stochastic)")
 
 def solve_kiosk_4(): 
     # TODO: 1 lines missing.
-    raise NotImplementedError("Implement function body")
+    raise NotImplementedError("Return cost and policy here (same format as DP_stochastic)")
 
 
 def main():

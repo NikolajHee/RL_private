@@ -3,17 +3,27 @@ from unitgrade import UTestCase, Report
 from irlc.pacman.gamestate import GameState
 from irlc.pacman.pacman_environment import GymPacmanEnvironment
 import numpy as np
-from irlc.project1.pacman import east, east2, SS0tiny, SS1tiny, SS2tiny
-
-names2maps = {'east': east,
-              'east2': east2,
-              'SS0tiny': SS0tiny,
-              'SS1tiny': SS1tiny,
-              'SS2tiny': SS2tiny,
-              }
 
 def get_starting_state(name):
+    from irlc.project1.pacman import east, east2, SS0tiny, SS1tiny, SS2tiny
+    names2maps = {'east': east,
+                  'east2': east2,
+                  'SS0tiny': SS0tiny,
+                  'SS1tiny': SS1tiny,
+                  'SS2tiny': SS2tiny,
+                  }
+
     return GymPacmanEnvironment(layout_str=names2maps[name]).reset()
+
+def get_map(name):
+    from irlc.project1.pacman import east, east2, SS0tiny, SS1tiny, SS2tiny
+    names2maps = {'east': east,
+                  'east2': east2,
+                  'SS0tiny': SS0tiny,
+                  'SS1tiny': SS1tiny,
+                  'SS2tiny': SS2tiny,
+                  }
+    return names2maps[name]
 
 class Pacman1(UTestCase):
     """ Problem 1: The go_east function """
@@ -41,7 +51,8 @@ class Pacman2(UTestCase):
 
     def get_transitions(self):
         from irlc.project1.pacman import p_next
-        state = GymPacmanEnvironment(layout_str=names2maps[self.map]).reset()
+        # state = GymPacmanEnvironment(layout_str=names2maps[self.map]).reset()
+        state = get_starting_state(self.map)
         state_transitions = p_next(state, self.action)
         self.assertIsInstance(state_transitions, dict)
         for x in state_transitions:  # Test if each new state is actually a GameState.
@@ -117,12 +128,13 @@ class Pacman3(UTestCase):
 
 class Pacman4(UTestCase):
     """ Problem 4a: No ghost optimal path (get_shortest_path) in map 'east' using N=20 """
-    map = east
+    map = 'east'
     N = 20
 
     def get_shortest_path(self):
         from irlc.project1.pacman import shortest_path
-        cost, actions, states = shortest_path(self.map, self.N)
+        layout = get_map(self.map)
+        cost, actions, states = shortest_path(layout, self.N)
         return cost, actions, states
 
     def test_shortest_path_cost(self):
@@ -150,7 +162,7 @@ class Pacman4(UTestCase):
 
 class Pacman4b(Pacman4):
     """ Problem 4b: Determine the shortest path on the map SS0tiny """
-    map = SS0tiny
+    map = 'SS0tiny'
 
 ## ONE GHOST
 class Pacman5(Pacman3):
@@ -171,7 +183,7 @@ class Pacman7(UTestCase):
     def _win_rate(self, N):
         self.title = "Testing winrate in N steps"
         from irlc.project1.pacman import win_probability
-        p = np.round(win_probability(names2maps[self.map], N), 4)
+        p = np.round(win_probability(get_map(self.map), N), 4)
         self.assertEqualC(p)
 
 
