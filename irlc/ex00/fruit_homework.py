@@ -64,8 +64,9 @@ def shop_smart(order, fruit_shops):
         > List has form [cost1, cost2], then find the index of the smallest value (the list has an index-function)
         > return fruitShops[lowest_index].
     """
-    cs = [s.price_of_order(order) for s in fruit_shops]
-    return fruit_shops[cs.index(min(cs))] 
+    # TODO: 2 lines missing.
+    raise NotImplementedError("Implement function body")
+    return best_shop
 
 
 if __name__ == '__main__':
