@@ -20,7 +20,7 @@ pip install unitgrade --upgrade --no-cache
 
 
 ## M1/ARM chipset (Mac os-x)
-Apple recently upraded from intel to an ARM chipset. This means a lot of disruption and the software ecosystem gets up to date. I am certain the toolbox can run under os-x since so many developers in machine learning uses mac, however, it will mean some additional setup is required. 
+Apple recently upraded from intel to an ARM chipset. I am certain the toolbox can run under os-x since so many developers in machine learning uses mac, however, it will mean some additional setup is required. 
 If you already have python 3.8 or later working and able to install packages it should be fine, otherwise you have to set up python 3.8 and install the missing packages. Links to get you started:
 
 To setup python on M1:
