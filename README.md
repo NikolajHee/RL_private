@@ -20,16 +20,29 @@ pip install unitgrade --upgrade --no-cache
 
 
 ## M1/ARM chipset (Mac os-x)
-Apple recently upraded from intel to an ARM chipset. I am certain the toolbox can run under os-x since so many developers in machine learning uses mac, however, it will mean some additional setup is required. 
-If you already have python 3.8 or later working and able to install packages it should be fine, otherwise you have to set up python 3.8 and install the missing packages. Links to get you started:
+Apple recently upraded from intel to an ARM chipset. If you don't have python 3.8 installed already, one student has had success installing python using Rosetta 2.
 
-To setup python on M1:
-- https://towardsdatascience.com/how-to-easily-set-up-python-on-any-m1-mac-5ea885b73fab
+I think this guide will explain the process of installing Rosetta 2:
 
-To install packages form pythons main repository pypi.org on anaconda
- - https://stackoverflow.com/questions/29286624/how-to-install-pypi-packages-using-anaconda-conda-command
+https://medium.com/thinknum/how-to-install-python-under-rosetta-2-f98c0865e012
 
-Select the anaconda interpreter in pycharm. See:
+The steps are then as follows: Create a new virtual environment with Python 3.8 
+```
+conda create --name py38 python=3.8
+```
+Activate the environment using 
+```
+conda activate py38
+source activate py35
+```
+Install `pip`
+``` 
+conda install pip```
+Install all packages
+```
+pip install -r requirements.txt
+```
+Set the new invironment as the interpreter in pycharm
  - https://www.jetbrains.com/help/pycharm/configuring-python-interpreter.html
 
 # External dependencies
