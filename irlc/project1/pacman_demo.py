@@ -1,6 +1,7 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 from irlc.pacman.pacman_environment import GymPacmanEnvironment
-from irlc.project1.pacman import east
+from irlc.project1.pacman import east, datadiscs, SS1tiny, SS2tiny
+from irlc import VideoMonitor
 
 count = """
 %%%%
@@ -26,7 +27,21 @@ if __name__ == "__main__":
     # You can check if two GameState objects x1 and x2 are the same by simply doing x1 == x2. 
     # There are other functions in the GameState class, but I advice against using them.
 
-    from irlc import VideoMonitor
     env = VideoMonitor(env)
     env.savepdf('pacman_east')
+    env.close()
+
+    env = VideoMonitor(GymPacmanEnvironment(layout_str=datadiscs))
+    env.reset()
+    env.savepdf('pacman_datadiscs')
+    env.close()
+
+    env = VideoMonitor(GymPacmanEnvironment(layout_str=SS1tiny))
+    env.reset()
+    env.savepdf('pacman_SS1tiny')
+    env.close()
+
+    env = VideoMonitor(GymPacmanEnvironment(layout_str=SS2tiny))
+    env.reset()
+    env.savepdf('pacman_SS2tiny')
     env.close()

@@ -94,67 +94,74 @@ def get_future_states(x, N):
     return state_spaces
 
 def win_probability(map, N=10): 
+    """ Assuming you get a reward of -1 on wining (and otherwise zero), the win probability is -J_pi(x_0). """
     # TODO: 4 lines missing.
     raise NotImplementedError("Return the chance of winning the given map within N steps or less.")
     return win_probability
 
 def shortest_path(map, N=10): 
-    # TODO: 8 lines missing.
+    """ If each move has a cost of 1, the shortest path is the path with the lowest cost.
+    The actions should be the list of actions taken.
+    The states should be a list of states the agent visit. The first should be the initial state and the last
+    should be the won state. """
+    # TODO: 4 lines missing.
     raise NotImplementedError("Return the cost of the shortest path, the list of actions taken, and the list of states.")
-    return cost, actions, states
+    return actions, states
 
 
 def no_ghosts():
     # Check the pacman_demo.py file for help on the GameState class and how to get started.
-    ## Question 1: Lets try to go East. Run this code to see if the states you return looks sensible.
+    # This function contains examples of calling your functions. However, you should use unitgrade to verify correctness.
+
+    ## Problem 1: Lets try to go East. Run this code to see if the states you return looks sensible.
     states = go_east(east)
     for s in states:
         print(str(s))
 
+    ## Problem 3: try the p_next function for a few empty environments. Does the result look sensible?
     x = GymPacmanEnvironment(layout_str=east).reset()
     action = x.A()[0]
-    print(f"Transitions when taking action {action} in map:")
+    print(f"Transitions when taking action {action} in map: 'east'")
     print(x)
-    print(p_next(x, action))
+    print(p_next(x, action))  # use str(state) to get a nicer representation.
 
-    print(f"Transitions when taking action {action} in map:")
+    print(f"Transitions when taking action {action} in map: 'east2'")
     x = GymPacmanEnvironment(layout_str=east2).reset()
     print(x)
     print(p_next(x, action))
 
-    ## Question 3
+    ## Problem 4
     print(f"Checking states space S_1 for k=1 in SS0tiny:")
     x = GymPacmanEnvironment(layout_str=SS0tiny).reset()
     states = get_future_states(x, N=10)
-    for s in states[1]:
+    for s in states[1]: # Print all elements in S_1.
         print(s)
     print("States at time k=10, |S_10| =", len(states[10]))
 
-    ## Question 4
-    N = 20 # Planning horizon
-    minimum_cost, action, states = shortest_path(east, N)
-    print("Optimal cost is", minimum_cost, "optimal action sequence:", action)
+    ## Problem 6
+    N = 20  # Planning horizon
+    action, states = shortest_path(east, N)
+    print("east: Optimal action sequence:", action)
 
-    minimum_cost, action, states = shortest_path(datadiscs, N)
-    print("Optimal cost is", minimum_cost, "optimal action sequence:", action)
+    action, states = shortest_path(datadiscs, N)
+    print("datadiscs: Optimal action sequence:", action)
 
-    minimum_cost, action, states = shortest_path(SS0tiny, N)
-    print("Optimal cost is", minimum_cost, "optimal action sequence:", action)
+    action, states = shortest_path(SS0tiny, N)
+    print("SS0tiny: Optimal action sequence:", action)
 
 
 def one_ghost():
-    # Win probability when planning using a single ghost. Notice this increases over time:
+    # Win probability when planning using a single ghost. Notice this tends to increase with planning depth
     wp = []
-    for n in range(5):
+    for n in range(6):
         wp.append(win_probability(SS1tiny, N=n))
-    print(wp)
     print(win_probability(SS1tiny, N=12))
 
-def two_ghost():
+def two_ghosts():
     # Win probability when planning using two ghosts
     print(win_probability(SS2tiny, N=12))
 
 if __name__ == "__main__":
     no_ghosts()
     one_ghost()
-    two_ghost()
+    two_ghosts()

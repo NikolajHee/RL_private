@@ -5,20 +5,13 @@ from irlc.pacman.pacman_environment import GymPacmanEnvironment
 import numpy as np
 
 def get_starting_state(name):
-    from irlc.project1.pacman import east, east2, SS0tiny, SS1tiny, SS2tiny
-    names2maps = {'east': east,
-                  'east2': east2,
-                  'SS0tiny': SS0tiny,
-                  'SS1tiny': SS1tiny,
-                  'SS2tiny': SS2tiny,
-                  }
-
-    return GymPacmanEnvironment(layout_str=names2maps[name]).reset()
+    return GymPacmanEnvironment(layout_str=get_map(name)).reset()
 
 def get_map(name):
-    from irlc.project1.pacman import east, east2, SS0tiny, SS1tiny, SS2tiny
+    from irlc.project1.pacman import east, east2, SS0tiny, datadiscs, SS1tiny, SS2tiny
     names2maps = {'east': east,
                   'east2': east2,
+                  'datadiscs': datadiscs,
                   'SS0tiny': SS0tiny,
                   'SS1tiny': SS1tiny,
                   'SS2tiny': SS2tiny,
@@ -44,8 +37,8 @@ class Pacman1(UTestCase):
         self.assertEqualC(tuple(str(s) for s in go_east(east)))
 
 
-class Pacman2(UTestCase):
-    """ Problem 2: the p_next function """
+class Pacman3(UTestCase):
+    """ Problem 3: the p_next function without droids """
     map = 'east'
     action = 'East'
 
@@ -77,8 +70,8 @@ class Pacman2(UTestCase):
         self.assertEqualC(tuple(self.get_transitions()))
 
 
-class Pacman3(UTestCase):
-    """ Problem 3: Compute the state spaces as a list [S_0, ..., S_N] on the map 'east' using N = 7 """
+class Pacman4(UTestCase):
+    """ Problem 4: Compute the state spaces as a list [S_0, ..., S_N] on the map 'east' using N = 7 """
     map = 'east'
     N = 7
 
@@ -126,31 +119,26 @@ class Pacman3(UTestCase):
         self.assertEqualC(tuple(self.states))
 
 
-class Pacman4(UTestCase):
-    """ Problem 4a: No ghost optimal path (get_shortest_path) in map 'east' using N=20 """
+class Pacman6a(UTestCase):
+    """ Problem 6a: No ghost optimal path (get_shortest_path) in map 'east' using N=20 """
     map = 'east'
     N = 20
 
     def get_shortest_path(self):
         from irlc.project1.pacman import shortest_path
         layout = get_map(self.map)
-        cost, actions, states = shortest_path(layout, self.N)
-        return cost, actions, states
-
-    def test_shortest_path_cost(self):
-        """ Shortest path cost """
-        cost, actions, states = self.get_shortest_path()
-        self.assertEqualC(cost)
+        actions, states = shortest_path(layout, self.N)
+        return actions, states
 
     def test_sequence_lengths(self):
         """ Test the length of the state/action lists. """
-        cost, actions, states = self.get_shortest_path()
+        actions, states = self.get_shortest_path()
         self.assertEqualC(len(actions))
         self.assertEqualC(len(states))
 
     def test_trajectory(self):
         """ Test the state/action trajectory """
-        J, actions, states = self.get_shortest_path()
+        actions, states = self.get_shortest_path()
         self.assertTrue(states[-1].isWin())
 
         x0 = states[0]
@@ -158,57 +146,77 @@ class Pacman4(UTestCase):
             x0 = x0.f(u)
             self.assertTrue(x0 == states[k + 1])
         self.assertEqualC(states[1])
-        self.assertEqualC(J)
+        # self.assertEqualC(J)
 
-class Pacman4b(Pacman4):
-    """ Problem 4b: Determine the shortest path on the map SS0tiny """
+class Pacman6b(Pacman6a):
+    """ Problem 6b: No ghost optimal path (get_shortest_path) in map 'SS1tiny' using N=20 """
     map = 'SS0tiny'
 
+class Pacman6c(Pacman6a):
+    """ Problem 6b: No ghost optimal path (get_shortest_path) in map 'datadiscs' using N=20 """
+    map = 'datadiscs'
+
 ## ONE GHOST
-class Pacman5(Pacman3):
-    """ Problem 5:  This class test the state spaces as a list [S_0, ..., S_N]. on the map 'SS1tiny' using N = 4 """
+class Pacman7a(Pacman3):
+    """ Problem 7a: the p_next function with one droid """
+    map = 'SS1tiny'
+    action = 'East'
+
+class Pacman7b(Pacman3):
+    """ Problem 7b: the p_next function with one droid """
+    map = 'SS1tiny'
+    action = 'West'
+
+class Pacman8a(Pacman4):
+    """ Problem 5:  Test the state spaces as a list [S_0, ..., S_N]. on the map 'SS1tiny' using N = 4 """
     map = 'SS1tiny'
     N = 4
 
-class Pacman6(Pacman3):
-    """ Pacman6: This class test the state spaces as a list [S_0, ..., S_N]. on the map 'SS1tiny' using N = 6 """
+class Pacman8b(Pacman4):
+    """ Problem 6: Test the state spaces as a list [S_0, ..., S_N]. on the map 'SS1tiny' using N = 6 """
     map = 'SS1tiny'
     N = 6
     pass
 
-class Pacman7(UTestCase):
-    """ Testing winrate on the map SS1tiny (win_probability) """
+class Pacman9(UTestCase):
+    """ Problem 9: Testing winrate on the map SS1tiny (win_probability) """
     map = 'SS1tiny'
 
     def _win_rate(self, N):
-        self.title = "Testing winrate in N steps"
+        self.title = f"Testing winrate in {N} steps"
         from irlc.project1.pacman import win_probability
         p = np.round(win_probability(get_map(self.map), N), 4)
+        # print("win rate in N ", N, "steps was", p)
         self.assertEqualC(p)
-
 
     def test_win_rate_N4(self):
         self._win_rate(N=4)
 
-    def test_win_rate_N8(self):
+    def test_win_rate_N5(self):
         self._win_rate(N=5)
+
+    def test_win_rate_N6(self):
+        self._win_rate(N=6)
 
 
 # ## TWO GHOSTS
-class Pacman8(Pacman2):
+class Pacman10(Pacman3): # p_next for two ghosts
+    """ Problem 10: Testing the p_next function using SS2tiny """
     map = 'SS2tiny'
     N = 4
 
-class Pacman9(Pacman3):
+class Pacman11(Pacman4): # State-space lists
+    """ Problem 11: Test the state spaces as a list [S_0, ..., S_N]. on the map 'SS2tiny' using N = 3 """
     map = 'SS2tiny'
     N = 3
 
-class Pacman10(Pacman7):
+class Pacman12(Pacman9): # Optimal planning for two ghost-droids.
+    """ Problem 12: Testing winrate on the map SS2tiny (win_probability) """
     map = 'SS2tiny'
     N = 2
 
 class Kiosk1(UTestCase):
-    """ Warmup check of S_0 and A_0(x_0) """
+    """ Problem 14: Warmup check of S_0 and A_0(x_0) """
     def test_warmup_states_length(self):
         from irlc.project1.kiosk import warmup_states, warmup_actions
         n = len(warmup_states())
@@ -234,7 +242,7 @@ class Kiosk1(UTestCase):
 
 
 class Kiosk2(UTestCase):
-    """ solve_kiosk_1 """
+    """ Problem 16: solve_kiosk_1 """
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -295,27 +303,27 @@ class Kiosk2(UTestCase):
 
 
 class Kiosk3(Kiosk2):
-    """ solve_kiosk_2 """
+    """ Problem 17: solve_kiosk_2 """
     @classmethod
     def setUpClass(cls) -> None:
         from irlc.project1.kiosk import solve_kiosk_2
         cls.J, cls.pi = solve_kiosk_2()
 
 
-class Kiosk4(Kiosk2):
-    """ solve_kiosk_3 """
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        from irlc.project1.kiosk import solve_kiosk_3
-        cls.J, cls.pi = solve_kiosk_3()
-
-
-class Kiosk5(Kiosk2):
-    title = "solve_kiosk_4"
-    def get_kiosk_Jpi(self):
-        from irlc.project1.kiosk import solve_kiosk_4
-        return solve_kiosk_4()
+# class Kiosk4(Kiosk2):
+#     """ solve_kiosk_3 """
+#
+#     @classmethod
+#     def setUpClass(cls) -> None:
+#         from irlc.project1.kiosk import solve_kiosk_3
+#         cls.J, cls.pi = solve_kiosk_3()
+#
+#
+# class Kiosk5(Kiosk2):
+#     title = "solve_kiosk_4"
+#     def get_kiosk_Jpi(self):
+#         from irlc.project1.kiosk import solve_kiosk_4
+#         return solve_kiosk_4()
 
 class Project1(Report): #240 total.
     title = "02465 project part 1: Dynamical Programming"
@@ -323,27 +331,27 @@ class Project1(Report): #240 total.
     pack_imports = [irlc]
     abbreviate_questions = True
 
-
     pacman_questions = [
-        (Pacman1, 10),
-        (Pacman2, 10),
-        (Pacman3, 10),
-        (Pacman4, 10),
-        (Pacman4b, 10),
-        (Pacman5, 10),
-        (Pacman6, 10),
-        (Pacman7, 10),
-        (Pacman8, 10),
-        (Pacman9, 10),
-        (Pacman10, 10),
+        (Pacman1, 10), # east
+        (Pacman3, 10), # p_next (g=0)
+        (Pacman4, 10), # future_states (g=0)
+        (Pacman6a, 4), # shortest_path (g=0)
+        (Pacman6b, 3), # shortest_path (g=0)
+        (Pacman6c, 3), # shortest_path (g=0)
+        (Pacman7a, 5), # p_next (g=1)
+        (Pacman7b, 5), # p_next (g=1)
+        (Pacman8a, 5), # future_states (g=1)
+        (Pacman8b, 5), # future_states (g=1)
+        (Pacman9, 10),  # optimal planning (g=1)
+        (Pacman10, 10), # p_next (g=2)
+        (Pacman11, 10), # future_states (g=2)
+        (Pacman12, 10), # optimal planning (g=2)
                  ]
 
     kiosk_questions = [
         (Kiosk1, 10),
-        (Kiosk2, 10),
-        (Kiosk3, 10),
-        (Kiosk4, 10),
-        (Kiosk5, 10),
+        (Kiosk2, 25),
+        (Kiosk3, 25),
     ]
 
     questions = []
@@ -353,4 +361,4 @@ class Project1(Report): #240 total.
 if __name__ == '__main__':
     from unitgrade import evaluate_report_student
     evaluate_report_student(Project1())
-# 448, 409 # 303,
+# 448, 409 # 303

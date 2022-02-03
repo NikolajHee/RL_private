@@ -12,8 +12,6 @@ from irlc.ex02.dp_model import DPModel
 from irlc.ex02.dp import DP_stochastic
 import matplotlib.pyplot as plt
 from scipy.stats import binom
-# from irlc.ex03.gym_builder import DP2Gym
-# from irlc.ex02.dp_agent import DynamicalProgrammingAgent
 from irlc import savepdf
 import numpy as np
 
@@ -31,7 +29,7 @@ def plot_policy(pi, title, pdf):
     savepdf(pdf)
     plt.show()
 
-# TODO: 70 lines missing.
+# TODO: 51 lines missing.
 raise NotImplementedError("")
 
 def warmup_states(): 
@@ -50,39 +48,22 @@ def solve_kiosk_2():
     # TODO: 1 lines missing.
     raise NotImplementedError("Return cost and policy here (same format as DP_stochastic)")
 
-def solve_kiosk_3(): 
-    # TODO: 1 lines missing.
-    raise NotImplementedError("Return cost and policy here (same format as DP_stochastic)")
-
-def solve_kiosk_4(): 
-    # TODO: 1 lines missing.
-    raise NotImplementedError("Return cost and policy here (same format as DP_stochastic)")
-
 
 def main():
-    # Question 1
+    # Problem 14
     print("Available states S_0:", warmup_states())
     print("Available actions A_0(x_0):", warmup_actions())
 
-    J, pi = solve_kiosk_1()
+    J, pi = solve_kiosk_1() # Problem 16
     print("Kiosk1: Expected profits: ", -J[0][0], " imperial credits")
     plot_policy(pi, "Kiosk1", "Latex/figures/kiosk1")
     plt.show()
 
-    J, pi = solve_kiosk_2()
-    print("Problem 2: Expected profits: ", -J[0][0], " imperial credits")
+    J, pi = solve_kiosk_2() # Problem 17
+    print("Kiosk 2: Expected profits: ", -J[0][0], " imperial credits")
     plot_policy(pi, "Kiosk2", "Latex/figures/kiosk2")
     plt.show()
 
-    J, pi = solve_kiosk_3()
-    print("Kiosk3: Expected profits: ",  -J[0][0], " imperial credits")
-    plot_policy(pi, "Kiosk3", "Latex/figures/kiosk3")
-    plt.show()
-
-    J, pi = solve_kiosk_4()
-    print("Kiosk4: Expected profits: ",  -J[0][0], " imperial credits")
-    plot_policy(pi, "Kiosk4", "Latex/figures/kiosk4")
-    plt.show()
 
 if __name__ == "__main__":
     main()

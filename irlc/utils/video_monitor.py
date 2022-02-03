@@ -5,6 +5,7 @@ from gym.wrappers import Monitor
 import warnings
 import time
 from PIL import Image
+# from pillow import Image
 import matplotlib.pyplot as plt
 import inspect
 from gym import Wrapper
