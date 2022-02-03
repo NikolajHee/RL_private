@@ -38,6 +38,7 @@ source activate py35
 Install `pip`
 ``` 
 conda install pip```
+```
 Install all packages
 ```
 pip install -r requirements.txt
