@@ -1,17 +1,10 @@
 # 02465 Introduction to reinforcement learning and control theory
-This repository contains code for 02465, introduction to machine learning and control theory.
-
-## Reading material
-See DTU Learn for reading material, exercise instructions, and lectures handouts. 
-
-# Installation guide
-The installation involves two steps. First, you need to install the source code itself, and then you will possibly miss some external dependencies required to use certain features of openai Gym.
-Complete the installation of the toolbox first, then install the dependencies as needed during the course based on your OS (Windows/Linux/OS-X).
+This repository contains code for 02465, introduction to machine learning and control theory. Please see DTU Learn for reading material, exercise instructions, and lectures handouts. 
 
 ## Course toolbox installation
-The software toolbox for the course can be found in the `irlc` subdirectory and is distributed as a python package. 
+The software toolbox for the course can be found in the `irlc` subdirectory and is distributed as a python package. Simply pull this repository using git and add the `irlc` package to your pythonpath.
 
- - **For details on using the software, please see the two videos on DTU Learn under 'Videos'. Please do this, and install the software, before the first lecture/exercise session.**
+ - **For details on using the software, please see the two videos on DTU Learn under 'Videos'. Please install the software before the first lecture/exercise session**
  - Exercise 0 on DTU learn contains additional information and a self-test you should try before the first lecture
 
 ## Unitgrade
