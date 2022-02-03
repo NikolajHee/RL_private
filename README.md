@@ -14,7 +14,7 @@ The software toolbox for the course can be found in the `irlc` subdirectory and 
  - **For details on using the software, please see the two videos on DTU Learn under 'Videos'. Please do this, and install the software, before the first lecture/exercise session.**
  - Exercise 0 on DTU learn contains additional information and a self-test you should try before the first lecture
 
-### Unitgrade
+## Unitgrade
 In order to create the assignments you need unitgrade: https://lab.compute.dtu.dk/tuhe/unitgrade
 Full installation instructions are provided through DTU Learn, but it should be as simple as:
 ```
@@ -25,11 +25,8 @@ In case there is a new version you can upgrade using:
 pip install unitgrade --upgrade --no-cache
 ```
 
-# External dependencies
-I will provide instructions on how to do this in windows, since Linux and OS-X is much simpler and the error messages from Gym will explain what you should do (furthermore I don't have OS-X).
-Please don't hesitate to post on e.g. Piazza if you encounter problems or find solutions. 
 
-# M1/ARM chipset (Mac os-x)
+## M1/ARM chipset (Mac os-x)
 Apple recently upraded from intel to an ARM chipset. This means a lot of disruption and the software ecosystem gets up to date. I am certain the toolbox can run under os-x since so many developers in machine learning uses mac, however, it will mean some additional setup is required. 
 If you already have python 3.8 or later working and able to install packages it should be fine, otherwise you have to set up python 3.8 and install the missing packages. Links to get you started:
 
@@ -41,6 +38,9 @@ To install packages form pythons main repository pypi.org on anaconda
 
 Select the anaconda interpreter in pycharm. See:
  - https://www.jetbrains.com/help/pycharm/configuring-python-interpreter.html
+
+# External dependencies
+I will provide instructions on how to do this in windows, since Linux and OS-X is much simpler and the error messages from Gym will explain what you should do. Do not hesitate to post on e.g. Piazza if you encounter problems or find solutions. 
 
 ## ffmpeg (Windows)
 - Go to https://ffmpeg.org/download.html#build-windows and select a source. In my case I went with  https://www.gyan.dev/ffmpeg/builds/ and selected the first link (https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z).
