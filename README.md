@@ -20,7 +20,8 @@ pip install unitgrade --upgrade --no-cache
 
 
 ## M1/ARM chipset (Mac os-x)
-Apple recently upraded from intel to an ARM chipset. If you don't have python 3.8 installed already, one student has had success installing python using Rosetta 2.
+Apple recently upraded from intel to an ARM chipset. If you don't have python 3.8 installed already, one student has had success installing python using Rosetta 2. 
+Relevant thread on piazza: https://piazza.com/class/kyynt87b9n03zm
 
 I think this guide will explain the process of installing Rosetta 2:
 
