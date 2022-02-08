@@ -1,0 +1,1 @@
+        return sum([quantity * self.cost(fruit) for fruit, quantity in order.items()])

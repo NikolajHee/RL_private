@@ -227,6 +227,6 @@ def plot_trajectory(trajectory, env=None, xkeys=None, ukeys=None):
     time = trajectory.time.squeeze()
     fp(time, trajectory.state, xkeys, labels=env.state_labels if env is not None else None)
     fp(time[:-1], trajectory.action, ukeys, labels=env.action_labels if env is not None else None)
-
+    plt.xlabel("Time / seconds")
     if env is not None:
         plt.legend()

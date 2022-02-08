@@ -103,9 +103,9 @@ class GraphicsGridworldDisplay:
         grid = mdp.grid
         # self.blank()
         for x in range(mdp.width):
-            for y in range(grid.height):
+            for y in range(mdp.height):
                 state = (x, y)
-                gridType = grid[x][y]
+                gridType = grid[x,y]
                 isExit = str(gridType) != gridType
                 isCurrent = currentState == state
                 name = f"sq_{x}_{y}"
@@ -113,7 +113,11 @@ class GraphicsGridworldDisplay:
                     self.drawSquare(name, x, y, 0, 0, 0, None, None, True, False, isCurrent)
                 else:
                     self.drawNullSquare(name, mdp.grid, x, y, False, isExit, isCurrent)
-        pos = self.to_screen(((grid.width - 1.0) / 2.0, - 0.8))
+        pos = self.to_screen(((mdp.width - 1.0) / 2.0, - 0.8))
+
+        # pos = self.to_screen(((mdp.width - 1.0) / 2.0, - 0.8))
+        # self.ga.text("Q_values_text", pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
+
         self.ga.text("bottom_text", pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
     def displayQValues(self, mdp, Q, currentState=None, message="Agent Q-Values"):
@@ -198,7 +202,7 @@ class GraphicsGridworldDisplay:
                         width=2)
             self.ga.text(name + "_text", (screen_x, screen_y),
                          TEXT_COLOR,
-                         str(grid[x][y]),
+                         str(grid[x,y]),
                          "Courier", -24, "bold", "c")
 
     def drawSquare(self, name, x, y, val, min, max, valStr, all_action, isObstacle, isTerminal, isCurrent):

@@ -23,9 +23,9 @@ class SmallGraphDP(DPModel):
     def __init__(self, t, G=None):  
         self.G = G.copy() if G is not None else G222.copy()  
         self.G = self.G.copy()  # Copy G. This is good style since G is passed by reference & modified in place.
-        self.G[(t,t)] = 0  # make target position absorbing  
-        self.t = t
-        self.nodes = {i for k in self.G for i in k}
+        self.G[(t,t)] = 0  # make target vertex absorbing  
+        self.t = t         # target vertex in graph
+        self.nodes = {i for k in self.G for i in k} # set of all nodes
         super(SmallGraphDP, self).__init__(N=len(self.nodes)-1)  
 
     def f(self, x, u, w, k):

@@ -79,6 +79,10 @@ class Pacman4(UTestCase):
     def states(self):
         return self.__class__.states_
 
+    @property
+    def sizes(self):
+        return self.__class__.sizes_
+
     @classmethod
     def setUpClass(cls):
         from irlc.project1.pacman import get_future_states
@@ -88,7 +92,17 @@ class Pacman4(UTestCase):
             assert isinstance(S, list)
             for s in S:
                 assert isinstance(s, GameState)
+        cls.sizes_ = [len(S) for S in states]
         cls.states_ = [set(S) for S in states]
+
+    def test_state_space_size_S0(self):
+        self.assertEqualC(self.sizes[0])
+
+    def test_state_space_size_S1(self):
+        self.assertEqualC(self.sizes[1])
+
+    def test_state_space_size_all(self):
+        self.assertEqualC(self.sizes)
 
     def test_number_of_spaces(self):
         """ Check the list of state spaces has the right length. It should be N+1 long (S_0, ..., S_N) """

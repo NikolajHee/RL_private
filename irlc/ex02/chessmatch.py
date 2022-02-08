@@ -59,15 +59,15 @@ class ChessMatch(DPModel):
         raise NotImplementedError("Implement function body")
         return 0
 
-def policy_rollout(env, pi, x0):
+def policy_rollout(model, pi, x0):
     x = x0
     J = 0
-    for k in range(env.N):
+    for k in range(model.N):
         u = pi(x, k)
-        w = env.w_rnd(x, u, k)
-        J += env.g(x, u, w, k)
-        x = env.f(x, u, w, k)
-    J += env.gN(x)
+        w = model.w_rnd(x, u, k)
+        J += model.g(x, u, w, k)
+        x = model.f(x, u, w, k)
+    J += model.gN(x)
     return J
 
 def pi_smart(x, k): 

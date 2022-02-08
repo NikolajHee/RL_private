@@ -1,0 +1,1 @@
+        self.k += 1                              # update current time step 
