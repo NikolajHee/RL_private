@@ -1,0 +1,1 @@
+        return u + (x + u - w) ** 2

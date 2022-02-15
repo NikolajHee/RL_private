@@ -1,0 +1,1 @@
+        return self.P[x][u][w][1]

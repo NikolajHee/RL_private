@@ -1,0 +1,1 @@
+        return {i: t[0] for i, t in enumerate(self.P[x][u])}

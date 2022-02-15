@@ -9,6 +9,7 @@ from irlc.ex02.graph_traversal import G222
 class SearchProblem: 
     """
     An abstract search problem. Provides the functionality defined in (Her21, Theorem 7.2.1).
+    The search problem has a function to tell the user when a state is terminal, and what transitions are available in a state. 
     """
     def __init__(self, initial_state=None): 
         if initial_state is not None:
@@ -87,14 +88,16 @@ class GraphSP(SearchProblem):
         self.goal = goal
         super().__init__(initial_state=start)
 
-    def is_terminal(self, state):
+    def is_terminal(self, state): # Return true if the state is a terminal state
         return state == self.goal
 
     def available_transitions(self, i,k=None):
         # In vertex i, return available transitions i -> j and their cost.
-        return {j: (j, cost) for (i_,j), cost in self.G.items() if i_ == i} 
+        # This is encoded as a dictionary, such that the keys are the actions, and
+        # the values are of the form (next_state, cost).
+        return {j: (j, cost) for (i_, j), cost in self.G.items() if i_ == i} 
 
     @property
     def vertices(self):
-        # Helper function: Return number of vertices in the graph.
+        # Helper function: Return number of vertices in the graph. You can ignore this.
         return len(set([i for edge in self.G for i in edge]))

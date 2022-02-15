@@ -95,11 +95,16 @@ class GraphicsGridworldDisplay:
                     self.drawSquare(name, x, y, value, minValue, maxValue, valString, all_actions, False, isExit,
                                     isCurrent)
 
+        if isinstance(currentState, tuple):
+            screen_x, screen_y = self.to_screen(currentState)
+            self.draw_player((screen_x, screen_y), 0.12 * self.GRID_SIZE)
+
         pos = self.to_screen(((mdp.width - 1.0) / 2.0, - 0.8))
         self.ga.text(f"v_text_", pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
     def displayNullValues(self, mdp, currentState=None, message=''):
         # mdp = self.mdp
+        self.ga.draw_background()
         grid = mdp.grid
         # self.blank()
         for x in range(mdp.width):
@@ -114,6 +119,10 @@ class GraphicsGridworldDisplay:
                 else:
                     self.drawNullSquare(name, mdp.grid, x, y, False, isExit, isCurrent)
         pos = self.to_screen(((mdp.width - 1.0) / 2.0, - 0.8))
+
+        if isinstance(currentState, tuple):
+            screen_x, screen_y = self.to_screen(currentState)
+            self.draw_player((screen_x, screen_y), 0.12 * self.GRID_SIZE)
 
         # pos = self.to_screen(((mdp.width - 1.0) / 2.0, - 0.8))
         # self.ga.text("Q_values_text", pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")

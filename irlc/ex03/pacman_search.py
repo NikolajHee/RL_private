@@ -46,7 +46,9 @@ class PacmanSearchProblem(SearchProblem):
 
     def is_terminal(self, state):
         # Returns true if this state is terminal, i.e. if Pacman's position is (1,1).
-        return state.getPacmanPosition() == (1, 1)
+        # TODO: 1 lines missing.
+        raise NotImplementedError("")
+        return is_in_position_11
 
     def available_transitions(self, state):       
         s0 = state.getScore()

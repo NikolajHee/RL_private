@@ -254,5 +254,3 @@ class Week02Tests(Report):
 if __name__ == '__main__':
     from unitgrade import evaluate_report_student
     evaluate_report_student(Week02Tests() )
-    # from unitgrade_private import hidden_create_files
-    # hidden_create_files.setup_grade_file_report(Week01Tests)
