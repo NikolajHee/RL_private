@@ -1,0 +1,1 @@
+        return 0 if all([self.valid_pos_(x[:j], x[j]) for j in range(self.N,1)]) else 0
