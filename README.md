@@ -18,6 +18,12 @@ In case there is a new version you can upgrade using:
 pip install unitgrade --upgrade --no-cache
 ```
 
+## Gym version 0.22.0
+Openai released a new major version of gym in late february 2022. If you upgrade gym to the newest version, many of the environments used in the course will break because of these changes. You will see this as an error about a missing ```rendering``` import. To fix this run
+```
+pip install gym==0.21.0
+```
+Note if you follow the installation instructions this will not be an issue since ```requirements.txt``` has been changed. 
 
 ## M1/ARM chipset (Mac os-x)
 Apple recently upraded from intel to an ARM chipset. If you don't have python 3.8 installed already, one student has had success installing python using Rosetta 2. 
