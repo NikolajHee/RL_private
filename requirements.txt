@@ -2,17 +2,17 @@ numpy
 unitgrade
 matplotlib
 sympy
-gym
+gym==0.21.0
 pyglet  # Contained in gym, but used in gridworld/pacman rendering
 tqdm
 seaborn
-cvxopt
-osqp
+# cvxopt
+# osqp
 PyQt5
 gym_minigrid
 pillow
 git+git://github.com/ibrahim-elshar/gym-windy-gridworlds.git
-cvxpy # install instructions https://www.cvxpy.org/install/
+# cvxpy # install instructions https://www.cvxpy.org/install/
 # cvxpy # Problematic requirements (fails on windows).
 # pybox2d # (Apparently cannnot be found. Where is this even being used?)
 # pathos # Multithreading for LMPC; deprecating for now; try to remove this dependency (requires Visual C++ 14).
