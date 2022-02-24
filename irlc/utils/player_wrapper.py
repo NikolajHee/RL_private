@@ -66,9 +66,10 @@ class PlayWrapper(AgentWrapper):
             elif hasattr(env.unwrapped, 'get_keys_to_action'):
                 keys_to_action = env.unwrapped.get_keys_to_action()
             else:
+                print(env.spec.id +" does not have explicit key to action mapping, please specify one manually")
                 assert False, env.spec.id + " does not have explicit key to action mapping, " + \
                               "please specify one manually"
-
+                # keys_to_action = dict()
         self.keys_to_action = keys_to_action
         self.env = env
         self.human_wants_restart = False
@@ -137,23 +138,23 @@ class PlayWrapper(AgentWrapper):
         return a
 
 def main():
-    from irlc.utils.berkley import BerkleyBookGridEnvironment
+    # from irlc.utils.berkley import BerkleyBookGridEnvironment
     from irlc.ex11.sarsa_agent import SarsaAgent
     from irlc.ex01.agent import train
-    from irlc.utils.berkley import VideoMonitor
-    env = BerkleyBookGridEnvironment(adaptor='gym')
-    agent = SarsaAgent(env, gamma=0.95, alpha=0.5)
+    # from irlc.utils.berkley import VideoMonitor
+    # env = BerkleyBookGridEnvironment(adaptor='gym')
+    # agent = SarsaAgent(env, gamma=0.95, alpha=0.5)
     # """
-    agent = PlayWrapper(agent, env)
+    # agent = PlayWrapper(agent, env)
 
-    env = VideoMonitor(env, agent=agent, video_file="videos/SarsaGridworld.mp4", fps=30, continious_recording=True,
-                       label="SADSF",
-                       monitor_keys=("Q",))
+    # env = VideoMonitor(env, agent=agent, video_file="videos/SarsaGridworld.mp4", fps=30, continious_recording=True,
+    #                    label="SADSF",
+    #                    monitor_keys=("Q",))
     # """
     # env.reset()
     # env.render()
-    train(env, agent, num_episodes=3)
-    env.close()
+    # train(env, agent, num_episodes=3)
+    # env.close()
     # parser = argparse.ArgumentParser()
     # parser.add_argument('--env', type=str, default='MontezumaRevengeNoFrameskip-v4', help='Define Environment')
     # args = parser.parse_args()

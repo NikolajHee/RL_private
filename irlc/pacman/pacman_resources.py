@@ -1,6 +1,5 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 import math
-
 import numpy as np
 from PIL import ImageColor
 from pyglet.shapes import Circle, Rectangle, Polygon, Sector
@@ -68,7 +67,10 @@ class Ghost(GroupedElement):
             e.set_eye_dir(direction)
 
     def set_position(self, x, y):
-        self.group.translate(x, y)
+        print("setting position", x,y)
+        self.group.x = x
+        self.group.y = y
+        # self.group.translate(x, y)
 
     def set_direction(self, direction):
         self.eyes(direction)

@@ -47,10 +47,10 @@ class DiscretizedModel:
 
         u = symv("u", len(ud)) 
         x = symv('x', len(xd))
-        """ y is a symbolic variable representing y = f(xs, us, dt) """
+        """ x_next is a symbolic variable representing x_{k+1} = f_k(x_k, u_k) """
         x_next = self.f_discrete_sym(x, u, dt=dt) 
-        """ compute the symbolic derivate of y wrt. z = (x,u): dy/dz """
 
+        """ compute the symbolic derivate of x_next wrt. z = (x,u): d x_{k+1}/dz """
         dy_dz = sym.Matrix([[sym.diff(f, zi) for zi in list(x) + list(u)] for f in x_next])
         """ Define (numpy) functions giving next state and the derivatives """
         self.f_z = sym.lambdify((tuple(x), tuple(u)), dy_dz, modules=sympy_modules_)
@@ -153,10 +153,12 @@ class DiscretizedModel:
             return fx 
 
     def c(self, x, u, i=None, compute_gradients=False): 
+        """ Compute the discretized cost function c_k(x_k, u_k) at k = i """
         v = self.cost.c(x, u, i)
         return v[0] if not compute_gradients else v 
 
     def cN(self, x, compute_gradients=False):  
+        """ Compute the discretized terminal cost function c_N(x_N)"""
         v = self.cost.cN(x)
         return v[0] if not compute_gradients else v  
 
