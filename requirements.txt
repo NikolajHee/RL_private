@@ -2,8 +2,8 @@ numpy
 unitgrade
 matplotlib
 sympy
-gym
-pyglet  # Contained in gym, but used in gridworld/pacman rendering
+gym==0.21.0 # Important not to use 0.22.0 (released mid-feb. 22) since it breaks existing environments.
+pyglet  # Contained in gym, used in gridworld/pacman rendering
 tqdm
 seaborn
 cvxopt
@@ -18,3 +18,5 @@ cvxpy # install instructions https://www.cvxpy.org/install/
 # pathos # Multithreading for LMPC; deprecating for now; try to remove this dependency (requires Visual C++ 14).
 # git+https://github.com/openai/baselines.git Deprecate for now.
 # gym[box2d] # I think we might need this for the lunar lander.
+
+# docker run -e DISPLAY=:1 --user "$(id -u):$(id -g)"  -v /home/tuhe/Documents/02465instructors/docker/tmp:/home docker python3 -m irlc.project1.project1_grade
