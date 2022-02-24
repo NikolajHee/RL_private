@@ -3,18 +3,19 @@ unitgrade
 matplotlib
 sympy
 gym==0.21.0 # Important not to use 0.22.0 (released mid-feb. 22) since it breaks existing environments.
-pyglet  # Contained in gym, used in gridworld/pacman rendering
+sklearn # Required for MPC (nearest-neighbors)
+pyglet  # Contained in gym, used in gridworld/pacman rendering.
 tqdm
 seaborn
-cvxopt
-osqp
+# cvxopt # Unclear if needed. Seems better than cvxpy for windows(?)
+# osqp # Unclear if needed
 PyQt5
 gym_minigrid
 pillow
 git+git://github.com/ibrahim-elshar/gym-windy-gridworlds.git
-cvxpy # install instructions https://www.cvxpy.org/install/
+cvxpy # install instructions https://www.cvxpy.org/install/ . Seems required for MPC agents.
+
 # cvxpy # Problematic requirements (fails on windows).
-# pybox2d # (Apparently cannnot be found. Where is this even being used?)
 # pathos # Multithreading for LMPC; deprecating for now; try to remove this dependency (requires Visual C++ 14).
 # git+https://github.com/openai/baselines.git Deprecate for now.
 # gym[box2d] # I think we might need this for the lunar lander.

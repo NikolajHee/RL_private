@@ -57,7 +57,8 @@ class SymbolicBicycleModel(ContiniousTimeSymbolicModel):
         if self.viewer == None:
             self.viewer = CarViewer(self)
 
-        self.viewer.update(x)
+        self.viewer.update(self.x_curv2x_XY(x))
+        # print(x)
         return self.viewer.render(return_rgb_array=mode == 'rgb_array')
 
     def close(self):

@@ -76,9 +76,6 @@ class GraphicsCache:
         self.viewer.geoms = list( self._items_in_viewer.values() )
         self._seen_things = set()
 
-    # def keep_geometries(self, name):
-    #     mark this as 'kept'
-    #     self._seen_things.add(name)
 
     def add_geometry(self, name, geom):
         if self.break_cache:
@@ -138,7 +135,6 @@ class GraphicsUtilGym:
         x,y = xy
         x = (x - self._local_xmin_xmax_ymin_ymax[0]) / (self._local_xmin_xmax_ymin_ymax[1] - self._local_xmin_xmax_ymin_ymax[0]) * self.viewer.width
         y = (y - self._local_xmin_xmax_ymin_ymax[2]) / (self._local_xmin_xmax_ymin_ymax[3] - self._local_xmin_xmax_ymin_ymax[2]) * self.viewer.height
-        # return (xy[0], self.gc.viewer.height-xy[1])
         return int(x), int(y)
 
 

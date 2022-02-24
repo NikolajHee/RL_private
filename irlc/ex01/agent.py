@@ -19,12 +19,13 @@ import shutil
 class Agent: 
     """ Main agent class. See (Her21, Subsection 4.4.3) for additional details.  """
     def __init__(self, env): 
-        self.env = env 
+        self.env = env
 
-    def pi(self, s, k=None): 
+    def pi(self, s, k=None):
         """ Compute the policy pi_k(s).
         For discrete application (dynamical programming/search and reinforcement learning), k is discrete k=0, 1, 2, ...
-        For control applications, k is continious and denote simulation time t. 
+        For control applications, k is continious and denote simulation time t, i.e. it should be called as
+        > agent.pi(x, t) 
 
         :param s: Current state
         :param k: Current time index.

@@ -103,15 +103,20 @@ class PlayWrapper(AgentWrapper):
     def setup(self):
         # print("In play wrapper - setup")
         # print(self._get_viewer())
-        self._get_viewer().window.on_key_press = self.key_press
-        self._get_viewer().window.on_key_release = self.key_release
+        viewer = self._get_viewer()
+        if viewer is not None:
+            viewer.window.on_key_press = self.key_press
+            viewer.window.on_key_release = self.key_release
+
 
     def pi(self,state, k=None):
         pi_action = super().pi(state, t=k) # make sure super class pi method is called in case it has side effects.
         self.setup()
         while True:
+            viewer = self._get_viewer()
             time.sleep(0.01)
-            self._get_viewer().window.dispatch_events()
+            if viewer is not None:
+                viewer.window.dispatch_events()
             a = self.human_agent_action
             if a == SPACEBAR or self.human_demand_autoplay:
                 # Just do what the agent wanted us to do
