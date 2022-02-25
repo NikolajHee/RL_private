@@ -41,7 +41,7 @@ class ContiniousPendulumModel(ContiniousTimeSymbolicModel):
             cost = SymbolicQRCost(R=np.ones( (1,1) ), Q=np.eye(2) )
 
         self.u_prev = None                        # For rendering
-        self.cp_render = gym.make("Pendulum-v0")  # environment only used for rendering
+        self.cp_render = gym.make("Pendulum-v1")  # environment only used for rendering
         self.cp_render.max_time_limit = 10000
         self.cp_render.reset()
         super().__init__(cost=cost, simple_bounds=simple_bounds)
