@@ -42,7 +42,7 @@ class MCAgentQuestion(UTestCase):
 class BlackjackQuestion(UTestCase):
     """ MC policy evaluation agent and Blacjack """
     def test_blackjack_mc(self):
-        env = gym.make("Blackjack-v0")
+        env = gym.make("Blackjack-v1")
         episodes = 50000
         from irlc.ex10.mc_evaluate import MCEvaluationAgent
         from irlc.ex10.mc_evaluate_blackjack import get_by_ace, to_matrix, policy20
