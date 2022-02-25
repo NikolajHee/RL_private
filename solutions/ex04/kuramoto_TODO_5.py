@@ -1,0 +1,1 @@
+    dg_dz = sym.diff(g, z) 
