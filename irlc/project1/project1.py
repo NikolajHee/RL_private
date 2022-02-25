@@ -147,6 +147,7 @@ class Pacman6a(UTestCase):
     def test_sequence_lengths(self):
         """ Test the length of the state/action lists. """
         actions, states = self.get_shortest_path()
+        print("self.map", self.map, 'actions', actions)
         self.assertEqualC(len(actions))
         self.assertEqualC(len(states))
 
@@ -283,7 +284,7 @@ class Kiosk2(UTestCase):
         pass
 
     def check_J(self, k, x):
-        J = [{k: np.round(v, 4) for k, v in J_.items()} for J_ in Kiosk2.J]
+        J = [{k: np.round(v, 4) for k, v in J_.items()} for J_ in self.__class__.J]
         t = self.mk_title(k, x)
         if k is not None and x is not None:
             t += f" = {J[k][x]}"
@@ -298,6 +299,7 @@ class Kiosk2(UTestCase):
         else:
             value = J
 
+        # print("Kiosk2, check_J", self.__class__.J[0])
         self.assertEqualC(value)
 
     def test_case_1(self):
@@ -322,6 +324,7 @@ class Kiosk3(Kiosk2):
     def setUpClass(cls) -> None:
         from irlc.project1.kiosk import solve_kiosk_2
         cls.J, cls.pi = solve_kiosk_2()
+        # print("Kiosk3", cls.J[0])
 
 
 # class Kiosk4(Kiosk2):
