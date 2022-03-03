@@ -58,7 +58,7 @@ class AgentWrapper(Agent):
 PAUSE_KEY = ord('p')
 SPACEBAR = "_SPACE_BAR_PRESSED_"
 class PlayWrapper(AgentWrapper):
-    def __init__(self, agent, env, keys_to_action=None):
+    def __init__(self, agent, env, keys_to_action=None, autoplay=False):
         super().__init__(agent, env)
         if keys_to_action is None:
             if hasattr(env, 'get_keys_to_action'):
@@ -75,7 +75,7 @@ class PlayWrapper(AgentWrapper):
         self.human_wants_restart = False
         self.human_sets_pause = False
         self.human_agent_action = -1
-        self.human_demand_autoplay = False
+        self.human_demand_autoplay = autoplay
 
     # space bar: 0x0020
     def key_press(self,key, mod):

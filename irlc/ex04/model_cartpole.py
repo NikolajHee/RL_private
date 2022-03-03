@@ -24,8 +24,8 @@ class ContiniousCartpole(ContiniousTimeSymbolicModel):
         self.mp = mp
         self.l = l
         self.g = g
-        self.observation_space = Box(low=-np.inf, high=np.inf, shape=(4,))
-        self.action_space = Box(low=-np.inf, high=np.inf, shape=(1,))
+        self.observation_space = Box(low=-np.inf, high=np.inf, shape=(4,),dtype=float)
+        self.action_space = Box(low=-np.inf, high=np.inf, shape=(1,),dtype=float)
         self.maxForce = maxForce
         '''
         Default to kellys swingup task. (From matlab repo)

@@ -1,0 +1,2 @@
+        z, z0, z_lb, z_ub = z + xs[k], z0 + list(guess['x'](tk).flat), z_lb + list(x_bnd.lb), z_ub + list(x_bnd.ub) 
+        z, z0, z_lb, z_ub = z + us[k], z0 + list(guess['u'](tk).flat), z_lb + list(u_bnd.lb), z_ub + list(u_bnd.ub) 
