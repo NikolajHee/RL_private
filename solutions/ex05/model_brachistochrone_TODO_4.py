@@ -1,0 +1,1 @@
+    # cost = SymbolicQRCost(c=1.0) 
