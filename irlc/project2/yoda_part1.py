@@ -36,10 +36,10 @@ def cost_discrete(x_k, u_k):
     otherwise the code can be fairly hard to debug. If you are following the framework, you can implement the function
     using commands such as:
 
-    dmodel = (create a model instance here)
+    dmodel = (create a discrete model instance here)
     return dmodel.c(x_k, u_k)
 
-    and you will then know you implemented the cost correctly.
+    If this worked, you will know you implemented the R, Q matrices correctly.
     """
     # TODO: 2 lines missing.
     raise NotImplementedError("Implement function body")
