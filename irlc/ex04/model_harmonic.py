@@ -47,15 +47,15 @@ class HarmonicOscilatorModel(LinearQuadraticModel):
              [-k/m, 0]]
 
         B = [[0], [1/m]]
-        C = [[0], [drag/m]]
+        d = [[0], [drag/m]]
 
-        A, B, C = np.asarray(A), np.asarray(B), np.asarray(C)
+        A, B, d = np.asarray(A), np.asarray(B), np.asarray(d)
         if Q is None:
             Q = np.eye(2)
         if R is None:
             R = np.eye(1)
         self.viewer = None
-        super().__init__(A=A, B=B, Q=Q, R=R, d=C)
+        super().__init__(A=A, B=B, Q=Q, R=R, d=d)
 
     def reset(self): # Return the initial state. In this case x = 1 and dx/dt = 0.
         return [1, 0]

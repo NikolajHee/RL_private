@@ -12,7 +12,7 @@ from irlc.ex04.continuous_time_environment import ContiniousTimeEnvironment
 class ContiniousCartpole(ContiniousTimeSymbolicModel):
     state_size = 4
     action_size = 1
-    state_labels = ["$x$", r"\frac{dx}{dt}$", r"$\theta$", r"\frac{d \theta}{dt}$"]
+    state_labels = ["$x$", r"$\frac{dx}{dt}$", r"$\theta$", r"$\frac{d \theta}{dt}$"]
     action_labels = ["Cart force $u$"]
 
     def __init__(self, mc=2,
@@ -139,9 +139,9 @@ class GymSinCosCartpoleModel(DiscretizedModel):
     def __init__(self, dt=0.02, cost=None, transform_actions=True, **kwargs): 
         model = ContiniousCartpole(**kwargs)
         self.transform_actions = transform_actions
-        self.observation_space = Box(low=-np.inf, high=np.inf, shape=(5,))
+        self.observation_space = Box(low=-np.inf, high=np.inf, shape=(5,),dtype=float)
         if transform_actions:
-            self.action_space = Box(low=-np.inf, high=np.inf, shape=(1,))  
+            self.action_space = Box(low=-np.inf, high=np.inf, shape=(1,),dtype=float)  
         else:
             self.action_space = model.action_space
 

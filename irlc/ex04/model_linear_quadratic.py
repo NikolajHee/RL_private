@@ -10,7 +10,7 @@ class LinearQuadraticModel(ContiniousTimeSymbolicModel):
     Implements a model with update equations
 
     dx/dt = Ax + Bx + d
-    Cost = 1/2 x^T Q x + 1/2 u^T R u + q' x + qc
+    Cost = integral_0^{t_F} (1/2 x^T Q x + 1/2 u^T R u + q' x + qc) dt
     """
     def __init__(self, A, B, Q, R, q=None, qc=None, d=None):  
         cost = SymbolicQRCost(R=R, Q=Q, q=q, qc=qc)

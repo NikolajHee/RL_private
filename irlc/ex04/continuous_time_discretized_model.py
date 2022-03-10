@@ -53,7 +53,7 @@ class DiscretizedModel:
         """ compute the symbolic derivate of x_next wrt. z = (x,u): d x_{k+1}/dz """
         dy_dz = sym.Matrix([[sym.diff(f, zi) for zi in list(x) + list(u)] for f in x_next])
         """ Define (numpy) functions giving next state and the derivatives """
-        self.f_z = sym.lambdify((tuple(x), tuple(u)), dy_dz, modules=sympy_modules_)
+        self.f_z = sym.lambdify((tuple(x), tuple(u)), dy_dz, modules=sympy_modules_) 
         # Create a numpy function corresponding to the discretized model x_{k+1} = f_discrete(x_k, u_k) 
         self.f_discrete = sym.lambdify((tuple(x), tuple(u)), x_next, modules=sympy_modules_)  
         # Make action/state transformation
