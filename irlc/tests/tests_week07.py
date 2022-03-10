@@ -103,14 +103,9 @@ class MPCLearningAgentLocalOptimizeQuestion(UTestCase):
         from irlc.ex07.lqr_learning_agents import boing_experiment
         stats, trajectories = boing_experiment(env, agent, num_episodes=4, plot=False)
         self.assertL2(stats[-1]['Accumulated Reward'], tol=500)
-        self.assertL2(trajectories[-1].state[-1], tol=0.12)
+        self.assertL2(trajectories[-1].state[-1], tol=0.2)
 
 
-
-
-    # def get_agent(self, env):
-    #     from irlc.ex07.lqr_learning_agents import MPCLearningAgent
-    #     return MPCLearningAgent(env)
 
 # class LearningLQRAgentQuestion(QuestionGroup):
 #     title = "MPCLearningAgent on Boing problem"
