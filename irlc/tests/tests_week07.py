@@ -97,7 +97,8 @@ class MPCLearningAgentLocalOptimizeQuestion(UTestCase):
 
     # class TrajectoryItem(LearningItem):
     def test_local_lqr_agent(self):
-        from irlc.ex07.lqr_learning_agents import MPCLearningAgentLocalOptimize
+        from irlc.ex07.learning_agent_mpc_optimize import MPCLearningAgentLocalOptimize
+
         env = BoingEnvironment(output=[10, 0])
         agent = MPCLearningAgentLocalOptimize(env)
         from irlc.ex07.lqr_learning_agents import boing_experiment
@@ -144,7 +145,9 @@ class MPCLocalAgentExactDynamicsQuestion(UTestCase):
 
     # class TrajectoryItem(LearningItem):
     def test_local_lqr_agent(self):
-        from irlc.ex07.lqr_learning_agents import MPCLocalAgentExactDynamics
+        # from irlc.ex07.lqr_learning_agents import MPCLocalAgentExactDynamics
+        from irlc.ex07.learning_agent_mpc_optimize import MPCLocalAgentExactDynamics
+
         env = BoingEnvironment(output=[10, 0])
         agent = MPCLocalAgentExactDynamics(env)
         from irlc.ex07.lqr_learning_agents import boing_experiment
@@ -158,11 +161,11 @@ class MPCLearningPendulum(UTestCase):
         """ Pendulum swingup task """
         tl = 1 - np.cos(np.pi / 180 * 20)
 
-        from irlc.ex07.mpc_pendulum_experiment import mk_mpc_pendulum_env
+        from irlc.ex07.mpc_pendulum_experiment_optim import mk_mpc_pendulum_env
         env_pendulum = mk_mpc_pendulum_env(Tmax=10)
         L = 12
         up = 100
-        from irlc.ex07.lqr_learning_agents import MPCLearningAgentLocalOptimize
+        from irlc.ex07.learning_agent_mpc_optimize import MPCLearningAgentLocalOptimize
         agent = MPCLearningAgentLocalOptimize(env_pendulum, horizon_length=L, neighbourhood_size=50, min_buffer_size=50)
         # from irlc import VideoMonitor
         # env_pendulum = VideoMonitor(env_pendulum)
