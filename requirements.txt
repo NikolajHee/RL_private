@@ -1,7 +1,7 @@
 numpy
 unitgrade
 matplotlib
-sympy
+sympy<1.10 # alternatively install using: > pip install "sympy<1.10"
 gym==0.21.0 # Important not to use 0.22.0 (released mid-feb. 22) since it breaks existing environments.
 sklearn # Required for MPC (nearest-neighbors)
 pyglet  # Contained in gym, used in gridworld/pacman rendering.
@@ -12,8 +12,8 @@ seaborn
 PyQt5
 gym_minigrid
 pillow
-git+git://github.com/ibrahim-elshar/gym-windy-gridworlds.git
-cvxpy # install instructions https://www.cvxpy.org/install/ . Seems required for MPC agents.
+# git+git://github.com/ibrahim-elshar/gym-windy-gridworlds.git
+# cvxpy # install instructions https://www.cvxpy.org/install/ . Seems required for MPC agents.
 
 # cvxpy # Problematic requirements (fails on windows).
 # pathos # Multithreading for LMPC; deprecating for now; try to remove this dependency (requires Visual C++ 14).
