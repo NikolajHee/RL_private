@@ -51,7 +51,7 @@ class SarsaLambdaQuestion(TabularAgentStub):
         return agent.env, agent
 
     def test_reward_function(self):
-        self.tol_qs = 2
+        self.tol_qs = 2.6
         self.chk_accumulated_reward()
 
 class Week12Tests(Report):

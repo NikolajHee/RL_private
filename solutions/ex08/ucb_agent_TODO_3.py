@@ -1,0 +1,1 @@
+        return np.argmax( self.Q + self.c * np.sqrt( np.log(t+1)/(self.N+1e-8)  )  ) 
