@@ -6,41 +6,41 @@ class JarJarPiOptimal(UTestCase):
     """ Problem 1: Compute optimal policy.  """
     def test_pi_1(self):
         from irlc.project3.jarjar import pi_optimal
-        self.assertEqual(pi_optimal(1), -1)
+        self.assertLinf(pi_optimal(1), -1)
 
     def test_pi_all(self):
         from irlc.project3.jarjar import pi_optimal
         for s in range(-10, 10):
             if s != 0:
-                self.assertEqualC(pi_optimal(s))
+                self.assertLinf(pi_optimal(s))
 
 class JarJarQ0Estimated(UTestCase):
     """ Problem 2: Implement Q0_approximate to (approximate) the Q-function for the optimal policy.  """
     def test_Q0_N1(self):
         from irlc.project3.jarjar import Q0_approximate
-        self.assertEqualC(Q0_approximate(gamma=0.8, N=1))
+        self.assertLinf(Q0_approximate(gamma=0.8, N=1))
 
     def test_Q0_N2(self):
         from irlc.project3.jarjar import Q0_approximate
-        self.assertEqualC(Q0_approximate(gamma=0.7, N=20))
+        self.assertLinf(Q0_approximate(gamma=0.7, N=20))
 
     def test_Q0_N100(self):
         from irlc.project3.jarjar import Q0_approximate
-        self.assertEqualC(Q0_approximate(gamma=0.9, N=20))
+        self.assertLinf(Q0_approximate(gamma=0.9, N=20))
 
 
 class JarJarQExact(UTestCase):
     """ Problem 4: Compute Q^*(s,a) exactly by extending analytical solution. """
     def test_Q_s0(self):
         from irlc.project3.jarjar import Q_exact
-        self.assertEqualC(Q_exact(0, gamma=0.8, a=1))
-        self.assertEqualC(Q_exact(0, gamma=0.8, a=-1))
+        self.assertLinf(Q_exact(0, gamma=0.8, a=1))
+        self.assertLinf(Q_exact(0, gamma=0.8, a=-1))
 
     def test_Q_s1(self):
         from irlc.project3.jarjar import Q_exact
-        self.assertEqualC(Q_exact(1, gamma=0.8, a=-1))
-        self.assertEqualC(Q_exact(1, gamma=0.95, a=-1))
-        self.assertEqualC(Q_exact(1, gamma=0.7, a=-1))
+        self.assertLinf(Q_exact(1, gamma=0.8, a=-1))
+        self.assertLinf(Q_exact(1, gamma=0.95, a=-1))
+        self.assertLinf(Q_exact(1, gamma=0.7, a=-1))
 
     def test_Q_s_positive(self):
         from irlc.project3.jarjar import Q_exact
