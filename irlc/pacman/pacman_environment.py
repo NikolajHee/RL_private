@@ -75,7 +75,9 @@ class GymPacmanEnvironment(gym.Env):
         return {(key.LEFT,): Directions.WEST,
                 (key.RIGHT,): Directions.EAST,
                 (key.UP,): Directions.NORTH,
-                (key.DOWN,): Directions.SOUTH}
+                (key.DOWN,): Directions.SOUTH,
+                (key.S,): Directions.STOP,
+                }
 
     def step(self, action):
         r_ = self.game.state.getScore()

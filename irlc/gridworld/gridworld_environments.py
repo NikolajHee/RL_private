@@ -1,4 +1,8 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
+"""
+References:
+  [SB18] Richard S. Sutton and Andrew G. Barto. Reinforcement Learning: An Introduction. The MIT Press, second edition, 2018. (See sutton2018.pdf).
+"""
 import numpy as np
 from pyglet.window import key
 from gym.envs.toy_text.frozen_lake import FrozenLakeEnv
@@ -36,10 +40,10 @@ grid_maze_grid = [[' ',' ',' ', +1],
                   [' ','#','#',' '],
                   ['S',' ',' ',' ']]
 
-sutton_corner_maze = [[1,   ' ', ' ', ' '], 
+sutton_corner_maze = [[  1, ' ', ' ', ' '], 
                       [' ', ' ', ' ', ' '],
                       [' ', 'S', ' ', ' '],
-                      [' ', ' ', ' ', 1]] 
+                      [' ', ' ', ' ',   1]] 
 
 # A big old open maze.
 grid_open_grid = [[' ']*8 for _ in range(5)]
@@ -131,6 +135,10 @@ class GridworldEnvironment(MDP2GymEnv):
                         mv = np.round( max( q.values() ), 2)
                         preferred_actions[s] = [k for k, v in q.items() if np.round(v, 2) == mv]
 
+                if agent != None and hasattr(agent, 'policy'):
+                    for s in self.mdp.nonterminal_states:
+                        preferred_actions[s] = [a for a, v in agent.policy[s].items() if v == max(agent.policy[s].values()) ]
+
                 self.display.displayValues(mdp=self.mdp, v=v, preferred_actions=preferred_actions, currentState=state, message=label)
 
             elif avail_modes[self.view_mode] == 'Q':
@@ -165,8 +173,21 @@ class OpenGridEnvironment(GridworldEnvironment):
     def __init__(self, *args, **kwargs):
         super().__init__(grid_open_grid, *args, **kwargs)
 
-class SuttonCornerGridEnvironment(GridworldEnvironment): 
-    def __init__(self, *args, living_reward=-1, **kwargs):
+"""  
+Implement Suttons little corner-maze environment (see (SB18, Example 4.1)).  
+You can make an instance using:
+> from irlc.gridworld.gridworld_environments import SuttonCornerGridEnvironment
+> env = SuttonCornerGridEnvironment()
+To get access the the mdp (as a MDP-class instance, for instance to see the states env.mdp.nonterminal_states) use
+> env.mdp
+You can make a visualization (allowing you to play) and train it as:
+> from irlc import PlayWrapper, Agent, train
+> agent = Agent()
+> agent = PlayWrapper(agent, env) # allows you to play using the keyboard; omit to use agent as usual. 
+> train(env, agent, num_episodes=1)
+"""
+class SuttonCornerGridEnvironment(GridworldEnvironment):
+    def __init__(self, *args, living_reward=-1, **kwargs): # living_reward=-1 means the agent gets a reward of -1 per step.
         super().__init__(sutton_corner_maze, *args, living_reward=living_reward, **kwargs) 
 
 class SuttonMazeEnvironment(GridworldEnvironment):

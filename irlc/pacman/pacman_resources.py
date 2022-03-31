@@ -67,7 +67,7 @@ class Ghost(GroupedElement):
             e.set_eye_dir(direction)
 
     def set_position(self, x, y):
-        print("setting position", x,y)
+        # print("setting position", x,y)
         self.group.x = x
         self.group.y = y
         # self.group.translate(x, y)
