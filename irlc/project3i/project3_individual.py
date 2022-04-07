@@ -31,10 +31,10 @@ class SarlacReturn(UTestCase):
         from irlc.project3i.sarlacc import sarlacc_return
         v = sarlacc_return(rules, gamma)
         # Check that the keys (states) that are included in v are correct. I.e., that the return is computed for the right states.
-        self.assertEqualC(list(sorted(v.keys())))
-        v = {k: v[k] for k in sorted(v.keys())}
+        states = list(sorted(v.keys()))
+        self.assertEqualC(states)
 
-        for s in v:
+        for s in states:
             self.assertL2(v[s], tol=1e-2)
 
     def test_sarlacc_return_empty_gamma1(self):

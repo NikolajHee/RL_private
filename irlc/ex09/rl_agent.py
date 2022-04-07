@@ -58,12 +58,12 @@ class ValueAgent(TabularAgent):
     def __init__(self, env, gamma=0.95, policy=None, v_init_fun=None): 
         self.env = env
         self.policy = policy  # policy to evaluate
-        """ Value estimates. 
+        """ self.v holds the value estimates. 
         Initially v[s] = 0 unless v_init_fun is given in which case v[s] = v_init_fun(s). """
         self.v = defaultdict2(float if v_init_fun is None else v_init_fun) 
         super().__init__(env, gamma=gamma)
-
-    def pi(self, s, k=None):  
+        self.Q = None  # Blank out the Q-values which will not be used.
+    def pi(self, s, k=None):
         return self.random_pi(s) if self.policy is None else self.policy(s) 
 
     def value(self, s):
@@ -97,10 +97,6 @@ class TabularQ:
     def __setitem__(self, state_comma_action, q_value):
         s, a = state_comma_action
         self.q_[s][a] = q_value
-
-    # def items(self):  # not sure this is used
-    #     raise Exception()
-    #     return self.q_.items()
 
     def to_dict(self):
         # Convert to a regular dictionary

@@ -54,7 +54,7 @@ grid_open_grid[-1][-1] = 1
 class GridworldEnvironment(MDP2GymEnv):
     metadata = {
         'render.modes': ['human', 'rgb_array'],
-        'video.frames_per_second': 50
+        'video.frames_per_second': 1000,
     }
     def get_keys_to_action(self):
         return {(key.LEFT,): GridworldMDP.WEST, (key.RIGHT,): GridworldMDP.EAST, (key.UP,): GridworldMDP.NORTH, (key.DOWN,): GridworldMDP.SOUTH}
@@ -62,7 +62,7 @@ class GridworldEnvironment(MDP2GymEnv):
     def _get_mdp(self, grid, uniform_initial_state=False):
         return GridworldMDP(grid, living_reward=self.living_reward)
 
-    def __init__(self, grid=None, uniform_initial_state=True, living_reward=0,zoom=1, **kwargs):
+    def __init__(self, grid=None, uniform_initial_state=True, living_reward=0,zoom=1, view_mode=0, **kwargs):
         self.living_reward = living_reward
         mdp = self._get_mdp(grid)
         super().__init__(mdp)
@@ -73,7 +73,7 @@ class GridworldEnvironment(MDP2GymEnv):
         self.render_steps = 0
         self.zoom = zoom
         self.timer = Timer()
-        self.view_mode = 0
+        self.view_mode = view_mode
 
         def _step(*args, **kwargs):
             o = type(self).step(self, *args, **kwargs)
@@ -135,7 +135,7 @@ class GridworldEnvironment(MDP2GymEnv):
                         mv = np.round( max( q.values() ), 2)
                         preferred_actions[s] = [k for k, v in q.items() if np.round(v, 2) == mv]
 
-                if agent != None and hasattr(agent, 'policy'):
+                if agent != None and hasattr(agent, 'policy') and agent.policy is not None and isinstance(agent.policy[state], dict):
                     for s in self.mdp.nonterminal_states:
                         preferred_actions[s] = [a for a, v in agent.policy[s].items() if v == max(agent.policy[s].values()) ]
 
