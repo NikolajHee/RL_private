@@ -45,13 +45,13 @@ class JarJarQExact(UTestCase):
     def test_Q_s_positive(self):
         from irlc.project3.jarjar import Q_exact
         for s in range(20):
-            Q_exact(s, gamma=0.75, a=-1)
+            self.assertLinf(Q_exact(s, gamma=0.75, a=-1))
 
     def test_Q_all(self):
         from irlc.project3.jarjar import Q_exact
         for s in range(-20, 20):
-            Q_exact(s, gamma=0.75, a=-1)
-            Q_exact(s, gamma=0.75, a=1)
+            self.assertLinf(Q_exact(s, gamma=0.75, a=-1))
+            self.assertLinf(Q_exact(s, gamma=0.75, a=1))
 
 
 
