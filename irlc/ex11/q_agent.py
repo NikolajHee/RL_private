@@ -3,6 +3,7 @@
 References:
   [SB18] Richard S. Sutton and Andrew G. Barto. Reinforcement Learning: An Introduction. The MIT Press, second edition, 2018. (See sutton2018.pdf).
 """
+from irlc.ex09.mdp import GymEnv2MDP
 from irlc.ex09.rl_agent import TabularAgent
 from irlc import train
 import gym
@@ -56,13 +57,22 @@ def cliffwalk():
     agent = QAgent(env, epsilon=epsilon, alpha=alpha)
 
     train(env, agent, q_exp, num_episodes=200, max_runs=max_runs)
+
+
+    # As a baseline, we set up/evaluate a value-iteration agent to get an idea about the optimal performance.
+    # To do so, we need an MDP object. We create an MDP object out of the gym environment below.
+    # You can look at the code if you like, but it is simply a helper function to convert from one datastructure to another,
+    # and all it does is to give a MDP object which is needed for our value-iteration implementation from the previous
+    # week.
+    mdp = GymEnv2MDP(env)
     vi_exp = "experiments/cliffwalk_VI"
-    Vagent = ValueIterationAgent(env, epsilon=epsilon)
+    Vagent = ValueIterationAgent(env, mdp=mdp, epsilon=epsilon)
     train(env, Vagent, vi_exp, num_episodes=200, max_runs=max_runs)
 
     vi_exp_opt = "experiments/cliffwalk_VI_optimal"
-    Vagent_opt = ValueIterationAgent(env, epsilon=0)
+    Vagent_opt = ValueIterationAgent(env, mdp=mdp, epsilon=0) # Same, but with epsilon=0
     train(env, Vagent_opt, vi_exp_opt, num_episodes=200, max_runs=max_runs)
+
     exp_names = [q_exp, vi_exp, vi_exp_opt]
     return env, exp_names
 

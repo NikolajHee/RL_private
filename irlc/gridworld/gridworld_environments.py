@@ -135,11 +135,19 @@ class GridworldEnvironment(MDP2GymEnv):
                         mv = np.round( max( q.values() ), 2)
                         preferred_actions[s] = [k for k, v in q.items() if np.round(v, 2) == mv]
 
-                if agent != None and hasattr(agent, 'policy') and agent.policy is not None and isinstance(agent.policy[state], dict):
+                if agent != None and hasattr(agent, 'policy') and agent.policy is not None and state in agent.policy and isinstance(agent.policy[state], dict):
                     for s in self.mdp.nonterminal_states:
                         preferred_actions[s] = [a for a, v in agent.policy[s].items() if v == max(agent.policy[s].values()) ]
 
-                self.display.displayValues(mdp=self.mdp, v=v, preferred_actions=preferred_actions, currentState=state, message=label)
+                if hasattr(agent, 'returns_count'):
+                    returns_count = agent.returns_count
+                else:
+                    returns_count = None
+                if hasattr(agent, 'returns_sum'):
+                    returns_sum = agent.returns_sum
+                else:
+                    returns_sum = None
+                self.display.displayValues(mdp=self.mdp, v=v, preferred_actions=preferred_actions, currentState=state, message=label, returns_count=returns_count, returns_sum=returns_sum)
 
             elif avail_modes[self.view_mode] == 'Q':
                 self.display.displayQValues(self.mdp, Q, currentState=state, message=label)

@@ -25,6 +25,7 @@ TEXT_COLOR = formatColor(1, 1, 1)
 MUTED_TEXT_COLOR = formatColor(0.7, 0.7, 0.7)
 LOCATION_COLOR = formatColor(0, 0, 1)
 
+RED_TEXT_COLOR = formatColor(.68, .93, 0.93)
 
 def getEndpoints(direction, position=(0, 0)):
     x, y = position
@@ -60,7 +61,7 @@ class GraphicsGridworldDisplay:
     def end_frame(self):
         self.ga.end_frame()
 
-    def displayValues(self, mdp, v, preferred_actions=None, currentState=None, message='Agent Values'):
+    def displayValues(self, mdp, v, preferred_actions=None, currentState=None, message='Agent Values', returns_count=None, returns_sum=None):
         if self.v_old == None:
             self.ga.gc.clear()
             self.v_old = {}
@@ -72,13 +73,16 @@ class GraphicsGridworldDisplay:
         grid = mdp.grid
         minValue = min(m)
         maxValue = max(m)
+
+
+
         for x in range(mdp.width):
             for y in range(mdp.height):
                 name = f"V_{x}_{y}_"
                 state = (x, y)
                 gridType = grid[x, y]
-                isExit = (str(gridType) != gridType)
-                isCurrent = (currentState == state)
+                isExit = str(gridType) != gridType
+                isCurrent = currentState == state
                 if gridType == '#':
                     self.drawSquare(name, x, y, 0, 0, 0, None, None, True, False, isCurrent)
                 else:
@@ -92,12 +96,18 @@ class GraphicsGridworldDisplay:
                         if preferred_actions != None:
                             all_actions = preferred_actions[state]
 
-                    self.drawSquare(name, x, y, value, minValue, maxValue, valString, all_actions, False, isExit,
-                                    isCurrent)
+                    returns_sum_ = returns_sum[state] if returns_sum is not None else None
+                    returns_count_ = returns_count[state] if returns_count is not None else None
+                    self.drawSquare(name, x, y, value, minValue, maxValue, valString, all_actions, False, isExit, isCurrent,
+                                    returns_sum=returns_sum_, returns_count=returns_count_)
 
+        # print("Drawing...")
         if isinstance(currentState, tuple):
+            # print("found pacman")
             screen_x, screen_y = self.to_screen(currentState)
             self.draw_player((screen_x, screen_y), 0.12 * self.GRID_SIZE)
+        # else:
+        #     print("no instance found??")
 
         pos = self.to_screen(((mdp.width - 1.0) / 2.0, - 0.8))
         self.ga.text(f"v_text_", pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
@@ -185,6 +195,7 @@ class GraphicsGridworldDisplay:
         self.ga.text("Q_values_text", pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
         if isinstance(currentState, tuple):
+
             screen_x, screen_y = self.to_screen(currentState)
             self.draw_player((screen_x, screen_y), 0.12 * self.GRID_SIZE)
 
@@ -214,13 +225,15 @@ class GraphicsGridworldDisplay:
                          str(grid[x,y]),
                          "Courier", -24, "bold", "c")
 
-    def drawSquare(self, name, x, y, val, min, max, valStr, all_action, isObstacle, isTerminal, isCurrent):
+    def drawSquare(self, name, x, y, val, min, max, valStr, all_action, isObstacle, isTerminal, isCurrent,
+                   returns_count=None, returns_sum=None):
         square_color = getColor(val, min, max)
+        (screen_x, screen_y) = self.to_screen((x, y))
         if isObstacle:
             square_color = OBSTACLE_COLOR
 
-        (screen_x, screen_y) = self.to_screen((x, y))
         self.square(name + "_o1", (screen_x, screen_y), 0.5 * self.GRID_SIZE, color=square_color, filled=1, width=1)
+
         self.square(name + "_o2", (screen_x, screen_y), 0.5 * self.GRID_SIZE, color=EDGE_COLOR, filled=0, width=3)
         if isTerminal and not isObstacle:
             self.square(name + "_o3", (screen_x, screen_y), 0.4 * self.GRID_SIZE, color=EDGE_COLOR, filled=0, width=2)
@@ -252,7 +265,16 @@ class GraphicsGridworldDisplay:
 
         text_color = TEXT_COLOR
         if not isObstacle:
-            self.ga.text(name + "_txt", (screen_x, screen_y), text_color, valStr, "Courier", -30, "bold", "c")
+            self.ga.text(name + "_txt", (screen_x, screen_y - (GRID_SIZE/6 if isCurrent else 0) ), text_color, valStr, "Courier", -30, "bold", "c")
+
+        if returns_count is not None:
+            self.ga.text(name + "_rc", (screen_x-GRID_SIZE/3, screen_y+GRID_SIZE/7), RED_TEXT_COLOR, f"N(s)={int(returns_count)}", "Courier", -20, "bold", "w")
+        if returns_sum is not None:
+            self.ga.text(name + "_rs", (screen_x-GRID_SIZE/3, screen_y+2*GRID_SIZE/7), RED_TEXT_COLOR, f"S(s)={returns_sum:.2f}", "Courier", -20, "bold", "w")
+
+        # if returns_count is not None:
+        #     self.ga.text(name + "_rs", (screen_x, screen_y), text_color, valStr, "Courier", -30, "bold", "c")
+
 
     def drawSquareQ(self, name, x, y, qVals, minVal, maxVal, valStrs, bestActions, isCurrent):
         GRID_SIZE = self.GRID_SIZE

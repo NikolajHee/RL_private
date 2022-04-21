@@ -8,18 +8,18 @@ from irlc.tests.tests_week08 import train_recording
 from irlc.tests.tests_week10 import TD0Question, MCAgentQuestion
 
 
-
-class NStepSarseEvaluationQuestion(TD0Question):
-    """ Test of TD-n evaluation agent """
-    # class EvaluateTabular(VExperienceItem):
-    #     title = "Value-function test"
-    gamma = 0.8
-    def get_env_agent(self):
-        envn = "SmallGridworld-v0"
-        from irlc.ex11.nstep_td_evaluate import TDnValueAgent
-        env = gym.make(envn)
-        agent = TDnValueAgent(env, gamma=self.gamma, n=5)
-        return env, agent
+# This problem no longer exists.
+# class NStepSarseEvaluationQuestion(TD0Question):
+#     """ Test of TD-n evaluation agent """
+#     # class EvaluateTabular(VExperienceItem):
+#     #     title = "Value-function test"
+#     gamma = 0.8
+#     def get_env_agent(self):
+#         envn = "SmallGridworld-v0"
+#         from irlc.ex11.nstep_td_evaluate import TDnValueAgent
+#         env = gym.make(envn)
+#         agent = TDnValueAgent(env, gamma=self.gamma, n=5)
+#         return env, agent
 
 
 
@@ -184,7 +184,7 @@ class Week11Tests(Report):
     pack_imports = [irlc]
     individual_imports = []
     questions =[
-        (NStepSarseEvaluationQuestion, 10),
+        # (NStepSarseEvaluationQuestion, 10),
         (QAgentQuestion, 10),
         (LinearQAgentQuestion, 10),
         (LinearSarsaAgentQuestion, 10),
