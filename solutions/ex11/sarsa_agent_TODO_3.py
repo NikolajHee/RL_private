@@ -1,0 +1,1 @@
+        self.a = self.pi_eps(sp) if not done else -1 
