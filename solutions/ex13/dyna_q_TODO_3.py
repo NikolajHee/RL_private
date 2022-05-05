@@ -1,0 +1,1 @@
+    experiments = dyna_experiment(env, env_name='maze',num_episodes=50,epsilon=0.1, alpha=0.1, gamma=.95, runs=4) 
