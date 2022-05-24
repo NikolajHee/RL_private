@@ -153,15 +153,17 @@ def no_ghosts():
 def one_ghost():
     # Win probability when planning using a single ghost. Notice this tends to increase with planning depth
     wp = []
-    for n in range(6):
+    for n in range(10):
         wp.append(win_probability(SS1tiny, N=n))
+    print(wp)
     print(win_probability(SS1tiny, N=12))
+
 
 def two_ghosts():
     # Win probability when planning using two ghosts
     print(win_probability(SS2tiny, N=12))
 
 if __name__ == "__main__":
-    no_ghosts()
+    # no_ghosts()
     one_ghost()
     two_ghosts()

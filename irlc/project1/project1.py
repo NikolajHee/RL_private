@@ -55,19 +55,22 @@ class Pacman3(UTestCase):
 
     def test_dictionary_size(self):
         """ Is the number of keys/values in the dictionary correct? """
+        # print(self.get_expected_test_value())
         self.assertEqualC(len(self.get_transitions()))
+        # self.get_expected_value()
+
 
     def test_probabilities(self):
         """ Does the probabilities have the right value? """
-        self.assertEqualC(tuple(self.get_transitions().values()))
+        self.assertEqualC(set(self.get_transitions().values()))
 
     def test_states(self):
         """ Does the dictionary contains the right states """
-        self.assertEqualC(tuple(self.get_transitions().keys()))
+        self.assertEqualC(set(self.get_transitions().keys()))
 
     def test_everything(self):
         """ Test both states and probabilities """
-        self.assertEqualC(tuple(self.get_transitions()))
+        self.assertEqualC(self.get_transitions())
 
 
 class Pacman4(UTestCase):
@@ -201,7 +204,8 @@ class Pacman9(UTestCase):
         self.title = f"Testing winrate in {N} steps"
         from irlc.project1.pacman import win_probability
         p = np.round(win_probability(get_map(self.map), N), 4)
-        # print("win rate in N ", N, "steps was", p)
+        print("win rate in N ", N, "steps was", p)
+
         self.assertEqualC(p)
 
     def test_win_rate_N4(self):

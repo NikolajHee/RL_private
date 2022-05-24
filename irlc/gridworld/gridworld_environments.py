@@ -4,6 +4,7 @@ References:
   [SB18] Richard S. Sutton and Andrew G. Barto. Reinforcement Learning: An Introduction. The MIT Press, second edition, 2018. (See sutton2018.pdf).
 """
 import numpy as np
+from collections import defaultdict
 from pyglet.window import key
 from gym.envs.toy_text.frozen_lake import FrozenLakeEnv
 from gym.spaces.discrete import Discrete
@@ -17,8 +18,8 @@ grid_cliff_grid = [[' ',' ',' ',' ',' ', ' ',' ',' ',' ',' ', ' '],
                    ['S',-100, -100, -100, -100,-100, -100, -100, -100, -100, 0]]
 
 grid_cliff_grid2 = [[' ',' ',' ',' ',' '],
-        [8,'S',' ',' ',10],
-        [-100,-100, -100, -100, -100]]
+                    ['S',' ',' ',' ',' '],
+                     [-100,-100, -100, -100, 0]]
 
 grid_discount_grid = [[' ',' ',' ',' ',' '],
                     [' ','#',' ',' ',' '],
@@ -150,7 +151,17 @@ class GridworldEnvironment(MDP2GymEnv):
                 self.display.displayValues(mdp=self.mdp, v=v, preferred_actions=preferred_actions, currentState=state, message=label, returns_count=returns_count, returns_sum=returns_sum)
 
             elif avail_modes[self.view_mode] == 'Q':
-                self.display.displayQValues(self.mdp, Q, currentState=state, message=label)
+
+                if hasattr(agent, 'e') and isinstance(agent.e, defaultdict):
+                    eligibility_trace = defaultdict(float)
+                    for k, v in agent.e.items():
+                        eligibility_trace[k] = v
+
+                else:
+                    eligibility_trace = None
+                    # raise Exception("bad")
+                # print(eligibility_trace)
+                self.display.displayQValues(self.mdp, Q, currentState=state, message=label, eligibility_trace=eligibility_trace)
             else:
                 raise Exception("No view mode selected")
         else:
@@ -176,6 +187,11 @@ class BridgeGridEnvironment(GridworldEnvironment):
 class CliffGridEnvironment(GridworldEnvironment):
     def __init__(self, *args, **kwargs):
         super().__init__(grid_cliff_grid, living_reward=-1, *args, **kwargs)
+
+class CliffGridEnvironment2(GridworldEnvironment):
+    def __init__(self, *args, **kwargs):
+        super().__init__(grid_cliff_grid2, living_reward=-1, *args, **kwargs)
+
 
 class OpenGridEnvironment(GridworldEnvironment):
     def __init__(self, *args, **kwargs):

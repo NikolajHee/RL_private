@@ -64,6 +64,7 @@ class KuramotoEnvironment(ContiniousTimeEnvironment):
         discrete_model = DiscreteKuramotoModel(dt)
         super().__init__(discrete_model, Tmax=Tmax) 
 
+
 def f(x, u):
     """ Implement the kuramoto osscilator model's dynamics, i.e. f such that dx/dt = f(x,u).
     The answer should be returned as a singleton list. """
@@ -178,7 +179,7 @@ if __name__ == "__main__":
     xs_euler.append(x)       # Initialize with first state
 
     # Use
-    # > next_x, cost, done, metadata = env.step([1.5])
+    # > next_x, cost, done, metadata = env.step([u])
     # to simulate a single step.
     for _ in range(10000):
         # TODO: 7 lines missing.

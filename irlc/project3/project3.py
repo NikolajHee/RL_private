@@ -18,15 +18,18 @@ class JarJarQ0Estimated(UTestCase):
     """ Problem 2: Implement Q0_approximate to (approximate) the Q-function for the optimal policy.  """
     def test_Q0_N1(self):
         from irlc.project3.jarjar import Q0_approximate
-        self.assertLinf(Q0_approximate(gamma=0.8, N=1))
+        import numpy as np
+        self.assertLinf(np.abs(Q0_approximate(gamma=0.8, N=1))) # TODO: Remove abs. This was added due to typo.
 
     def test_Q0_N2(self):
         from irlc.project3.jarjar import Q0_approximate
-        self.assertLinf(Q0_approximate(gamma=0.7, N=20))
+        import numpy as np
+        self.assertLinf(np.abs(Q0_approximate(gamma=0.7, N=20))) # TODO: Remove abs. This was added due to typo.
 
     def test_Q0_N100(self):
         from irlc.project3.jarjar import Q0_approximate
-        self.assertLinf(Q0_approximate(gamma=0.9, N=20))
+        import numpy as np
+        self.assertLinf(np.abs(Q0_approximate(gamma=0.9, N=20)))  # TODO: Remove abs. This was added due to typo.
 
 
 class JarJarQExact(UTestCase):

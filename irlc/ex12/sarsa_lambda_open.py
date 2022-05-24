@@ -9,7 +9,10 @@ def keyboard_play(Agent, method_label='MC', num_episodes=1000, alpha=0.5, autopl
     print("(Please be aware that Sarsa, N-step Sarsa, and Sarsa(Lambda) do not always make the right updates when you input actions with the keyboard)")
 
     env = OpenGridEnvironment()
-    agent = Agent(env, gamma=0.99, epsilon=0.1, alpha=alpha, **args)
+    try:
+        agent = Agent(env, gamma=0.99, epsilon=0.1, alpha=alpha, **args)
+    except Exception as e: # If it is a value agent without the epsilon.
+        agent = Agent(env, gamma=0.99, alpha=alpha, **args)
     agent = PlayWrapper(agent, env,autoplay=autoplay)
     env = VideoMonitor(env, agent=agent, fps=100, agent_monitor_keys=('pi', 'Q'), render_kwargs={'method_label': method_label})
     train(env, agent, num_episodes=num_episodes)

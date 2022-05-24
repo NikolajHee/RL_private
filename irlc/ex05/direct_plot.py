@@ -7,7 +7,7 @@ from irlc import savepdf
 """
 Helper function for plotting.
 """
-def plot_solutions(model, solutions, animate=True, pdf=None, plot_defects=True, Ix=None, animate_repeats=1, animate_all=False, plot=False):
+def plot_solutions(model, solutions, animate=True, pdf=None, plot_defects=True, Ix=None, animate_repeats=1, animate_all=False, plot=True):
 
     for k, sol in enumerate(solutions):
         grd = sol['grid']

@@ -139,11 +139,13 @@ class GraphicsGridworldDisplay:
 
         self.ga.text("bottom_text", pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
-    def displayQValues(self, mdp, Q, currentState=None, message="Agent Q-Values"):
+    def displayQValues(self, mdp, Q, currentState=None, message="Agent Q-Values", eligibility_trace=None):
+        """ Eligibility trace is an optional dictionary-like object. """
         if self.Q_old == None:
             self.ga.gc.clear()
             self.ga.draw_background()
             self.Q_old = {}
+            self.e_old = {}
         else:
             self.ga.gc.copy_all()
 
@@ -163,10 +165,28 @@ class GraphicsGridworldDisplay:
                 else:
                     actions, Qs = Q.get_Qs((x, y))
                     Qs = list(np.round(Qs, decimals=2))
+
+                # Q_same = False
                 if self.Q_old != None and Qs == self.Q_old.get((x, y), 0):
+                    Q_same = True
+                else:
+                    Q_same = False
+
+                E_same = True
+                if eligibility_trace is not None:
+                    es = [eligibility_trace[state, a] for a in actions]
+                    if state in self.e_old and self.e_old[state] == es:
+                        E_same = True
+                    else:
+                        E_same = False
+
+                if E_same and Q_same:
                     continue
                 else:
-                    self.Q_old[(x, y)] = Qs
+                    self.Q_old[state] = Qs
+                    if eligibility_trace is not None:
+                        self.e_old[state] = es
+
                 name = f"Qsqr_{x}_{y}"
                 gridType = mdp.grid[x, y]
                 isExit = (str(gridType) != gridType)
@@ -190,7 +210,10 @@ class GraphicsGridworldDisplay:
                         v = Q[state, action]
                         q[action] += v
                         valStrings[action] = '%.2f' % v
-                    self.drawSquareQ(name, x, y, q, minValue, maxValue, valStrings, actions, isCurrent)
+                        # etrace = None if eligibility_trace is None else eligibility_trace[]
+                        # print(state, action, eligibility_trace[state, action])
+                        de = None if eligibility_trace is None else {a: eligibility_trace[state, a] for a in actions}
+                    self.drawSquareQ(name, x, y, q, minValue, maxValue, valStrings, actions, isCurrent, eligibility_trace=de)
         pos = self.to_screen(((mdp.width - 1.0) / 2.0, - 0.8))
         self.ga.text("Q_values_text", pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
@@ -276,7 +299,8 @@ class GraphicsGridworldDisplay:
         #     self.ga.text(name + "_rs", (screen_x, screen_y), text_color, valStr, "Courier", -30, "bold", "c")
 
 
-    def drawSquareQ(self, name, x, y, qVals, minVal, maxVal, valStrs, bestActions, isCurrent):
+    def drawSquareQ(self, name, x, y, qVals, minVal, maxVal, valStrs, bestActions, isCurrent, eligibility_trace=None):
+
         GRID_SIZE = self.GRID_SIZE
         (screen_x, screen_y) = self.to_screen((x, y))
         center = (screen_x, screen_y)
@@ -284,6 +308,7 @@ class GraphicsGridworldDisplay:
         ne = (screen_x + 0.5 * GRID_SIZE, screen_y - 0.5 * GRID_SIZE)
         se = (screen_x + 0.5 * GRID_SIZE, screen_y + 0.5 * GRID_SIZE)
         sw = (screen_x - 0.5 * GRID_SIZE, screen_y + 0.5 * GRID_SIZE)
+
         n = (screen_x, screen_y - 0.5 * GRID_SIZE + 5)
         s = (screen_x, screen_y + 0.5 * GRID_SIZE - 5)
         w = (screen_x - 0.5 * GRID_SIZE + 5, screen_y)
@@ -316,15 +341,32 @@ class GraphicsGridworldDisplay:
             valStr = ""
             if action in valStrs:
                 valStr = valStrs[action]
-            h = -20
+            h = -20 # Font size (for reasons).
+            if eligibility_trace is not None:
+                estr = f'{eligibility_trace[action]:.2f}'
+                dh = 0.105 * GRID_SIZE
+                ECOL = RED_TEXT_COLOR if  eligibility_trace[action] != 0 else getColor(qVals[action], minVal, maxVal)
+                esize = -16
+            # dw = 0.095 * GRID_SIZE
+
             if action == GridworldMDP.NORTH:
                 self.ga.text(name + "_txt1", n, text_color, valStr, "Courier", h, "bold", "n")
+
+                if eligibility_trace is not None:
+                    self.ga.text(name + "_txt1e", (n[0], n[1]+dh), ECOL, estr, "Courier", esize, "bold", "n")
             if action == GridworldMDP.SOUTH:
                 self.ga.text(name + "_txt2", s, text_color, valStr, "Courier", h, "bold", "s")
+                if eligibility_trace is not None:
+                    self.ga.text(name + "_txt2e", (s[0], s[1]-dh), ECOL, estr, "Courier", esize, "bold", "s")
             if action == GridworldMDP.EAST:
                 self.ga.text(name + "_txt3", e, text_color, valStr, "Courier", h, "bold", "e")
+                if eligibility_trace is not None:
+                    self.ga.text(name + "_txt3e", (e[0], e[1]+dh), ECOL, estr, "Courier", esize, "bold", "e")
             if action == GridworldMDP.WEST:
                 self.ga.text(name + "_txt4", w, text_color, valStr, "Courier", h, "bold", "w")
+                if eligibility_trace is not None:
+                    self.ga.text(name + "_txt4e", (w[0], w[1]+dh), ECOL, estr, "Courier", esize, "bold", "w")
+
 
     def square(self, name, pos, size, color, filled, width):
         x, y = pos

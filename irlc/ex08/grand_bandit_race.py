@@ -9,7 +9,7 @@ from irlc import savepdf
 import time
 
 if __name__ == "__main__":
-    print("Ladies and gentlemen. It is time for the graaand bandit race") 
+    print("Ladies and gentlemen. It is time for the graaand bandit race")
     def intro(bandit, agents):
         print("We are live from the beautiful surroundings where they will compete in:")
         print(bandit)
@@ -75,4 +75,4 @@ if __name__ == "__main__":
     raise NotImplementedError("Call eval_and_plot here")
     plt.suptitle("Stationary bandit (no offset)")
     savepdf("grand_race_4")
-    plt.show() 
+    plt.show()
