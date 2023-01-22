@@ -1,12 +1,6 @@
 # pyglet # Install from pypi. Conda defaults to an older version with the Polygon class.
 PyQt5
-<<<<<<< HEAD
 unitgrade
-=======
-gym_minigrid
-git+git://github.com/ibrahim-elshar/gym-windy-gridworlds.git
-unitgrade==0.1.23 # Use a slightly older version to avoid upgrade problems. 
->>>>>>> 14f20ad1cf115391f2bd955c6c9ca5d576249f82
 
 # pygame>=2.1.3.dev8 # We remove this and install it later.
 
