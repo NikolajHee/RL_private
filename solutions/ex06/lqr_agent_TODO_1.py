@@ -1,1 +1,0 @@
-        d, A, B = model.f(env.observation_space.sample()*0, env.action_space.sample()*0, k=0, compute_jacobian=True) 

@@ -1,1 +1,0 @@
-            returns.append( (sa_t, G) )

@@ -1,1 +1,0 @@
-    experiments = dyna_experiment(env, env_name='cliff',num_episodes=200,epsilon=epsilon, alpha=alpha, gamma=gamma, runs=4) 

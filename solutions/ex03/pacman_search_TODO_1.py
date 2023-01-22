@@ -1,1 +1,0 @@
-        is_in_position_11 = state.getPacmanPosition() == (1, 1) 

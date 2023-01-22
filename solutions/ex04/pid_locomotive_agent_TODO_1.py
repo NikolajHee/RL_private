@@ -1,1 +1,0 @@
-        self.pid = PID(dt=dt, Kp=Kp, Ki=Ki, Kd=Kd, target=target) 

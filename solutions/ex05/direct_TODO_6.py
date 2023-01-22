@@ -1,1 +1,0 @@
-            eqC.append((xs[k+1][j] - xs[k][j]) - 0.5*hk*(fs[k+1][j] + fs[k][j])) 

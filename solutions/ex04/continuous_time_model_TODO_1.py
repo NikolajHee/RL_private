@@ -1,5 +1,0 @@
-                k1 = Delta * np.asarray(self.f(xn, un, tn)) 
-                k2 = Delta * np.asarray(self.f(xn + k1/2, u_fun(xn, tn+Delta/2), tn+Delta/2))
-                k3 = Delta * np.asarray(self.f(xn + k2/2, u_fun(xn, tn+Delta/2), tn+Delta/2))
-                k4 = Delta * np.asarray(self.f(xn + k3, u_fun(xn, tn + Delta), tn+Delta))
-                xnp = xn + 1/6 * (k1 + 2*k2 + 2*k3 + k4) 

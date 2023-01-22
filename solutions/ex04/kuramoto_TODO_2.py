@@ -1,1 +1,0 @@
-    f_value = cmodel.f(x, u, t=0) 

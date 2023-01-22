@@ -1,1 +1,0 @@
-    J += model.gN(x) 

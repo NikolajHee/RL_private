@@ -1,1 +1,0 @@
-        done = len(self.s) >= 2 and self.s[-1] == self.s[-2] and self.s[-1] != 0 

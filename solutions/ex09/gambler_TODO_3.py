@@ -1,1 +1,0 @@
-        r = 1 if s + a == 100 and s < 100 else 0

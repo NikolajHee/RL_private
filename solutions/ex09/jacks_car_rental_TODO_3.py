@@ -1,1 +1,0 @@
-                d[((c1, c2), reward_1 + reward_2 + abs(a)*self.move_cost) ] += pc1 * pc2 

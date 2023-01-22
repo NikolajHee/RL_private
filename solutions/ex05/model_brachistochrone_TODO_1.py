@@ -1,1 +1,0 @@
-            cost = SymbolicQRCost(Q=np.zeros((3,3)), R = np.zeros((1,1)), qc=1.0)  

@@ -1,1 +1,0 @@
-        return pi[k][x]

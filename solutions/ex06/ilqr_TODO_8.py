@@ -1,1 +1,0 @@
-                J_new = compute_J(env, x_hat, u_hat) 

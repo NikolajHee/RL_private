@@ -1,1 +1,0 @@
-        return 0 if x == self.t else np.inf

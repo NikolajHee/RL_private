@@ -1,1 +1,0 @@
-            X, U, XP = self.buffer.get_closest_observations(self.x_bar[l], self.u_bar[l], n=self.neighbourhood_size)  

@@ -1,1 +1,0 @@
-    x_interp = xs[:, I] + tau * fs[:, I] + (tau ** 2 / (2 * hk)) * (fs[:, I + 1] - fs[:, I]) 

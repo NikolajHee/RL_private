@@ -1,1 +1,0 @@
-                    Delta, mu = min(1.0, Delta) / Delta_0, max(0, mu*Delta) 

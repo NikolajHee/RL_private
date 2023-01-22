@@ -1,1 +1,0 @@
-        return tuple( obs['image'].flat )

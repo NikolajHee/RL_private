@@ -1,1 +1,0 @@
-    return ["mr " + a for a in animals]

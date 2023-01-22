@@ -1,1 +1,0 @@
-            Delta, mu = max(1.0, Delta) * Delta_0, max(mu_min, mu * Delta) # Increase 

@@ -1,1 +1,0 @@
-            box.high[:, :, i] = nbounds[i]  

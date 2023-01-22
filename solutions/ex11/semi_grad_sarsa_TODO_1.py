@@ -1,1 +1,0 @@
-        return self.a if self.t > 0 else super().pi(s)

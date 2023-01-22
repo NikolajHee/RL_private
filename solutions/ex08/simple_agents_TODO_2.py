@@ -1,1 +1,0 @@
-        return np.random.randint(self.k) if np.random.rand() < self.epsilon else np.argmax(self.Q) 

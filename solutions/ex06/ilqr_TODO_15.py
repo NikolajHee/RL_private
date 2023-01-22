@@ -1,1 +1,0 @@
-        x[i + 1] = model.f(x[i], u_star[i], i) 

@@ -1,1 +1,0 @@
-        return self.prices[fruit]

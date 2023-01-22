@@ -1,1 +1,0 @@
-        return set(range(-k,k+1))

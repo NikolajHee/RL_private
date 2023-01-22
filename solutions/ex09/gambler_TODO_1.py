@@ -1,1 +1,0 @@
-        return state in [0, self.goal]

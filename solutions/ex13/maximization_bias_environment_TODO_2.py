@@ -1,1 +1,0 @@
-                return {(self.state_B, 0): 1}

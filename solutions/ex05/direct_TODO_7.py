@@ -1,1 +1,0 @@
-        ineqC += model.sym_h(x=xs[k], u=us[k], t=ts[k]) 

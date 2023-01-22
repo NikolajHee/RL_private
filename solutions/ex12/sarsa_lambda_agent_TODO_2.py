@@ -1,1 +1,0 @@
-        delta = r + self.gamma * (self.Q[sp,a_prime] if not done else 0) - self.Q[s,a]  
