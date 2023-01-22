@@ -12,17 +12,14 @@ import os
 # > from irlc import Agent, train
 from irlc.utils.irlc_plot import main_plot as main_plot
 from irlc.utils.irlc_plot import plot_trajectory as plot_trajectory
-from irlc.ex01.agent import Agent as Agent, train as train
 try:
+    from irlc.ex01.agent import Agent as Agent, train as train
     from irlc.ex09.rl_agent import TabularAgent, ValueAgent
 except ImportError:
     pass
 from irlc.utils.player_wrapper import interactive as interactive
 from irlc.utils.lazylog import LazyLog # This one is unclear. Is it required?
 from irlc.utils.timer import Timer
-
-# from irlc.utils.player_wrapper_pyglet import PlayWrapper as PlayWrapper # deprecated.
-# from irlc.utils.video_monitor import VideoMonitor as VideoMonitor # deprecated.
 
 
 def get_irlc_base():
