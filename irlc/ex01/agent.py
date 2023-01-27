@@ -242,10 +242,11 @@ def train(env,
     # include_metadata = len(inspect.getfullargspec(agent.train).args) >= 7
     break_outer = False
 
-    with tqdm(total=num_episodes, disable=not verbose, file=sys.stdout) as tq:
+    with tqdm(total=num_episodes, disable=not verbose, file=sys.stdout, mininterval=int(num_episodes/100) if num_episodes>100 else None) as tq:
         for i_episode in range(num_episodes): 
             if break_outer:
                 break
+            info_s = {}
             if reset or i_episode > 0:
                 s, info_s = env.reset() 
             elif hasattr(env, "s"):  # This is doing what, exactly? Perhaps save/load of agent?
@@ -323,9 +324,11 @@ def train(env,
     for i, t in enumerate(trajectories):
         from collections import defaultdict
         nt = defaultdict(lambda: [])
-        if "supersample" in t.env_info[0]:
+        if "supersample" in t.env_info[1]:
             for f in fields:
                 for k, ei in enumerate(t.env_info):
+                    if 'supersample' not in ei:
+                        continue
                     z = ei['supersample'].__getattribute__(f).T
                     if k == 0:
                         pass

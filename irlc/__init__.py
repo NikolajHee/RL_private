@@ -62,10 +62,11 @@ def fix_bookstabs_latex_(ss, linewidth=True, first_column_left=True, column_spec
 def _savepdf_env(file, env):
     from PIL import Image
     import matplotlib.pyplot as plt
-
-    env.render_mode, rmt = 'rgb_array', env.render_mode
+    if hasattr(env, 'render_mode') and not env.render_mode == 'rgb_array':
+        env.render_mode, rmt = 'rgb_array', env.render_mode
     frame = env.render()
-    env.render_mode = rmt
+    if hasattr(env, 'render_mode') and not env.render_mode == 'rgb_array':
+        env.render_mode = rmt
 
     im = Image.fromarray(frame)
     snapshot_base = file
@@ -95,7 +96,7 @@ def _savepdf_env(file, env):
         plt.tight_layout()
         from irlc import savepdf
         savepdf(sf, verbose=True)
-        plt.show()
+        # plt.show()
 
 
 

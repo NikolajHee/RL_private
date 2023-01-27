@@ -169,12 +169,12 @@ class PacmanEnvironment(gym.Env):
 
 class PacmanWinWrapper(RewardWrapper):
     def step(self, action):
-        observation, reward, done, info = self.env.step(action)
+        observation, reward, done, truncated, info = self.env.step(action)
         if self.env.game.state.isWin():
             reward = 1
         else:
             reward = 0
-        return observation, reward, done, info
+        return observation, reward, done, truncated, info
 
 
 if __name__ == "__main__":
