@@ -2,6 +2,7 @@
 def add(a, b): 
     """  This function shuold return the sum of a and b. I.e. if print(add(2,3)) should print '5'. """
     # TODO: 1 lines missing.
+    return a + b
     raise NotImplementedError("Implement function body")
 
 def misterfy(animals): 
