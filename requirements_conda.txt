@@ -1,26 +1,11 @@
-# This file is the requirements_conda.txt file for students.
-gym>=0.26.2 # Had a strange crash when this was not specified (downloaded old version of gym).
+gym>=0.26.1 # Had a strange crash when this was not specified (downloaded old version of gym).
 sympy
-tqdm       # Really?
+tqdm
 seaborn
-cvxopt          # Unclear if needed. Seems better than cvxpy for windows(?)
-osqp            # Unclear if needed
-cvxpy           # install instructions https://www.cvxpy.org/install/ . Seems required for MPC agents.
-pillow          # Is it really true this does not come with gym?
-scikit-learn    # For week 7.
-faiss-cpu       # For fast NN search in week 7.
-matplotlib      # fail on windows w. conda.
-# minigrid      # For the gym-minigrid package. I don't think this is part of the course anymore.
-
-# pygame>=2.1.3.dev8 # for python 3.11. deprecated as it conflicts with gym[box2d]
-# gym[box2d] # th 2023: Temporarily removed to after gym because of version issues.
-# pyglet # Don't add this here. Conda defaults to an older version with the Polygon class.
-# pybox2d Trying to remove. Let's see what happens.
-# PyQt5
-# gym_minigrid
-# git+git://github.com/ibrahim-elshar/gym-windy-gridworlds.git
-# cvxpy # Problematic requirements (fails on windows).
-# pathos # Multithreading for LMPC; deprecating for now; try to remove this dependency (requires Visual C++ 14).
-# git+https://github.com/openai/baselines.git Deprecate for now.
-# gym[box2d] # I think we might need this for the lunar lander.
-# docker run -e DISPLAY=:1 --user "$(id -u):$(id -g)"  -v /home/tuhe/Documents/02465instructors/docker/tmp:/home docker python3 -m irlc.project1.project1_grade
+cvxopt
+osqp
+cvxpy
+pillow
+scikit-learn
+faiss-cpu
+matplotlib

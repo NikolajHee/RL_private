@@ -1,13 +1,2 @@
-# pyglet # Install from pypi. Conda defaults to an older version with the Polygon class.
 PyQt5
 unitgrade
-
-# pygame>=2.1.3.dev8 # We remove this and install it later.
-
-
-# possibly minigrid gym_minigrid # ==1.0 # git+git://github.com/ibrahim-elshar/gym-windy-gridworlds.git
-# cvxpy # Problematic requirements (fails on windows).
-# pathos # Multithreading for LMPC; deprecating for now; try to remove this dependency (requires Visual C++ 14).
-# git+https://github.com/openai/baselines.git Deprecate for now.
-# gym[box2d] # I think we might need this for the lunar lander.
-# docker run -e DISPLAY=:1 --user "$(id -u):$(id -g)"  -v /home/tuhe/Documents/02465instructors/docker/tmp:/home docker python3 -m irlc.project1.project1_grade
