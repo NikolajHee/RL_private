@@ -18,23 +18,14 @@ class CarViewerPygame(UpgradedGraphicsUtil):
         fudge = 0.2
         xs, ys = zip(*outer)
         super().__init__(screen_width=1000, xmin=min(xs) - fudge, xmax=max(xs) + fudge,
-                         ymin=min(ys) - fudge, ymax=max(ys) + fudge, title="Racecar environment")
+                         ymax=min(ys) - fudge, ymin=max(ys) + fudge, title="Racecar environment")
         self.center = center
         self.outer = outer
         self.inner = inner
         # Load ze sprite.
         from irlc.utils.graphics_util_pygame import Object
         self.car = Object("car.png", image_width=90)
-        # car = self.get_sprite("car.png")
 
-
-        # self.ga = GraphicsUtilGym()
-        # batch = self.batch
-        # self.track = [PolygonOutline(batch, coords=inner, outlineColor=track_outline, width=10),
-        #               PolygonOutline(batch, coords=outer, outlineColor=track_outline, width=2),
-        #               PolygonOutline(batch, coords=center, outlineColor=track_middle, width=2),
-        #               PolygonOutline(batch, coords=[inner[0], outer[0]], outlineColor=track_outline, width=1)]
-        # self.car = CarGeom(batch, order=1)
 
     def render(self):
         green = (126, 200, 80)
@@ -51,25 +42,10 @@ class CarViewerPygame(UpgradedGraphicsUtil):
         self.car.rect.center = xy
         # self.car.rect.center = xy[1]
 
-        self.car.rotate(-psi / (2*np.pi) * 360)
+        self.car.rotate(psi / (2*np.pi) * 360)
         # self.car.rotate(45)
         self.car.blit(self.surf)
         self.circle("in", (x,y), 4, fillColor=(255, 0, 0)) # drawn on the center of the car.
 
     def update(self, xglob):
         self.xglob = xglob
-        # return
-        # x, y, psi = xglob[4], xglob[5], xglob[3]
-        # self.car.group.translate(x, y)
-        # self.car.group.rotate(psi)
-
-
-# class CarGeom(GroupedElement):
-#     def render(self):
-#         # BorderedRectangle does not work for some reason..
-#         width = 0.4*2
-#         height = 0.2*2
-#         dd = width/10
-#         self.cm1 = Rectangle(-(width+dd)/2, -(height+dd)/2, width+dd, height+dd, color=(0, 0, 0), batch=self.batch, group=self.group)
-#         self.cm2 = Rectangle(-width/2, -height/2, width, height, color=(220, 50, 50), batch=self.batch, group=self.group)
-#         self.cm3 = Circle(0, 0, width/10, color=(0, 0, 0), batch=self.batch, group=self.group)

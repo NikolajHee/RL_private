@@ -201,8 +201,7 @@ class GraphicsUtilGym:
         self.isopen = False
 
     def render(self):
-        # Render the track, etc.
-        print("Rendering method not overwritten.")
+        # print("Rendering method not overwritten.")
         pass
 
     def blit(self, render_mode=None):
@@ -215,8 +214,6 @@ class GraphicsUtilGym:
         self.screen.blit(self.surf, (0, 0))
 
         if render_mode == "human":
-
-
             pygame.event.pump()
             pygame.display.flip()
         elif render_mode == "rgb_array":
@@ -572,7 +569,7 @@ class Object(pygame.sprite.Sprite):
 class UpgradedGraphicsUtil(GraphicsUtilGym):
     def __init__(self, screen_width=800, screen_height=None, xmin=0., xmax=800., ymin=0., ymax=600., title="Gym window"):
         if screen_height is None:
-            screen_height = int(screen_width / (xmax - xmin) * (ymax-ymin))
+            screen_height = np.abs( int(screen_width / (xmax - xmin) * (ymax-ymin)) )
         elif xmin is None:
             xmin = 0
             xmax = screen_width

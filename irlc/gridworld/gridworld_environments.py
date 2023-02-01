@@ -126,7 +126,7 @@ class GridworldEnvironment(MDP2GymEnv):
 
 
     def render(self):
-        print("rendering")
+        # print("rendering")
         if self.display_pygame is None:
             # self.display = None
             # self.viewer = None
@@ -135,7 +135,7 @@ class GridworldEnvironment(MDP2GymEnv):
             # self.display = gridworld_graphics_display.GraphicsGridworldDisplay(self.mdp, gridSize)
             from irlc.gridworld.gridworld_graphics_display import GraphicsGridworldDisplay
             self.display_pygame = GraphicsGridworldDisplay(self.mdp, size=int(150 * self.zoom)) # last item is grid size
-            print("I made a display")
+            # print("I made a display")
 
         # print("Render callsed")
         # if Q is not None:
@@ -153,10 +153,10 @@ class GridworldEnvironment(MDP2GymEnv):
             label = f"{method_label} AFTER {self.render_steps} STEPS"
 
         state = self.state
-
         avail_modes = []
         if agent != None:
-            label = (agent.label if hasattr(agent, 'label') else method_label) if label is None else label
+
+            label = (agent.label if hasattr(agent, 'label') else method_label) #if label is None else label
             v = agent.v if hasattr(agent, 'v') else None
             Q = agent.Q if hasattr(agent, 'Q') else None
             policy = agent.policy if hasattr(agent, 'policy') else None
@@ -199,6 +199,7 @@ class GridworldEnvironment(MDP2GymEnv):
                     returns_sum = agent.returns_sum
                 else:
                     returns_sum = None
+
                 self.display_pygame.displayValues(mdp=self.mdp, v=v, preferred_actions=preferred_actions, currentState=state, message=label, returns_count=returns_count, returns_sum=returns_sum)
 
             elif avail_modes[self.view_mode] == 'Q':
@@ -219,7 +220,7 @@ class GridworldEnvironment(MDP2GymEnv):
             # self.display.displayNullValues(self.mdp, currentState=state)
 
         render_out2 = self.display_pygame.blit(render_mode=self.render_mode)
-        print("I blitted")
+        # print("I blitted")
         # print("> blitted")
         return render_out2
         # if self.render_mode == 'human':
@@ -332,7 +333,6 @@ class FrozenLake(GridworldEnvironment):
         menv = FrozenLakeEnv(is_slippery=is_slippery) # Load frozen-lake game layout and convert to our format 'grid'
         gym2grid = dict(F=' ', G=1, H=0)
         grid = [[gym2grid.get(s.decode("ascii"), s.decode("ascii")) for s in l] for l in menv.desc.tolist()]
-        # grid =  frozen_lake_4
         menv.close()
         super().__init__(grid=grid, *args, living_reward=living_reward, **kwargs)
 

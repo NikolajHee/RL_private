@@ -205,8 +205,12 @@ class PacmanGraphics:
             # draw the given path.
             path = [self.to_screen(p) for p in path]
             x, y = zip(*path)
-            name = f"render_path"
-            self.ga.plot(name, x, y, width=4, color=formatColor(0.5, 0.95, 0.5) )
+            # name = f"render_path"
+            for k in range(len(x)-1):
+                self.ga.line('asdfasdf', here=(x[k], y[k]), there=(x[k+1], y[k+1]), width=4, color= formatColor(0.5, 0.95, 0.5) )
+
+            # if len(path) > 1:
+            #     self.ga.plot(name, x, y, width=4, color=formatColor(0.5, 0.95, 0.5) )
 
         if ghostbeliefs is not None:
             self.drawDistributions(state.data, ghostbeliefs=ghostbeliefs)
@@ -223,6 +227,8 @@ class PacmanGraphics:
 
     def blit(self, render_mode=None):
         return self.ga.blit(render_mode=render_mode)
+
+
 
     def close(self):
         self.ga.close()

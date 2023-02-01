@@ -70,7 +70,6 @@ class GraphicsGridworldDisplay:
         self.ga.close()
 
     def blit(self, render_mode=None):
-
         return self.ga.blit(render_mode=render_mode)
         # if render_mode == 'rgb_array':
         #     return np.transpose(
@@ -81,16 +80,16 @@ class GraphicsGridworldDisplay:
 
 
 
-    def autorefresh(self, env, interval=0.1):
-        raise Exception("What is this?")
-        def task(env, interval):
-            while True:
-                env.render()
-                time.sleep(interval)
-
-        from threading import Thread
-        thread = Thread(target=task, args=(env, interval))
-        thread.start()
+    # def autorefresh(self, env, interval=0.1):
+    #     raise Exception("What is this?")
+    #     def task(env, interval):
+    #         while True:
+    #             env.render()
+    #             time.sleep(interval)
+    #
+    #     from threading import Thread
+    #     thread = Thread(target=task, args=(env, interval))
+    #     thread.start()
 
     # def end_frame(self):
     #     self.ga.end_frame()

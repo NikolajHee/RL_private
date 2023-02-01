@@ -167,7 +167,7 @@ class PlayWrapperPygame(AgentWrapper):
                     elif (event.key,) in self.keys_to_action:
                         a = self.keys_to_action[(event.key,)]
 
-                        print("The key exists!")
+                        # print("The key exists!")
                         break
                     elif event.unicode == 'p':
                         # unpause
@@ -183,11 +183,12 @@ class PlayWrapperPygame(AgentWrapper):
 
             if a is not None:
                 # return a # We don't  are if action is not in action-space.
-                if hasattr(self.env, 'A') and a not in self.env.A(state):
-                    print(f"Got action {a} not available in action space {self.env.A(state)}")
-                    a = self.env.A(state)[-1] # Last because of the gym environment.
-                else:
-                    return a
+                # if hasattr(self.env, 'A') and a not in self.env.A(state):
+                #     print(f"Got action {a} not available in action space {self.env.A(state)}")
+                #     a = self.env.A(state)[-1] # Last because of the gym environment.
+                # else:
+                #     return a
+                return a
             # viewer = self._get_viewer()
             time.sleep(0.1)
             # if viewer is not None:

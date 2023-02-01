@@ -41,7 +41,15 @@ class ChessTournament(Env):
 
     def step(self, action):
         game_outcome = None # should be -1, 0, or 1 depending on outcome of single game.
-        # TODO: 7 lines missing.
+        ## TODO: Oy veh, the following 7 lines below have been permuted. Uncomment, rearrange to the correct order and remove the error.
+        #-------------------------------------------------------------------------------------------------------------------------------
+        #     else:
+        # else:
+        #         game_outcome = 1
+        #     if np.random.rand() < self.p_win:
+        #         game_outcome = -1 
+        #     game_outcome = 0
+        # if np.random.rand() < self.p_draw: 
         raise NotImplementedError("Compute game_outcome here")
         self.s.append(game_outcome)
 

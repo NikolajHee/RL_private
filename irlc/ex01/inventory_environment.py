@@ -15,15 +15,11 @@ class InventoryEnvironment(gym.Env):
         self.k = 0                               # reset time step k=0
         return self.s, {}                        # Return the state we reset to (and an empty dict)
 
-    def step(self, a): 
-        # TODO: 2 lines missing.
+    def step(self, a):
+        w = np.random.choice(3, p=(.1, .7, .2))       # Generate random disturbance
+        # TODO: 5 lines missing.
         raise NotImplementedError("Insert your solution and remove this error.")
-        reward = -(a + (self.s + a - w)**2)           # reward = -cost      = -g_k(x_k, u_k, w_k)
-        terminated = self.k == self.N-1               # Have we terminated? (i.e. is k==N-1)
-        self.s = s_next                               # update environment state
-        # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
-        return s_next, reward, terminated, False, {}  # return transition information
+        return s_next, reward, terminated, False, {}  # return transition information  
 
 class RandomAgent(Agent): 
     def pi(self, s, k, info=None): 
@@ -34,15 +30,24 @@ class RandomAgent(Agent):
     def train(self, s, a, r, sp, done=False, info_s=None, info_sp=None):
         """ Called at each step of the simulation to allow the agent to train.
         The agent was in state s, took action a, ended up in state sp (with reward r).
-        'done' is a bool which indicates if the environment terminated when transitioning to sp. """
+        > 'done' is a bool which indicates if the environment terminated when transitioning to sp.
+        > info_s and info_sp are the info-dictionaries returned by the environment (see documentation online)."""
         pass 
 
 def simplified_train(env, agent): 
     s, _ = env.reset()
     J = 0  # Accumulated reward for this rollout
-    for k in range(1000): 
-        # TODO: 7 lines missing.
-        raise NotImplementedError("Implement function body")
+    for k in range(1000):
+        ## TODO: Oy veh, the following 7 lines below have been permuted. Uncomment, rearrange to the correct order and remove the error.
+        #-------------------------------------------------------------------------------------------------------------------------------
+        # if terminated or truncated:
+        # sp, r, terminated, truncated, metadata = env.step(a)
+        # a = agent.pi(s, k) 
+        # s = sp
+        # J += r
+        # agent.train(s, a, sp, r, terminated)
+        #     break 
+        raise NotImplementedError("Remove this exception after the above lines have been uncommented and rearranged.")
     return J 
 
 def run_inventory():

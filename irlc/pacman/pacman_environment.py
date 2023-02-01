@@ -11,6 +11,7 @@ from gym import RewardWrapper
 from irlc.utils.common import ExplicitActionSpace
 
 class PacmanEnvironment(gym.Env):
+    _unpack_search_state = True  # A hacky fix to set the search state.
     """
     A fairly messy pacman environment class. I do not recommend reading this code.
     """
@@ -31,13 +32,6 @@ class PacmanEnvironment(gym.Env):
         if animate_movement is None:
             animate_movement = render_mode =='human'
 
-        # Set up action space. Use this P-construction so action space can depend on state (grr. gym).
-        # class P:
-        #     def __getitem__(self, state):
-        #         if isinstance(state, tuple):
-        #             state = state[0]
-        #         return {pm_action: "new_state" for pm_action in state.A()}
-        # self.P = P()
         self.action_space = ExplicitActionSpace(self) # Wrapper environments copy the action space.
 
         # Load level layout
@@ -74,14 +68,8 @@ class PacmanEnvironment(gym.Env):
 
     def close(self):
         if self.graphics_display is not None:
-            # if self.render_mode == 'human':
             self.graphics_display.close()
             return
-        #     pass
-        # if self.graphics_display is not None:
-        #     if self.graphics_display.viewer is not None:
-        #         self.graphics_display.viewer.close()
-        #     self.graphics_display.viewer = None
 
     @property
     def state(self):
@@ -119,9 +107,12 @@ class PacmanEnvironment(gym.Env):
         return self.state, reward, done, False, {}
 
     def render(self):
-        path = None
-        ghostbeliefs = None
-        visitedlist = None
+        if hasattr(self, 'agent'):
+            path = self.agent.__dict__.get('path', None)
+            ghostbeliefs = self.agent.__dict__.get('ghostbeliefs', None)
+            visitedlist = self.agent.__dict__.get('visitedlist', None)
+        else:
+            path, ghostbeliefs, visitedlist = None, None, None
 
         # Initialize graphics adaptor.
         if self.graphics_display is None and self.render_mode in ["human", 'rgb_array']:

@@ -23,7 +23,7 @@ def to_s(row, col, ncol):
     """ Converts from (row,col) to linear indexing. This function is taken from the frozen_lake environment """
     return row * ncol + col
 
-def to_rc(s, ncol): 
+def to_rc(s, ncol):
     """
     inverse of the to_s function from
 
@@ -31,8 +31,11 @@ def to_rc(s, ncol):
 
     Given s, should return row, col such that when we call to_s(row, col, ncol) we get the same s back.
     """
-    # TODO: 2 lines missing.
-    raise NotImplementedError("Implement function body")
+    ## TODO: Half of each line of code in the following 2 lines have been replaced by garbage. Make it work and remove the error.
+    #----------------------------------------------------------------------------------------------------------------------------
+    # col = s???????
+    # row = s????????
+    raise NotImplementedError("Insert your solution and remove this error.")
     return row, col
 
 if __name__ == "__main__":
