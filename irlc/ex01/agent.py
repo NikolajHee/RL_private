@@ -307,8 +307,11 @@ def train(env,
                               # "Steps": steps, # Steps is deprecated; pending removal.
                               **agent.extra_stats()})
 
-            tq.set_postfix(ordered_dict=OrderedDict(list(OrderedDict(stats[-1]).items() )[:5] )) if len(stats) > 0 else None
+            rate = int(num_episodes / 100)
+            if rate > 0 and i_episode % rate == 0:
+                tq.set_postfix(ordered_dict=OrderedDict(list(OrderedDict(stats[-1]).items())[:5])) if len(stats) > 0 else None
             tq.update()
+
     sys.stderr.flush()
 
     if resume_stats and save_stats and recent is not None:
