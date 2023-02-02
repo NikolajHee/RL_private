@@ -89,7 +89,7 @@ class PacmanEnvironment(gym.Env):
         r_ = self.game.state.getScore()
         done = False
         if action not in self.A(self.state):
-            raise Exception(f"Agent tried {action=} available actions {self.P[self.game.state]}")
+            raise Exception(f"Agent tried {action=} available actions {self.A(self.state)}")
 
         # Let player play `action`, then let the ghosts play their moves in sequence.
         for agent_index in range(len(self.game.agents)):
