@@ -188,6 +188,14 @@ class PlayWrapperPygame(AgentWrapper):
                 #     a = self.env.A(state)[-1] # Last because of the gym environment.
                 # else:
                 #     return a
+                try:
+                    from irlc.pacman.gamestate import GameState
+                    if isinstance(state, GameState):
+                        if a not in state.A():
+                            a = "Stop"
+                except Exception as e:
+                    pass
+
                 return a
             # viewer = self._get_viewer()
             time.sleep(0.1)

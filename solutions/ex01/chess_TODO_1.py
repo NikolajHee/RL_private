@@ -1,0 +1,1 @@
+    return 1 if games[-1] == 1 else 0
