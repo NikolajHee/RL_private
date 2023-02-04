@@ -5,7 +5,7 @@ You can find installation instructions at:
  - https://02465material.pages.compute.dtu.dk/02465public/installation.html
 
 ## Unitgrade
-In order to create the assignments you need unitgrade: https://lab.compute.dtu.dk/tuhe/unitgrade
+In order to hand in the assignments you need unitgrade: https://lab.compute.dtu.dk/tuhe/unitgrade
 Full installation instructions are provided through DTU Learn, but it should be as simple as:
 ```
 pip install unitgrade   
