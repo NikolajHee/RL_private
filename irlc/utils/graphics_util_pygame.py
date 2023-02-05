@@ -117,6 +117,8 @@ class GraphicsUtilGym:
             The local_xmin_xmax_ymin_ymax controls the (local) coordinate system which is mapped onto screen coordinates. I.e. specify this
             to work in a native x/y coordinate system. If not, it will default to screen coordinates familiar from Gridworld.
         """
+        width = int(width)
+        height = int(height)
 
         icon = os.path.dirname(__file__) + "/../utils/graphics/dtu_icon.png"
         pygame_icon = pygame.image.load(icon)
