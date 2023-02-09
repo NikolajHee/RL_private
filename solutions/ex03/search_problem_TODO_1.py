@@ -1,0 +1,1 @@
+        return {u: ((self.env.f(s, u, None, k), k+1), self.env.g(s, u, None, k)) for u in self.env.A(s, k)} 

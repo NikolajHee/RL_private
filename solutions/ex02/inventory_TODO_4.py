@@ -1,0 +1,1 @@
+        return max(0, min(2, x + u - w ))
