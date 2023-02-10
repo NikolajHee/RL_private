@@ -118,7 +118,7 @@ class GraphicsUtilGym:
             to work in a native x/y coordinate system. If not, it will default to screen coordinates familiar from Gridworld.
         """
         width = int(width)
-        height = int(height)
+        height = int(height)    # For width/height to be integers to avoid crashes on some systems.
 
         icon = os.path.dirname(__file__) + "/../utils/graphics/dtu_icon.png"
         pygame_icon = pygame.image.load(icon)
