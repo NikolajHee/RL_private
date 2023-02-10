@@ -1,2 +1,2 @@
-PyQt5<=5.15.7 # 5.15.8 has a problem with matplotlib.
+PyQt5>=5.15.9 # 5.15.8 has a problem with matplotlib; but newest version is 5.15.9
 unitgrade
