@@ -4,3 +4,4 @@ __pycache__
 irlc.egg-info
 cache.db
 *.artifacts.pkl
+.pytest_cache
