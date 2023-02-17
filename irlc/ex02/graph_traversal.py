@@ -1,13 +1,13 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 """
 References:
-  [Her21] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2021.
+  [Her23] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2023.
 """
 import numpy as np
 from irlc.ex02.dp_model import DPModel
 
 """
-Graph of shortest path problem of (Her21, Subsection 5.1.1)
+Graph of shortest path problem of (Her23, Subsection 5.1.1)
 """
 G222 = {(1, 2): 6,  (1, 3): 5, (1, 4): 2, (1, 5): 2,  
         (2, 3): .5, (2, 4): 5, (2, 5): 7,
@@ -19,7 +19,7 @@ def symG(G):
 symG(G222)
 
 class SmallGraphDP(DPModel):
-    """ Implement the small-graph example in (Her21, Subsection 5.1.1). t is the terminal node. """
+    """ Implement the small-graph example in (Her23, Subsection 5.1.1). t is the terminal node. """
     def __init__(self, t, G=None):  
         self.G = G.copy() if G is not None else G222.copy()  
         self.G = self.G.copy()  # Copy G. This is good style since G is passed by reference & modified in place.

@@ -1,7 +1,7 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 """
 References:
-  [Her21] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2021.
+  [Her23] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2023.
 """
 from irlc.ex02.graph_traversal import SmallGraphDP
 from irlc.ex02.graph_traversal import policy_rollout
@@ -9,7 +9,7 @@ from irlc.ex02.dp_model import DPModel
 
 def DP_stochastic(model: DPModel): 
     """
-    Implement the stochastic DP algorithm. The implementation follows (Her21, Algorithm 1).
+    Implement the stochastic DP algorithm. The implementation follows (Her23, Algorithm 1).
     Once you are done, you should be able to call the function as:
 
     .. runblock:: pycon
@@ -26,7 +26,7 @@ def DP_stochastic(model: DPModel):
     """
 
     """ 
-    In case you run into problems, I recommend following the hints in (Her21, Subsection 6.2.1) and focus on the
+    In case you run into problems, I recommend following the hints in (Her23, Subsection 6.2.1) and focus on the
     case without a noise term; once it works, you can add the w-terms. When you don't loop over noise terms, just specify
     them as w = None in env.f and env.g.
     """
@@ -37,7 +37,7 @@ def DP_stochastic(model: DPModel):
     for k in range(N-1, -1, -1):
         for x in model.S(k):
             """
-            Update pi[k][x] and Jstar[k][x] using the general DP algorithm given in (Her21, Algorithm 1).
+            Update pi[k][x] and Jstar[k][x] using the general DP algorithm given in (Her23, Algorithm 1).
             If you implement it using the pseudo-code, I recommend you define Q (from the algorithm) as a dictionary like the J-function such that
                         
             > Q[u] = Q_u (for all u in model.A(x,k))
@@ -60,7 +60,7 @@ def DP_stochastic(model: DPModel):
     return J, pi 
 
 
-if __name__ == "__main__":  # Test dp on small graph given in (Her21, Subsection 6.2.1)
+if __name__ == "__main__":  # Test dp on small graph given in (Her23, Subsection 6.2.1)
     print("Testing the deterministic DP algorithm on the small graph yafcport")
     model = SmallGraphDP(t=5)  # Instantiate the small graph with target node 5 
     J, pi = DP_stochastic(model)

@@ -221,7 +221,6 @@ def plot_trajectory(trajectory, env=None, xkeys=None, ukeys=None):
         from irlc.ex04.model_pendulum import GymSinCosPendulumEnvironment
         env = GymSinCosPendulumEnvironment()
         stats, trajectories = train(env, Agent(env), num_episodes=1, return_trajectory=True)
-
         plot_trajectory(trajectories[0], env)
 
     Labels will be derived from the ``env`` if supplied. The parameters ``xkeys`` and ``ukeys`` can be used to limit which
@@ -244,7 +243,7 @@ def plot_trajectory(trajectory, env=None, xkeys=None, ukeys=None):
     :param ukeys: List of integers corresponding to the coordinates of :math:`u` we wish to plot
 
     .. tip::
-        If the plot does not show, you might want to import matplotlib as ``import matplotlib.pyplot as plt`` and call``plt.show()``
+        If the plot does not show, you might want to import matplotlib as ``import matplotlib.pyplot as plt`` and call ``plt.show()``
     """
     if xkeys is None:
         xkeys = [i for i in range(trajectory.state.shape[1])]

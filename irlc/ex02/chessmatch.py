@@ -1,7 +1,7 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 """
 References:
-  [Her21] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2021.
+  [Her23] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2023.
 """
 import numpy as np
 from irlc.ex02.dp_model import DPModel
@@ -10,7 +10,7 @@ from irlc.ex02.dp import DP_stochastic
 
 class ChessMatch(DPModel):
     """
-    See (Her21, Subsection 6.2.2) for details on this problem.
+    See (Her23, Subsection 6.2.2) for details on this problem.
 
     Note that timid play will be denoted by the action u=0, bold play by u=1. The state is represented as an integer
     which tracks the score, i.e. x=1 means we are ahead by one point and x=0 means the match is tied.
@@ -81,7 +81,7 @@ def pi_smart(x, k):
 
 if __name__ == '__main__':
     """
-    Chess match problem, see (Her21, Subsection 6.2.2) for details on this problem.
+    Chess match problem, see (Her23, Subsection 6.2.2) for details on this problem.
     
     Since the problem is formulated as reward, we multiply the reward by -1 to get a cost. 
     """

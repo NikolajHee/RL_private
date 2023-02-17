@@ -1,8 +1,8 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 """
-Implements the inventory-control problem from (Her21, Subsection 5.1.2). See todays slides if you are stuck!
+Implements the inventory-control problem from (Her23, Subsection 5.1.2). See todays slides if you are stuck!
 References:
-  [Her21] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2021.
+  [Her23] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2023.
 """
 from irlc.ex02.dp_model import DPModel
 from irlc.ex02.dp import DP_stochastic

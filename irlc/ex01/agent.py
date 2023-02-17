@@ -1,7 +1,7 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 """
 References:
-  [Her21] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2021.
+  [Her23] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2023.
 """
 # from line_profiler_pycharm import profile
 import inspect
@@ -20,10 +20,10 @@ import typing
 
 class Agent: 
     """
-    Main agent class. See (Her21, Subsection 4.4.3) for additional details.
+    Main agent class. See (Her23, Subsection 4.4.3) for additional details.
 
     To use the agent class, you should first create an environment. In this case we will just create an instance of the
-    ``InventoryEnvironment`` (see (Her21, Subsection 4.2.3))
+    ``InventoryEnvironment`` (see (Her23, Subsection 4.2.3))
 
     :Example:
 
@@ -168,7 +168,7 @@ def train(env,
           delete_old_experiments=False, # Remove the old experiments folder. Useful while debugging a model (or to conserve disk space)
           ):
     """
-    Implement the main training loop, see (Her21, Subsection 4.4.4).
+    Implement the main training loop, see (Her23, Subsection 4.4.4).
     Simulate the interaction between agent `agent` and the environment `env`.
     The function has a lot of special functionality, so it is useful to consider the common cases. An example:
 

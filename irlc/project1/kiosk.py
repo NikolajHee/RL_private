@@ -1,12 +1,12 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 """
-This project resembles the Inventory-control problem discussed in (Her21, Subsection 5.1.2) but with more complicated rules.
+This project resembles the Inventory-control problem discussed in (Her23, Subsection 5.1.2) but with more complicated rules.
 If you are stuck, the inventory-control problem will be a good place to start.
 
 I recommend to use the DP_stochastic function (as we did with the inventory-control example). This means
 your main problem is to build appropriate DPModel-classes to represent the different problems.
 References:
-  [Her21] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2021.
+  [Her23] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2023.
 """
 from irlc.ex02.dp_model import DPModel
 from irlc.ex02.dp import DP_stochastic

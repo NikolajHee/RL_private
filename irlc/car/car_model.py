@@ -40,19 +40,22 @@ class SymbolicBicycleModel(ContiniousTimeSymbolicModel):
 
         self.viewer = None  # rendering
         self.hot_start = hot_start
-        self.observation_space = Box(low=np.asarray([-np.inf, -np.inf, -np.inf, -np.inf, -np.inf, -map_width], dtype=float),
-                                     high=np.asarray([v_max, np.inf, np.inf, np.inf, np.inf, map_width]), dtype=float)
-        self.action_space = Box(low=np.asarray([-0.5, -1]), high=np.asarray([0.5, 1]), dtype=float)
+        # self.observation_space = Box(low=np.asarray([-np.inf, -np.inf, -np.inf, -np.inf, -np.inf, -map_width], dtype=float),
+        #                              high=np.asarray([v_max, np.inf, np.inf, np.inf, np.inf, map_width]), dtype=float)
+        # self.action_space = Box(low=np.asarray([-0.5, -1]), high=np.asarray([0.5, 1]), dtype=float)
 
         xl = np.zeros((6,))
         xl[4] = self.map.TrackLength
-        simple_bounds = {'x0': Bounds(list(self.reset()), list(self.reset())),
-                        'xF': Bounds(list(xl), list(xl)), **simple_bounds}
-
+        # simple_bounds = {'x0': Bounds([-np.inf, -np.inf, -np.inf, -np.inf, -np.inf, -map_width], [v_max, np.inf, np.inf, np.inf, np.inf, map_width]),
+        #                 'xF': Bounds(list(xl), list(xl)), **simple_bounds}
+        # n = 6
+        # d = 2
         if cost is None:
-            cost = SymbolicQRCost(Q=np.zeros((self.state_size,self.state_size)), R=np.eye(self.action_size), qc=1.)
+            cost = SymbolicQRCost(Q=np.zeros((6,6)), R=np.eye(2), qc=1.)
+        bounds = dict(x_low=[-np.inf, -np.inf, -np.inf, -np.inf, -np.inf, -map_width], x_high=[v_max, np.inf, np.inf, np.inf, np.inf, map_width],
+                      u_low=[-0.5, -1], u_high=[0.5, 1])
 
-        super().__init__(cost=cost, simple_bounds=simple_bounds)
+        super().__init__(cost=cost, bounds=bounds)
 
     def render(self, x, render_mode='human'):
         if self.viewer == None:
@@ -66,13 +69,7 @@ class SymbolicBicycleModel(ContiniousTimeSymbolicModel):
         if self.viewer is not None:
             self.viewer.close()
 
-    def reset(self):
-        x0 = np.zeros((6,))
-        if self.hot_start:
-            x0[0] = 0.5  # Start velocity is 0.5
 
-        # self.render()
-        return x0
 
     def x_curv2x_XY(self, x_curv):
         '''
@@ -157,11 +154,13 @@ class SymbolicBicycleModel(ContiniousTimeSymbolicModel):
 class DiscreteCarModel(DiscretizedModel): 
     def __init__(self, dt=0.1, cost=None, **kwargs): 
         model = SymbolicBicycleModel(**kwargs)
-        self.observation_space = model.observation_space
-        self.action_space = model.action_space 
+        # self.observation_space = model.observation_space
+        # self.action_space = model.action_space 
+        # n = 6
+        # d = 2
         if cost is None:
             from irlc.ex04.cost_discrete import DiscreteQRCost
-            cost = DiscreteQRCost(Q=np.zeros((self.state_size, self.state_size)), R=np.eye(self.action_size))
+            cost = DiscreteQRCost(Q=np.zeros((model.state_size, model.state_size)), R=np.eye(model.action_size))
         super().__init__(model=model, dt=dt, cost=cost)
 
         self.cost = cost
@@ -234,6 +233,13 @@ class CarEnvironment(ContiniousTimeEnvironment):
         x = x.copy()
         x[4] -= self.map.TrackLength
         return x
+
+    def _get_initial_state(self):
+        x0 = np.zeros((6,))
+        if self.discrete_model.continuous_model.hot_start:
+            x0[0] = 0.5  # Start velocity is 0.5
+        # self.render()
+        return x0
 
 if __name__ == "__main__":
     # car = SymbolicBicycleModel()

@@ -141,8 +141,6 @@ class PacmanEnvironment(gym.Env):
             self.graphics_display.master_render(self.game.state, ghostbeliefs=ghostbeliefs, path=path, visitedlist=visitedlist)
 
             return self.graphics_display.blit(render_mode=self.render_mode)
-
-
             # return self.graphics_display.viewer.render(return_rgb_array=self.render_mode == "rgb_array")
 
         elif self.render_mode in ['ascii']:
