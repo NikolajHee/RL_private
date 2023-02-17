@@ -44,11 +44,9 @@ def dp_forward(sp: SearchProblem, N: int):
                 J[k+1][xj] = .... 
                 """
                 # TODO: 3 lines missing.
-                breakpoint()
-                if (xj not in J[k+1]) or (c + J[k][xi] < J[k+1][xj]):
+                if (xj not in J[k].keys()) or (c + J[k][xi] < J[k+1][xj]):
                     J[k+1][xj] = c + J[k][xi]
-                    pi[k][xj] = (a,xi)
-
+                    pi[k][xi] = (a,xi)
                 #raise NotImplementedError("Implement function body")
 
     # The final states obtained are the keys in J[N+1]. Find one of these which is also a terminal state for the search problem
