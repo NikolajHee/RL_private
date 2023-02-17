@@ -100,8 +100,8 @@ if __name__ == '__main__':
     J, pi = DP_stochastic(cm) 
     print(f"Expected reward (-cost) when starting from a match score of 0: {-J[0][0]} (true value {pW})")
     print(f"value of J:")
-    for k,Jk in enumerate(J):
-        for x,Jx in enumerate(Jk):
+    for k, Jk in enumerate(J):
+        for x, Jx in Jk.items():
             print(f"J_{k}({x}) = {Jx}")
         print("---")
     print(f"Policy at k=0: ", pi[0])
