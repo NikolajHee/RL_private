@@ -22,7 +22,7 @@ class ContiniouBrachistochrone(ContiniousTimeSymbolicModel):
         self.h = h
         self.x_dist = x_dist # or x_B
 
-        guess0 = {'t0': 0,
+        self.guess0 = {'t0': 0,
                  'tF': 2,
                  'x': [np.asarray([0, 0, 0]), np.asarray([x_dist, x_dist, 2])],
                  'u': [np.asarray([0]), np.asarray([1])]}
