@@ -1,7 +1,7 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 """
 References:
-  [Her23] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2023.
+  [Her21] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2021.
 """
 import numpy as np
 from irlc.ex02.dp_model import DPModel
@@ -10,7 +10,7 @@ from irlc.ex02.dp import DP_stochastic
 
 class ChessMatch(DPModel):
     """
-    See (Her23, Subsection 6.2.2) for details on this problem.
+    See (Her21, Subsection 6.2.2) for details on this problem.
 
     Note that timid play will be denoted by the action u=0, bold play by u=1. The state is represented as an integer
     which tracks the score, i.e. x=1 means we are ahead by one point and x=0 means the match is tied.
@@ -20,24 +20,24 @@ class ChessMatch(DPModel):
         self.pd = pd
         super(ChessMatch, self).__init__(N)
 
-    def A(self, x, k): 
-        # TODO: 1 lines missing.
-        raise NotImplementedError("Return action space (hint: there are two actions; timid and bold play)")
+    def A(self, x, k):
+        return {0,1}
+        #raise NotImplementedError("Return action space (hint: there are two actions; timid and bold play)")
 
     def S(self, k): 
         """
         State space is {-k, ..., k} (maximal loss to maximal win)
         """
-        # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        return set(range(-k,k+1))
+        #raise NotImplementedError("Implement function body")
 
-    def g(self, x, u, w, k):  
-        # TODO: 1 lines missing.
-        raise NotImplementedError("Note that g_k(x, u, w) = 0")
+    def g(self, x, u, w, k):
+        return 0
+        #raise NotImplementedError("Note that g_k(x, u, w) = 0")
 
-    def f(self, x, u, w, k): 
-        # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+    def f(self, x, u, w, k):
+        return x + w
+        #raise NotImplementedError("Implement function body")
 
     def Pw(self, x, u, k):
         """
@@ -50,8 +50,9 @@ class ChessMatch(DPModel):
             return {-1: 1 - self.pd,  # loss.
                     0: self.pd}       # draw
         else: # Bold play. return something quite similar to the timid-case but with the right probabilities.
-            # TODO: 1 lines missing.
-            raise NotImplementedError("compute and return policy corresponding to bold play.")
+            return {1: self.pw,
+                    -1: 1-self.pw}
+            #raise NotImplementedError("compute and return policy corresponding to bold play.")
 
     def gN(self, x):
         """
@@ -60,8 +61,11 @@ class ChessMatch(DPModel):
         """
         if x > 0:
             return -1
-        # TODO: 4 lines missing.
-        raise NotImplementedError("Compute and return terminal costs in the two other cases.")
+        if x == 0:
+            return -self.pw
+        if x < 1:
+            return 0
+        #raise NotImplementedError("Compute and return terminal costs in the two other cases.")
 
 def policy_rollout(model, pi, x0):
     x = x0
@@ -76,12 +80,12 @@ def policy_rollout(model, pi, x0):
 
 def pi_smart(x, k): 
     """ smart policy: archives optimal match-win probability """
-    # TODO: 1 lines missing.
-    raise NotImplementedError("Implement function body")
+    return 0 if x > 0 else 1
+    #raise NotImplementedError("Implement function body")
 
 if __name__ == '__main__':
     """
-    Chess match problem, see (Her23, Subsection 6.2.2) for details on this problem.
+    Chess match problem, see (Her21, Subsection 6.2.2) for details on this problem.
     
     Since the problem is formulated as reward, we multiply the reward by -1 to get a cost. 
     """
@@ -109,7 +113,8 @@ if __name__ == '__main__':
 
     def dp_pi(x,k): 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        return pi[k][x]
+        #raise NotImplementedError("Implement function body")
 
     J_dp_pi = np.mean([policy_rollout(cm, dp_pi, x0=0) for _ in range(T)])
     print(f"Expected reward (-cost) when starting from a match score of 0: {-J_dp_pi} (true value {pW})") 

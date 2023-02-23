@@ -130,7 +130,8 @@ class DP2SP(SearchProblem):
         if k == self.env.N:
             return {0: ( self.terminal_state, self.env.gN(s))}
         # TODO: 1 lines missing.
-        raise NotImplementedError("return transtitions as a dictionary. Note the 1-line solution requires dictionary comprehension.")
+        #raise NotImplementedError("return transtitions as a dictionary. Note the 1-line solution requires dictionary comprehension.")
+        return {action: ((self.env.f(s, action, None, k), k+1), self.env.g(s, action, None,k)) for action in self.env.A(s, k)}
 
 class SmallGraphSP(SearchProblem):
     G = G222

@@ -1,13 +1,14 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 """
 References:
-  [Her23] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2023.
+  [Her21] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2021.
 """
+
 import numpy as np
 from irlc.ex02.dp_model import DPModel
 
 """
-Graph of shortest path problem of (Her23, Subsection 5.1.1)
+Graph of shortest path problem of (Her21, Subsection 5.1.1)
 """
 G222 = {(1, 2): 6,  (1, 3): 5, (1, 4): 2, (1, 5): 2,  
         (2, 3): .5, (2, 4): 5, (2, 5): 7,
@@ -19,7 +20,7 @@ def symG(G):
 symG(G222)
 
 class SmallGraphDP(DPModel):
-    """ Implement the small-graph example in (Her23, Subsection 5.1.1). t is the terminal node. """
+    """ Implement the small-graph example in (Her21, Subsection 5.1.1). t is the terminal node. """
     def __init__(self, t, G=None):  
         self.G = G.copy() if G is not None else G222.copy()  
         self.G = self.G.copy()  # Copy G. This is good style since G is passed by reference & modified in place.
@@ -31,6 +32,8 @@ class SmallGraphDP(DPModel):
     def f(self, x, u, w, k):
         if (x,u) in self.G:  
             # TODO: 1 lines missing.
+            #return max(0, min(2, x + u - w))
+            #self.G[(x,u)]
             return u
             #raise NotImplementedError("Implement function body")
         else:
@@ -38,12 +41,13 @@ class SmallGraphDP(DPModel):
 
     def g(self, x, u, w, k): 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        return self.G[(x,u)]
+        #raise NotImplementedError("Implement function body")
 
     def gN(self, x):  
         # TODO: 1 lines missing.
         return 0 if x == self.t else np.inf
-        raise NotImplementedError("Implement function body")
+        #raise NotImplementedError("Implement function body")
 
     def S(self, k):   
         return self.nodes
@@ -60,12 +64,12 @@ def pi_silly(x, k):
 def pi_inc(x, k): 
     # TODO: 1 lines missing.
     return x+1
-    raise NotImplementedError("Implement function body")
+    #raise NotImplementedError("Implement function body")
 
 def pi_smart(x,k): 
     # TODO: 1 lines missing.
     return 5
-    raise NotImplementedError("Implement function body")
+    #raise NotImplementedError("Implement function body")
 
 def policy_rollout(model, pi, x0):
     """
@@ -98,7 +102,6 @@ def policy_rollout(model, pi, x0):
     J += model.gN(x) # Add last cost term env.gN(x) to J.
     #raise NotImplementedError("Remove this exception after the above lines have been uncommented and rearranged.")
     return J, trajectory
-
 
 def main():
     t = 5  # target node

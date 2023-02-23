@@ -6,7 +6,8 @@ from irlc.ex02.dp import DP_stochastic
 from irlc.ex02.dp_agent import DynamicalProgrammingAgent
 from irlc.pacman.pacman_environment import PacmanEnvironment
 
-#!s=east
+# !s=east
+
 east = """ 
 %%%%%%%%
 % P   .%
@@ -46,8 +47,26 @@ datadiscs = """
 %%%%%%%
 """
 
-# TODO: 30 lines missing.
-raise NotImplementedError("Put your own code here")
+# TODO: 30 lines missing
+#raise NotImplementedError("Put your own code here")
+class PacManOwn(DPModel):
+    def __init__(self, N, x0):
+        super().__init__(N)
+        self.S_save = get_future_states(x0, N)
+    def f(self, x, u, w, k):
+        return list(p_next(x,u))[0]
+    def g(self, x, u, w, k):
+        return 0 if (x.isWin()) else k
+    def gN(self, x):
+        return -1 if x.isWin() else 0
+    def S(self, k):
+        #print(self.S_save[k])
+        return self.S_save[k]
+    def A(self, x, k):
+        return x.A()
+    #def Pw(self, x, u, k):
+
+
 
 def p_next(x, u): 
     """ Given the agent is in GameState x and takes action u, the game will transition to a new state xp.
@@ -65,8 +84,9 @@ def p_next(x, u):
         * Check the probabilities sum to 1. This will be your main way of debugging your code and catching issues relating to the previous point.
     """
     # TODO: 8 lines missing.
-    raise NotImplementedError("Return a dictionary {.., xp: p, ..} where xp is a possible next state and p the probability")
-    return states
+    return {x.f(u): 1}
+    #raise NotImplementedError("Return a dictionary {.., xp: p, ..} where xp is a possible next state and p the probability")
+    #return states
 
 
 def go_east(map): 
@@ -85,12 +105,39 @@ def go_east(map):
         * Use this environment to get the first GameState, then use the recommended functions to go east
     """
     # TODO: 5 lines missing.
-    raise NotImplementedError("Return the list of states pacman will traverse if he goes east until he wins the map")
+    #raise NotImplementedError("Return the list of states pacman will traverse if he goes east until he wins the map")
+    env = PacmanEnvironment(layout_str=east)#, render_mode='human')
+    x, info = env.reset()
+    states = []
+    x_new = x
+    states.append(x_new)
+    t = 0
+    while ("East" in x_new.A()) and t < 10000:
+        x_new = x_new.f('East')
+        states.append(x_new)
+        t += 1
     return states
 
 def get_future_states(x, N): 
     # TODO: 4 lines missing.
-    raise NotImplementedError("return a list-of-list of future states [S_0,\dots,S_N]. Each S_k is a state space, i.e. a list of GameState objects.")
+    #raise NotImplementedError("return a list-of-list of future states [S_0,\dots,S_N]. Each S_k is a state space, i.e. a list of GameState objects.")
+    state_spaces = []
+    state_spaces.append([x]) # S0
+    # lacks the check for dubplicates
+    #for i in range(N):
+    #    state_spaces.append([[list(p_next(k,j))[0] for j in k.A()] for k in state_spaces[i]][0])
+    
+    #  # this works but not so cool
+    for i in range(N):
+        states = []
+        for k in state_spaces[i]:
+            # available actions:
+                #actions = k.A()
+                for u in k.A():
+                    u_new = list(p_next(k,u))[0]
+                    if u_new not in states: states.append(u_new)
+        state_spaces.append(states)
+    #p_next(x,u)   Given the agent is in GameState x and takes action u, the game will transition to a new state xp
     return state_spaces
 
 def win_probability(map, N=10): 
@@ -105,7 +152,26 @@ def shortest_path(map, N=10):
     The states should be a list of states the agent visit. The first should be the initial state and the last
     should be the won state. """
     # TODO: 4 lines missing.
-    raise NotImplementedError("Return the cost of the shortest path, the list of actions taken, and the list of states.")
+    #model = DPModel(10)
+    #states = go_east(map) # return list of states
+    env = PacmanEnvironment(layout_str=map)#, render_mode='human')
+    initial_x, _ = env.reset()
+    model = PacManOwn(N, initial_x)
+    agent = DynamicalProgrammingAgent(env, model=model)
+    
+    # conversion to optimal state and action list
+    x_temp = initial_x
+    actions, states = [], []
+    for k in range(model.N):
+        u = agent.pi(x_temp,k)
+        states.append(x_temp)
+        if x_temp.isWin(): break # if we win, the loop needs to break
+        # we want the last state but not the last action
+        actions.append(u)
+        x_temp = x_temp.f(u)
+        
+    #print("J", agent.J)
+    #raise NotImplementedError("Return the cost of the shortest path, the list of actions taken, and the list of states.")
     return actions, states
 
 

@@ -29,14 +29,14 @@ class TravelingSalesman(DPModel):
         assert((x[-1],u) in self.G)
         ## TODO: Half of each line of code in the following 1 lines have been replaced by garbage. Make it work and remove the error.
         #----------------------------------------------------------------------------------------------------------------------------
-        # return ????????
-        raise NotImplementedError("Insert your solution and remove this error.")
+        return (*x,u)
+        #raise NotImplementedError("Insert your solution and remove this error.")
 
     def g(self, x, u, w, k):
         ## TODO: Half of each line of code in the following 1 lines have been replaced by garbage. Make it work and remove the error.
         #----------------------------------------------------------------------------------------------------------------------------
-        # return self????????????
-        raise NotImplementedError("Insert your solution and remove this error.")
+        return self.G[x[-1], u]
+        #raise NotImplementedError("Insert your solution and remove this error.")
 
     def gN(self, x):
         """
@@ -50,8 +50,8 @@ class TravelingSalesman(DPModel):
         """
         ## TODO: Half of each line of code in the following 1 lines have been replaced by garbage. Make it work and remove the error.
         #----------------------------------------------------------------------------------------------------------------------------
-        # path_ok = x[0] == x[-1] and len(set(x)) == len(self.cities)????????????????????????????????????????????????????????????
-        raise NotImplementedError("Insert your solution and remove this error.")
+        path_ok = (x[0] == x[-1]) and (len(set(x)) == len(self.cities))
+        #raise NotImplementedError("Insert your solution and remove this error.")
         return 0 if path_ok else np.inf
 
     def A(self, x, k):

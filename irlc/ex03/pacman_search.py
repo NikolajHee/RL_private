@@ -47,14 +47,18 @@ class PacmanSearchProblem(SearchProblem):
     def is_terminal(self, state):
         # Returns true if this state is terminal, i.e. if Pacman's position is (1,1).
         # TODO: 1 lines missing.
-        raise NotImplementedError("Insert your solution and remove this error.")
+        is_in_position_11 = state.getPacmanPosition() == (1,1)
+        #raise NotImplementedError("Insert your solution and remove this error.")
         return is_in_position_11
 
     def available_transitions(self, state):       
         s0 = state.getScore()
         transitions = {}
         # TODO: 3 lines missing.
-        raise NotImplementedError("Create the available transitions here")
+        for u in state.A():
+            sp = state.f(u)
+            transitions[u] = (sp, s0-sp.getScore())
+        #raise NotImplementedError("Create the available transitions here")
         return transitions
 
 
@@ -69,9 +73,9 @@ class ForwardDPSearchAgent(Agent):
         J, self.actions, path = dp_forward(search_problem, N)
 
     def pi(self, s, k, info=None):
-        action = None
+        action = self.actions[k] 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Compute the action here. Hint: Look at the __init__ function.")
+        #raise NotImplementedError("Compute the action here. Hint: Look at the __init__ function.")
         # This code handle the case where the action is not set correctly.
         # I found this useful given that EnsureTerminalSelfTransitionsWrapper return a dummy action when the environment has terminated.
         if action not in s.A():
@@ -87,7 +91,7 @@ if __name__ == "__main__":
     problem1 = EnsureTerminalSelfTransitionsWrapper(problem1) # This will make the terminal states absorbing as described in (Her23, Subsection 5.2.1) 
 
     # Same for second layout
-    env2 = PacmanEnvironment(layout_str=layout2)
+    env2 = PacmanEnvironment(layout_str=layout2,render_mode=  'human')
     problem2 = PacmanSearchProblem(env2)
     problem2 = EnsureTerminalSelfTransitionsWrapper(problem2) # This will make the terminal states absorbing as described in (Her23, Subsection 5.2.1)
 

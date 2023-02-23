@@ -51,15 +51,16 @@ class Gym2DPModel(DPModel):
     def f(self, x, u, w, k):
         ## TODO: Half of each line of code in the following 1 lines have been replaced by garbage. Make it work and remove the error.
         #----------------------------------------------------------------------------------------------------------------------------
-        # return self.?????????????
-        raise NotImplementedError("Insert your solution and remove this error.")
+        return self.P[x][u][w][1]
+
+        #raise NotImplementedError("Insert your solution and remove this error.")
 
     def g(self, x, u, w, k):
         """ Remember the DP environment has a (positive) reward, we want a negative cost. Multiply reward by -1. """
         ## TODO: Half of each line of code in the following 1 lines have been replaced by garbage. Make it work and remove the error.
         #----------------------------------------------------------------------------------------------------------------------------
-        # return -self.?????????????
-        raise NotImplementedError("Insert your solution and remove this error.")
+        return -self.P[x][u][w][2]
+        #raise NotImplementedError("Insert your solution and remove this error.")
 
     def gN(self, x):
         """
@@ -89,8 +90,9 @@ class Gym2DPModel(DPModel):
         """
         ## TODO: Half of each line of code in the following 1 lines have been replaced by garbage. Make it work and remove the error.
         #----------------------------------------------------------------------------------------------------------------------------
-        # return {i: t[0] for i, t i??????????????????????????
-        raise NotImplementedError("Insert your solution and remove this error.")
+
+        return {i: t[0] for i, t in enumerate(self.P[x][u])}
+        #raise NotImplementedError("Insert your solution and remove this error.")
 
 def plot_value_function(env, J, figsize=8, ncol=None):
     if ncol is None:
@@ -102,7 +104,8 @@ def plot_value_function(env, J, figsize=8, ncol=None):
     for i in range(S):
         nr, nc = to_rc(i, ncol)
         # TODO: 1 lines missing.
-        raise NotImplementedError("Update A[nr,nc] to contain the value function.")
+        A[(nr,nc)] = J[i]
+        #raise NotImplementedError("Update A[nr,nc] to contain the value function.")
 
     if figsize is not None:
         plt.figure(figsize=(figsize, figsize))

@@ -31,12 +31,14 @@ class QueensDP(DPModel):
 
     def A(self, x, k): 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        J_avail = {i for i in range(self.N)}
+        #aise NotImplementedError("Implement function body")
         return { (k,j) for j in J_avail if self.valid_pos_( x, (k,j) ) }
 
     def g(self, x, u, w, k): 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        return 0
+        #raise NotImplementedError("Implement function body")
 
     def gN(self, x): 
         """
@@ -44,11 +46,13 @@ class QueensDP(DPModel):
         those actions that will lead to a valid board position. I have implemented it anyway
         """
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        return 0
+        #raise NotImplementedError("Implement function body")
 
     def f(self, x, u, w, k): 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        return (*x,u)
+        #raise NotImplementedError("Implement function body")
 
 def chessboard_plot(q_sp, path):
     xy  = path[-2][0]

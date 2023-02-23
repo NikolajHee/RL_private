@@ -1,8 +1,8 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 """
-Implements the inventory-control problem from (Her23, Subsection 5.1.2). See todays slides if you are stuck!
+Implements the inventory-control problem from (Her21, Subsection 5.1.2). See todays slides if you are stuck!
 References:
-  [Her23] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2023.
+  [Her21] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2021.
 """
 from irlc.ex02.dp_model import DPModel
 from irlc.ex02.dp import DP_stochastic
@@ -13,27 +13,33 @@ class InventoryDPModel(DPModel):
 
     def A(self, x, k): # Action space A_k(x) 
         # TODO: 1 lines missing.
+        return [0,1,2]
         raise NotImplementedError("Implement function body")
 
     def S(self, k): # State space S_k 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        return [0,1,2]
+        #raise NotImplementedError("Implement function body")
 
     def g(self, x, u, w, k): # Cost function g_k(x,u,w) 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        return u + (x + u - w)**2
+        #raise NotImplementedError("Implement function body")
 
     def f(self, x, u, w, k): # Dynamics f_k(x,u,w) 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        return max(0, min(2, x - w + u))
+        #raise NotImplementedError("Implement function body")
 
     def Pw(self, x, u, k): # Distribution over random disturbances 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        return {0: 1/10, 1:7/10, 2:1/5}
+        #raise NotImplementedError("Implement function body")
 
     def gN(self, x): 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        return 0
+        #raise NotImplementedError("Implement function body")
 
 def main():
     inv = InventoryDPModel() 

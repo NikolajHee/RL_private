@@ -147,7 +147,7 @@ class Pacman6a(UTestCase):
         from irlc.project1.pacman import shortest_path
         layout = get_map(self.map)
         actions, states = shortest_path(layout, self.N)
-        return actions, states
+        return actions, states   
 
     def test_sequence_lengths(self):
         """ Test the length of the state/action lists. """

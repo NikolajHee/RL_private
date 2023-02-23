@@ -3,8 +3,7 @@
 References:
   [Her23] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2023.
 """
-import os
-os.chdir('/Users/nikolaj/Desktop/GIT/RL_private/irlc')
+
 from irlc.ex03.search_problem import GraphSP, DP2SP, EnsureTerminalSelfTransitionsWrapper, SearchProblem
 from irlc.ex02.graph_traversal import SmallGraphDP
 import numpy as np
@@ -44,7 +43,6 @@ def dp_forward(sp: SearchProblem, N: int):
                 J[k+1][xj] = .... 
                 """
                 # TODO: 3 lines missing.
-                breakpoint()
                 if (xj not in J[k+1]) or (c + J[k][xi] < J[k+1][xj]):
                     J[k+1][xj] = c + J[k][xi]
                     pi[k][xj] = (a,xi)
