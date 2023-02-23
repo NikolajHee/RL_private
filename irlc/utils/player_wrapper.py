@@ -31,7 +31,7 @@ class AgentWrapper(Agent):
 
     """
     def __init__(self, agent, env):
-        print("AgentWrapper is deprecated. ")
+        # print("AgentWrapper is deprecated. ")
         self.agent = agent
         self.env = env
 
@@ -248,7 +248,7 @@ def interactive(env : gym.Env, agent: Agent, autoplay=False) -> (gym.Env, Agent)
     :param autoplay: Whether the simulation should be unpaused automatically
     :return: An environment and agent which have been slightly updated to make them interact with each other. You can use them as usual with the ``train``-function.
     """
-    print("plot() a")
+    # print("plot() a")
     from PIL import Image # Let's put this one here in case we run the code in headless mode.
 
     # if agent is None:
@@ -258,10 +258,10 @@ def interactive(env : gym.Env, agent: Agent, autoplay=False) -> (gym.Env, Agent)
 
     def plot():
         env.render_mode, rmt = 'rgb_array', env.render_mode
-        print("plot() b")
+        # print("plot() b")
 
         frame = env.render()
-        print("plot() c")
+        # print("plot() c")
 
         env.render_mode = rmt
         im = Image.fromarray(frame)
@@ -269,7 +269,7 @@ def interactive(env : gym.Env, agent: Agent, autoplay=False) -> (gym.Env, Agent)
         plt.axis('off')
         plt.axis('off')
         plt.tight_layout()
-        print("plot() d")
+        # print("plot() d")
 
     def savepdf(file):
         env.render_mode, rmt = 'rgb_array', env.render_mode

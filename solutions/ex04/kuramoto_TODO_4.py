@@ -1,0 +1,1 @@
+    f_euler_derivative = dmodel.f(x, u, k=0, compute_jacobian=True)[1]  

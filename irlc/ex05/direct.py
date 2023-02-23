@@ -157,11 +157,6 @@ def collocate(model, N=25, optimizer_options=None, guess=None, verbose=True):
     z0, z_lb, z_ub = [], [], []  # Guess z0 and lower/upper bounds (list-of-numbers): z_lb[k] <= z0[k] <= z_ub[k]
     ts_eval = sym.lambdify((t0, tF), ts.tolist(), modules='numpy')
     for k in range(N):
-        # x_bnd, u_bnd = sb['x'], sb['u']
-        # if k == 0:
-        #     x_bnd = sb['x0']
-        # if k == N - 1:
-        #     x_bnd = sb['xF']
         x_low  = list(model.bounds['x0_low'] if k == 0 else (model.bounds['xF_low'] if k == N-1 else model.bounds['x_low']))
         x_high = list(model.bounds['x0_high'] if k == 0 else (model.bounds['xF_high'] if k == N - 1 else model.bounds['x_high']))
         u_low, u_high = list(model.bounds['u_low']), list(model.bounds['u_high'])

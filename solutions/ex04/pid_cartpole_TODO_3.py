@@ -1,0 +1,1 @@
+    agent = PIDCartpoleAgent(env, dt=env.dt, Kp=120, Ki=0, Kd=10, balance_to_x0=True) 

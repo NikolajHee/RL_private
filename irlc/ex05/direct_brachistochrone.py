@@ -54,14 +54,6 @@ if __name__ == "__main__":
     http://www.hep.caltech.edu/~fcp/math/variationalCalculus/variationalCalculus.pdf
     """
     model, solutions = compute_unconstrained_solutions()
-    #
-    # env = ContiniouBrachistochrone(h=None, x_dist=1)
-    # _, _, guess = brachistochrone(x_B=1) # to obtain a guess
-    # options = [get_opts(N=10, ftol=1e-3, guess=guess),
-    #            get_opts(N=30, ftol=1e-6)]
-    #
-    # # solve without constraints
-    # solutions = direct_solver(env, options)
     plot_brachistochrone_solutions(model, solutions[-1:], out="brachi")
 
     # solve with dynamical (sloped planc) constraint at height of h.

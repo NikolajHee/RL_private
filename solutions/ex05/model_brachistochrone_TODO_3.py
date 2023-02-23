@@ -1,0 +1,1 @@
+            return [ -x[1] - x[0]/2 - self.h ] 
