@@ -37,7 +37,9 @@ class ContiniousKuramotoModel(ContiniousTimeSymbolicModel):
         where f is the symbolic expression. Note you can use trigonometric functions like sym.cos. 
         """
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement symbolic expression as a singleton list here")
+        #raise NotImplementedError("Implement symbolic expression as a singleton list here")
+        #breakpoint()
+        symbolic_f_expression  = [sym.N(uk + sym.cos(xk)) for (uk,xk) in zip(u,x)]
         # define the symbolic expression 
         return symbolic_f_expression  
 
@@ -63,10 +65,12 @@ def f(x, u):
     The answer should be returned as a singleton list. """
     cmodel = ContiniousKuramotoModel()
     # TODO: 1 lines missing.
-    raise NotImplementedError("Insert your solution and remove this error.")
+    #raise NotImplementedError("Insert your solution and remove this error.")
     # Use the ContiniousKuramotoModel to compute f(x,u). If in doubt, insert a breakpoint and let pycharms autocomplete
     # guide you. See my video to Exercise 2 for how to use the debugger. Don't forget to specify t (for instance t=0).
     # Note that sympys error messages can be a bit unforgiving.
+    f_value = cmodel.sym_f(x,u,t=0)
+    
     return f_value
 
 def fk(x,u):
@@ -79,7 +83,8 @@ def fk(x,u):
     """
     dmodel = DiscreteKuramotoModel(dt=0.5)
     # TODO: 1 lines missing.
-    raise NotImplementedError("Compute Euler discretized dynamics here using the dmodel.")
+    #raise NotImplementedError("Compute Euler discretized dynamics here using the dmodel.")
+    f_euler = dmodel.f(x,u)
     return f_euler
 
 def dfk_dx(x,u):
@@ -101,7 +106,8 @@ def dfk_dx(x,u):
     dmodel = DiscreteKuramotoModel(dt=0.5)
     # the function dmodel.f accept various parameters. Perhaps their name can give you an idea?
     # TODO: 1 lines missing.
-    raise NotImplementedError("Compute derivative here using the dmodel.")
+    _, f_euler_derivative, _ = dmodel.f(x,u,compute_jacobian=True)
+    #raise NotImplementedError("Compute derivative here using the dmodel.")
     return f_euler_derivative
 
 def rk4_simulate(x0, u, t0, tF, N=1000):
@@ -122,11 +128,21 @@ def rk4_simulate(x0, u, t0, tF, N=1000):
     tt = np.linspace(t0, tF, N+1)   # Time grid t_k = tt[k] between t0 and tF.
     xs = [ x0 ]
     f(x0, u) # This is how you can call f.
+
+    delta = (tF - t0)/N
     for k in range(N):
         x_next = None # Obtain x_next = x_{k+1} using a single RK4 step.
         # Remember to insert breakpoints and use the console to examine what the various variables are.
         # TODO: 7 lines missing.
-        raise NotImplementedError("Insert your solution and remove this error.")
+
+        k1 = np.array(f(xs[-1], u))
+        k2 = np.array(f(xs[-1] + delta*k1/2, u))
+        k3 = np.array(f(xs[-1] + delta*k2/2, u))
+        k4 = np.array(f(xs[-1] + delta*k3, u))
+
+        x_next = xs[-1] + 1/6 * delta *( k1 + 2*k2 + 2*k3 + k4)
+
+        #raise NotImplementedError("Insert your solution and remove this error.")
         xs.append(x_next)
     xs = np.stack(xs, axis=0)
     return xs, tt 
@@ -137,12 +153,13 @@ if __name__ == "__main__":
     g = sym.exp( sym.cos(z) ** 2) * sym.sin(z) # Create a nasty symbolic expression.
     print("z is:", z, " and g is:", g) 
     # TODO: 1 lines missing.
-    raise NotImplementedError("Compute the derivative of g here (symbolically)")
+    dg_dz = sym.diff(g, z)
+    #raise NotImplementedError("Compute the derivative of g here (symbolically)")
     print("The derivative of the nasty expression is dg/dz =", dg_dz)
 
     # TODO: 1 lines missing.
-    raise NotImplementedError("Turn the symbolic expression into a function using sym.lambdify. Check the notes for an example (or sympys documentation).")
-
+    #raise NotImplementedError("Turn the symbolic expression into a function using sym.lambdify. Check the notes for an example (or sympys documentation).")
+    g_as_a_function = sym.lambdify(z, dg_dz)
     print("dg/dz (when z=0) =", g_as_a_function(0))
     print("dg/dz (when z=pi/2) =", g_as_a_function(np.pi/2))
     print("(Compare these results with the symbolic expression)") 
@@ -165,16 +182,16 @@ if __name__ == "__main__":
     xs, ts = rk4_simulate(x0, [u], t0=0, tF=20, N=100)
     xs_true, us_true, ts_true = cmodel.simulate(x0, u_fun=u, t0=0, tF=20, N_steps=100)
 
-    # Plot the exact simulation of the environment
+    # # Plot the exact simulation of the environment
     import matplotlib.pyplot as plt
-    plt.plot(ts_true, xs_true, 'k.-', label='RK4 state sequence x(t) (using model.simulate)')
-    plt.plot(ts, xs, 'r-', label='RK4 state sequence x(t) (using your code)')
-    plt.legend()
-    savepdf('kuramoto_rk4')
-    plt.show()
+    # plt.plot(ts_true, xs_true, 'k.-', label='RK4 state sequence x(t) (using model.simulate)')
+    # plt.plot(ts, xs, 'r-', label='RK4 state sequence x(t) (using your code)')
+    # plt.legend()
+    # savepdf('kuramoto_rk4')
+    # plt.show()
 
 
-    plt.figure(2)
+    # plt.figure(2)
     # Part 3: The discrete environment
     dmodel = DiscreteKuramotoModel()  # Create a *discrete* model
     print(dmodel) # Uncomment this line to see details about the environment.
@@ -204,7 +221,16 @@ if __name__ == "__main__":
     # to simulate a single step.
     for _ in range(10000):
         # TODO: 7 lines missing.
-        raise NotImplementedError("Use the step() function to simulate the environment. Note that the step() function uses RK4.")
+        metadata   = env.step([u])
+        xs_step.append(metadata[0])
+
+        ts_step.append(env.time)
+        xs_euler.append(dmodel.f( xs_euler[-1], [u], 0))
+        
+        if metadata[2]: break
+
+
+        #raise NotImplementedError("Use the step() function to simulate the environment. Note that the step() function uses RK4.")
 
     plt.plot(ts, xs, 'k-', label='RK4 (nearly exact)')
     plt.plot(ts_step, xs_step, 'b.', label='RK4 (step-function in environment)')

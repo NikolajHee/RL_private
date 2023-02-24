@@ -66,7 +66,7 @@ class PacManNoGhost(DPModel):
     def A(self, x, k):
         return x.A()
     #def Pw(self, x, u, k):
-class PacManOneGhost(DPModel):
+class PacManWithGhost(DPModel):
     def __init__(self, N, x0):
         super().__init__(N)
         self.S_save = get_future_states(x0, N)
@@ -95,7 +95,7 @@ class PacManOneGhost(DPModel):
     def Pw(self, x, u, k):
         dict_ = p_next(x,u)
         n = len(dict_.values())
-        return {i: 1/n for (i,_) in zip(range(n), range(n))}
+        return {i: 1/n for (i) in range(n)}
         # calculating p_next again?
 
 
@@ -115,14 +115,24 @@ def p_next(x, u):
         * Check the probabilities sum to 1. This will be your main way of debugging your code and catching issues relating to the previous point.
     """
     # TODO: 8 lines missing.
-    x_new = x.f(u) 
-    if x_new.player() == 0: return {x_new: 1} # in case of no ghosts
-    number_of_actions = len(x_new.A())
-    uniform_distribution = [1/number_of_actions for _ in range(number_of_actions)]
-    
-    assert (sum(uniform_distribution) - 1) < 1e-8 # testing if they are approx equal to 100%
-    
-    return {x_new.f(i): j for (i,j) in zip(x_new.A(),uniform_distribution)}
+    G = [{} for _ in range(x.players())]
+    # the pacman makes one deterministic move
+    x0 = x.f(u)
+    G[0][x0] = 1
+    if x0.player() == 0: return G[0]
+
+    # loop over every ghost
+    for i in range(x.players() - 1):
+        # compute the possible states
+        t1 = [xp.f(u) for (xp,p) in G[i].items() for u in xp.A()]
+        # compute the probability (independence rule so we multiply)
+        t2 = [p * 1/len(xp.A()) for (xp,p) in G[i].items() for u in xp.A()]
+        # collect information in dictionary
+        G[i+1] = {a: b for (a,b) in zip(t1, t2)}
+    # return the final result
+    return G[-1]
+
+
 
 
 def go_east(map): 
@@ -141,16 +151,12 @@ def go_east(map):
         * Use this environment to get the first GameState, then use the recommended functions to go east
     """
     # TODO: 5 lines missing.
-    #raise NotImplementedError("Return the list of states pacman will traverse if he goes east until he wins the map")
-    env = PacmanEnvironment(layout_str=east)#, render_mode='human')
-    x, info = env.reset()
-    states = []
-    x_new = x
-    states.append(x_new)
+    x, _ = PacmanEnvironment(layout_str=east).reset()
+    states = [x]
     t = 0
-    while ("East" in x_new.A()) and t < 10000:
-        x_new = x_new.f('East')
-        states.append(x_new)
+    while ("East" in x.A()) and t < 1e4: # t is a max-iter
+        x = x.f('East')
+        states.append(x)
         t += 1
     return states
 
@@ -180,7 +186,7 @@ def win_probability(map, N=10):
     # TODO: 5 lines missing.
     env = PacmanEnvironment(layout_str=map)
     initial_x, _ = env.reset()
-    model = PacManOneGhost(N, initial_x)
+    model = PacManWithGhost(N, initial_x)
     agent = DynamicalProgrammingAgent(env, model=model)
 
     win_probability = -agent.J[0][initial_x]
@@ -272,5 +278,5 @@ def two_ghosts():
 
 if __name__ == "__main__":
     #no_ghosts()
-    one_ghost()
-    #two_ghosts()
+    #one_ghost()
+    two_ghosts()

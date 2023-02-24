@@ -17,7 +17,11 @@ class PIDCarAgent(Agent):
         """
         # self.pid_angle = ...
         # TODO: 2 lines missing.
-        raise NotImplementedError("Define PID controllers here.")
+        self.pid_angle = PID(dt=env.discrete_model.dt, Kp=1.0, Ki=0, Kd=0, target=0) 
+        self.pid_velocity = PID(dt=env.discrete_model.dt, Kp=1.5, Ki=0, Kd=0, target=v_target) 
+
+
+        #raise NotImplementedError("Define PID controllers here.")
         self.use_both_x5_x3 = use_both_x5_x3 # Using both x3+x5 seems to make it a little easier to get a quick lap time, but you can just use x5 to begin with.
         super().__init__(env)
 
@@ -34,7 +38,8 @@ class PIDCarAgent(Agent):
         """
 
         # TODO: 2 lines missing.
-        raise NotImplementedError("Compute action here. No clipping necesary.")
+        xx = x[5] + x[3] if self.use_both_x5_x3 else x[5] 
+        u = np.asarray([self.pid_angle.pi(xx), self.pid_velocity.pi(x[0])]) 
         return u
 
 
