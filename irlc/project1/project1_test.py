@@ -57,7 +57,7 @@ class Pacman3(UTestCase):
 
     def test_dictionary_size(self):
         """ Is the number of keys/values in the dictionary correct? """
-        # print(self.get_expected_test_value())
+        print(self.get_expected_test_value())
         self.assertEqualC(len(self.get_transitions()))
         # self.get_expected_value()
 

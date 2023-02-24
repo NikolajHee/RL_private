@@ -5,6 +5,7 @@ from irlc.ex02.dp_model import DPModel
 from irlc.ex02.dp import DP_stochastic
 from irlc.ex02.dp_agent import DynamicalProgrammingAgent
 from irlc.pacman.pacman_environment import PacmanEnvironment
+import numpy as np
 
 # !s=east
 
@@ -49,7 +50,7 @@ datadiscs = """
 
 # TODO: 30 lines missing
 #raise NotImplementedError("Put your own code here")
-class PacManOwn(DPModel):
+class PacManNoGhost(DPModel):
     def __init__(self, N, x0):
         super().__init__(N)
         self.S_save = get_future_states(x0, N)
@@ -65,7 +66,37 @@ class PacManOwn(DPModel):
     def A(self, x, k):
         return x.A()
     #def Pw(self, x, u, k):
+class PacManOneGhost(DPModel):
+    def __init__(self, N, x0):
+        super().__init__(N)
+        self.S_save = get_future_states(x0, N)
 
+    def f(self, x, u, w, k):
+        dict_ = p_next(x,u)
+        #prob = list(dict_.values())
+        states = list(dict_.keys())
+        return states[w]
+
+    def g(self, x, u, w, k):
+        return 0
+
+    def gN(self, x):
+        #if x.isWin(): return -1
+        #if x.isLose(): return 0
+        return -1 if x.isWin() else 0
+
+    def S(self, k):
+        #print(self.S_save[k])
+        return self.S_save[k]
+
+    def A(self, x, k):
+        return x.A()
+
+    def Pw(self, x, u, k):
+        dict_ = p_next(x,u)
+        n = len(dict_.values())
+        return {i: 1/n for (i,_) in zip(range(n), range(n))}
+        # calculating p_next again?
 
 
 def p_next(x, u): 
@@ -84,9 +115,14 @@ def p_next(x, u):
         * Check the probabilities sum to 1. This will be your main way of debugging your code and catching issues relating to the previous point.
     """
     # TODO: 8 lines missing.
-    return {x.f(u): 1}
-    #raise NotImplementedError("Return a dictionary {.., xp: p, ..} where xp is a possible next state and p the probability")
-    #return states
+    x_new = x.f(u) 
+    if x_new.player() == 0: return {x_new: 1} # in case of no ghosts
+    number_of_actions = len(x_new.A())
+    uniform_distribution = [1/number_of_actions for _ in range(number_of_actions)]
+    
+    assert (sum(uniform_distribution) - 1) < 1e-8 # testing if they are approx equal to 100%
+    
+    return {x_new.f(i): j for (i,j) in zip(x_new.A(),uniform_distribution)}
 
 
 def go_east(map): 
@@ -120,9 +156,9 @@ def go_east(map):
 
 def get_future_states(x, N): 
     # TODO: 4 lines missing.
-    #raise NotImplementedError("return a list-of-list of future states [S_0,\dots,S_N]. Each S_k is a state space, i.e. a list of GameState objects.")
     state_spaces = []
     state_spaces.append([x]) # S0
+
     # lacks the check for dubplicates
     #for i in range(N):
     #    state_spaces.append([[list(p_next(k,j))[0] for j in k.A()] for k in state_spaces[i]][0])
@@ -132,18 +168,23 @@ def get_future_states(x, N):
         states = []
         for k in state_spaces[i]:
             # available actions:
-                #actions = k.A()
                 for u in k.A():
-                    u_new = list(p_next(k,u))[0]
-                    if u_new not in states: states.append(u_new)
+                    u_new_list = list(p_next(k,u).keys())
+                    for u_new in u_new_list:
+                        if u_new not in states: states.append(u_new)
         state_spaces.append(states)
-    #p_next(x,u)   Given the agent is in GameState x and takes action u, the game will transition to a new state xp
     return state_spaces
 
 def win_probability(map, N=10): 
     """ Assuming you get a reward of -1 on wining (and otherwise zero), the win probability is -J_pi(x_0). """
     # TODO: 5 lines missing.
-    raise NotImplementedError("Return the chance of winning the given map within N steps or less.")
+    env = PacmanEnvironment(layout_str=map)
+    initial_x, _ = env.reset()
+    model = PacManOneGhost(N, initial_x)
+    agent = DynamicalProgrammingAgent(env, model=model)
+
+    win_probability = -agent.J[0][initial_x]
+    #raise NotImplementedError("Return the chance of winning the given map within N steps or less.")
     return win_probability
 
 def shortest_path(map, N=10): 
@@ -156,7 +197,7 @@ def shortest_path(map, N=10):
     #states = go_east(map) # return list of states
     env = PacmanEnvironment(layout_str=map)#, render_mode='human')
     initial_x, _ = env.reset()
-    model = PacManOwn(N, initial_x)
+    model = PacManNoGhost(N, initial_x)
     agent = DynamicalProgrammingAgent(env, model=model)
     
     # conversion to optimal state and action list
@@ -230,6 +271,6 @@ def two_ghosts():
     print("Two ghosts:", win_probability(SS2tiny, N=12))
 
 if __name__ == "__main__":
-    no_ghosts()
+    #no_ghosts()
     one_ghost()
-    two_ghosts()
+    #two_ghosts()
