@@ -30,23 +30,78 @@ def plot_policy(pi, title, pdf):
     plt.show()
 
 # TODO: 51 lines missing.
-raise NotImplementedError("Insert your solution and remove this error.")
+#raise NotImplementedError("Insert your solution and remove this error.")
+class kiosk_1(DPModel): 
+    def __init__(self, N=14):
+        #super().__init__(N=N)
+        self.N = N
+
+    def A(self, x, k): # Action space A_k(x) 
+        return list(range(15+1))
+
+    def S(self, k): # State space S_k 
+        return list(range(20+1))
+
+    def g(self, x, u, w, k): # Cost function g_k(x,u,w) 
+        amount_sold = (w + min(x+u-w,0))
+        return - amount_sold * 2.1 + u * 1.5
+
+    def f(self, x, u, w, k): # Dynamics f_k(x,u,w) 
+        return max(0, min(20, x - w + u))
+
+    def Pw(self, x, u, k): # Distribution over random disturbances 
+        return {0: 3/10, 3:6/10, 6:1/10}
+
+    def gN(self, x): 
+        return 0
+
+class kiosk_2(DPModel): 
+    def __init__(self, N=14):
+        #super().__init__(N=N)
+        self.N = N
+
+    def A(self, x, k): # Action space A_k(x) 
+        return list(range(15+1))
+
+    def S(self, k): # State space S_k 
+        return list(range(20+1))
+
+    def g(self, x, u, w, k): # Cost function g_k(x,u,w) 
+        amount_sold = (w + min(x+u-w,0))
+        excess_blaster = (x - w + u - 20) if ((x - w + u) > 20) else 0
+        return - amount_sold * 2.1 + u * 1.5 + excess_blaster * 3
+
+    def f(self, x, u, w, k): # Dynamics f_k(x,u,w) 
+        return max(0, min(20, x - w + u))
+
+    def Pw(self, x, u, k): # Distribution over random disturbances 
+        #return {0: 3/10, 3:6/10, 6:1/10}
+        return {w: binom.pmf(w, 20, 1/5) for w in range(21)}
+
+    def gN(self, x): 
+        return 0
+
+
 
 def warmup_states(): 
     # TODO: 1 lines missing.
-    raise NotImplementedError("return state set")
+    return set(range(20+1)) # plus 1 as it contains 0
+    #raise NotImplementedError("return state set")
 
 def warmup_actions(): 
     # TODO: 1 lines missing.
-    raise NotImplementedError("return action set")
+    return set(range(15+1)) # plus 1 as it contains 0
+    #raise NotImplementedError("return action set")
 
 def solve_kiosk_1(): 
     # TODO: 1 lines missing.
-    raise NotImplementedError("Return cost and policy here (same format as DP_stochastic)")
+    return DP_stochastic(kiosk_1())
+    ##raise NotImplementedError("Return cost and policy here (same format as DP_stochastic)")
 
 def solve_kiosk_2(): 
     # TODO: 1 lines missing.
-    raise NotImplementedError("Return cost and policy here (same format as DP_stochastic)")
+    return DP_stochastic(kiosk_2())
+    #raise NotImplementedError("Return cost and policy here (same format as DP_stochastic)")
 
 
 def main():
