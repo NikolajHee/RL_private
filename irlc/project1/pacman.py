@@ -130,6 +130,10 @@ def p_next(x, u):
         # collect information in dictionary
         G[i+1] = {a: b for (a,b) in zip(t1, t2)}
     # return the final result
+
+    # check if there is similar states:
+    assert 1 == 2
+
     return G[-1]
 
 
