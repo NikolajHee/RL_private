@@ -185,6 +185,9 @@ def get_future_states(x, N):
         state_spaces.append(states)
     return state_spaces
 
+    ##########################
+    
+
 def win_probability(map, N=10): 
     """ Assuming you get a reward of -1 on wining (and otherwise zero), the win probability is -J_pi(x_0). """
     # TODO: 5 lines missing.
