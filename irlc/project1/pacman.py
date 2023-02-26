@@ -171,25 +171,13 @@ def go_east(map, tmax = 1e4):
 
 def get_future_states(x, N): 
     # TODO: 4 lines missing.
-    state_spaces = [[x]] # S0
-
-    # lacks the check for dubplicates
-    #for i in range(N):
-    #    state_spaces.append([[list(p_next(k,j))[0] for j in k.A()] for k in state_spaces[i]][0])
-    
-    #  # this works but not so cool
+    state_spaces = [set([x])] # S0
     for i in range(N):
-        states = []
-        for k in state_spaces[i]:
-            # available actions:
-                for u in k.A():
-                    u_new_list = list(p_next(k,u).keys())
-                    for u_new in u_new_list:
-                        if u_new not in states: states.append(u_new)
-        state_spaces.append(states)
+        # yes a list comprehension with 3 for loops ;)
+        states = [u_new for k in state_spaces[i] for u in k.A() for u_new in list(p_next(k,u).keys())]
+        # we append it as a set to avoid duplicates
+        state_spaces.append(set(states))
     return state_spaces
-
-    ##########################
 
 
 def win_probability(map, N=10): 
@@ -207,8 +195,6 @@ def shortest_path(map, N=10):
     The states should be a list of states the agent visit. The first should be the initial state and the last
     should be the won state. """
     # TODO: 4 lines missing.
-    #model = DPModel(10)
-    #states = go_east(map) # return list of states
     env = PacmanEnvironment(layout_str=map)#, render_mode='human')
     initial_x, _ = env.reset()
     agent = DynamicalProgrammingAgent(env, model=PacManNoGhost(N, initial_x))
@@ -223,7 +209,6 @@ def shortest_path(map, N=10):
         # we want the last state but not the last action
         actions.append(u)
         x_temp = x_temp.f(u)
-    
     return actions, states
 
 
