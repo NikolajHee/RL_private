@@ -125,8 +125,8 @@ class InfoPane:
                  'style': "bold"}
             self.ghostDistanceText.append(t)
 
-    def updateScore(self, score):
-        self.scoreText['contents'] = "SCORE: % 4d" % score
+    def updateScore(self, score, method=''):
+        self.scoreText['contents'] = "SCORE: % 4d %s" %(score, method)
 
     def setTeam(self, isBlue):
         txt = "RED TEAM"
@@ -170,7 +170,7 @@ class InfoPane:
 
 
 class PacmanGraphics:
-    def __init__(self, state, zoom=1.0, frameTime=0.0, capture=False, isBlue=False):
+    def __init__(self, state, zoom=1.0, frameTime=0.0, capture=False, isBlue=False, method=''):
         self.have_window = 0
         self.currentGhostImages = {}
         self.pacmanImage = None
@@ -186,6 +186,7 @@ class PacmanGraphics:
         self.startGraphics(state)
         self.distributionImages = None  # Initialized lazily
         self.previousState = state
+        self.method = method
 
     # def initialize(self, state, isBlue = False):
 
@@ -217,7 +218,7 @@ class PacmanGraphics:
 
         self.drawStaticObjects(state.data)
         self.drawAgentObjects(state.data)
-        self.infoPane.updateScore(state.data.score)
+        self.infoPane.updateScore(state.data.score, self.method)
 
         if 'ghostDistances' in dir(state.data):
             self.infoPane.updateGhostDistances(state.data.ghostDistances)

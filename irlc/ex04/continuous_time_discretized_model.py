@@ -34,7 +34,7 @@ class DiscretizedModel:
         :param cost: If this parameter is not specified, the cost will be derived (discretized) automatically from ``model``
         :param discretization_method: Can be either ``'Euler'`` (default) or ``'ei'`` (exponential integration). The later will assume that the model is a linear.
         """
-        self.dt = dt
+        self.dt = dt  
         self.continuous_model = model   
         if discretization_method is None:
             from irlc.ex04.model_linear_quadratic import LinearQuadraticModel

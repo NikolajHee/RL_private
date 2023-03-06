@@ -150,6 +150,7 @@ from gym import spaces
 class ExplicitActionSpace(spaces.Discrete):
     def __init__(self, env):
         self.env = env
+        self.start = 0
         # pass
         # self.actions = actions
         # super().__init__(len(actions))

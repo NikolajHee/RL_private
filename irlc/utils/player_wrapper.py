@@ -166,9 +166,14 @@ class PlayWrapperPygame(AgentWrapper):
                         break
                     elif (event.key,) in self.keys_to_action:
                         a = self.keys_to_action[(event.key,)]
+                        if info is not None and 'mask' in info:
+                            if info['mask'][a] == 0:
+                                # The action was masked. This means that this action is unavailable, and we should select another.
+                                # The default is to select one of the available actions from the mask.
+                                a = info['mask'].argmax()
 
-                        # print("The key exists!")
-                        break
+                        else:
+                            break
                     elif event.unicode == 'p':
                         # unpause
                         self.human_demand_autoplay = not self.human_demand_autoplay
@@ -258,11 +263,7 @@ def interactive(env : gym.Env, agent: Agent, autoplay=False) -> (gym.Env, Agent)
 
     def plot():
         env.render_mode, rmt = 'rgb_array', env.render_mode
-        # print("plot() b")
-
         frame = env.render()
-        # print("plot() c")
-
         env.render_mode = rmt
         im = Image.fromarray(frame)
         plt.imshow(im)

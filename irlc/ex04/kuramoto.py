@@ -129,7 +129,7 @@ def rk4_simulate(x0, u, t0, tF, N=1000):
         raise NotImplementedError("Insert your solution and remove this error.")
         xs.append(x_next)
     xs = np.stack(xs, axis=0)
-    return xs, tt 
+    return xs, tt
 
 if __name__ == "__main__":
     # Part 1: A sympy warmup. This defines a fairly nasty sympy function:
