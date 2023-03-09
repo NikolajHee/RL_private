@@ -4,12 +4,14 @@ import matplotlib.pyplot as plt
 from irlc import savepdf
 from irlc.ex06.ilqr import ilqr_basic, ilqr_linesearch
 from irlc.ex06.model_rendevouz import DiscreteRendevouzModel
+from irlc.ex04.continuous_time_environment import ContiniousTimeEnvironment
+from irlc.ex04.continuous_time_discretized_model import DiscretizedModel
 
-def ilqr(env, N, x0, n_iter, use_linesearch, verbose=True):
+def ilqr(model : DiscretizedModel, N, x0, n_iter, use_linesearch, verbose=True):
     if not use_linesearch:
-        xs, us, J_hist, L, l = ilqr_basic(env, N, x0, n_iterations=n_iter,verbose=verbose) 
+        xs, us, J_hist, L, l = ilqr_basic(model, N, x0, n_iterations=n_iter,verbose=verbose) 
     else:
-        xs, us, J_hist, L, l = ilqr_linesearch(env, N, x0, n_iterations=n_iter, tol=1e-6,verbose=verbose)
+        xs, us, J_hist, L, l = ilqr_linesearch(model, N, x0, n_iterations=n_iter, tol=1e-6,verbose=verbose)
     xs, us = np.stack(xs), np.stack(us)
     return xs, us, J_hist, L, l
 
@@ -20,10 +22,10 @@ def plot_vehicles(x_0, y_0, x_1, y_1, linespec='-', legend=("Vehicle 1", "Vehicl
 
 Tmax = 20
 def solve_rendovouz(use_linesearch=False):
-    env = DiscreteRendevouzModel()
-    x0 = env.continuous_model.x0 # Starting position
-    N = int(Tmax/env.dt)
-    return ilqr(env, N, x0, n_iter=10, use_linesearch=use_linesearch), env
+    model = DiscreteRendevouzModel()
+    x0 = np.asarray(model.continuous_model.bounds['x0_low']) # Starting position
+    N = int(Tmax/model.dt)
+    return ilqr(model, N, x0, n_iter=10, use_linesearch=use_linesearch), model
 
 def plot_rendevouz(use_linesearch=False):
     (xs, us, J_hist, _, _), env = solve_rendovouz(use_linesearch=use_linesearch)
