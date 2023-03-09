@@ -1,0 +1,1 @@
+            dA, dB, dd = solve_linear_problem_simple(Y=XP, X=X, U=U, lamb=lamb) 
