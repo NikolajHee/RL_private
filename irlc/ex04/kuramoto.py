@@ -12,7 +12,7 @@ import numpy as np
 from irlc import train, Agent, savepdf
 
 
-class ContiniousKuramotoModel(ContiniousTimeSymbolicModel): 
+class ContiniousKuramotoModel(ContiniousTimeSymbolicModel): # same role as DPModel
     def __init__(self): 
         """
         Create a cost-object. The code defines a quadratic cost (with the given matrices) and allows easy computation
@@ -106,9 +106,9 @@ def dfk_dx(x,u):
     dmodel = DiscreteKuramotoModel(dt=0.5)
     # the function dmodel.f accept various parameters. Perhaps their name can give you an idea?
     # TODO: 1 lines missing.
-    _, f_euler_derivative, _ = dmodel.f(x,u,compute_jacobian=True)
+    _, Jx, Ju = dmodel.f(x,u,compute_jacobian=True)
     #raise NotImplementedError("Compute derivative here using the dmodel.")
-    return f_euler_derivative
+    return Jx
 
 def rk4_simulate(x0, u, t0, tF, N=1000):
     """
@@ -135,10 +135,10 @@ def rk4_simulate(x0, u, t0, tF, N=1000):
         # Remember to insert breakpoints and use the console to examine what the various variables are.
         # TODO: 7 lines missing.
 
-        k1 = np.array(f(xs[-1], u))
-        k2 = np.array(f(xs[-1] + delta*k1/2, u))
-        k3 = np.array(f(xs[-1] + delta*k2/2, u))
-        k4 = np.array(f(xs[-1] + delta*k3, u))
+        k1 = np.asarray(f(xs[-1], u))
+        k2 = np.asarray(f(xs[-1] + delta*k1/2, u))
+        k3 = np.asarray(f(xs[-1] + delta*k2/2, u))
+        k4 = np.asarray(f(xs[-1] + delta*k3, u))
 
         x_next = xs[-1] + 1/6 * delta *( k1 + 2*k2 + 2*k3 + k4)
 
@@ -203,6 +203,8 @@ if __name__ == "__main__":
     print("The derivative of the Euler discretized version wrt. x is:")
     print("df_k/dx(x=0,u=0) =", dfk_dx([0], [0])) 
 
+
+
     # Part 4: The environment and simulation:
 
     env = KuramotoEnvironment(Tmax=20)  # An environment that runs for 5 seconds.
@@ -221,13 +223,13 @@ if __name__ == "__main__":
     # to simulate a single step.
     for _ in range(10000):
         # TODO: 7 lines missing.
-        metadata   = env.step([u])
-        xs_step.append(metadata[0])
+        xp, reward, terminate, _, info = env.step([u])
+        xs_step.append(xp)
 
         ts_step.append(env.time)
         xs_euler.append(dmodel.f( xs_euler[-1], [u], 0))
         
-        if metadata[2]: break
+        if terminate: break
 
 
         #raise NotImplementedError("Use the step() function to simulate the environment. Note that the step() function uses RK4.")

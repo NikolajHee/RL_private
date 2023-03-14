@@ -21,9 +21,6 @@ class DirectAgent(Agent):
             options = [get_opts(N=10, ftol=1e-3, guess=guess, verbose=False),
                        get_opts(N=60, ftol=1e-6, verbose=False)
                        ]
-        # if simple_bounds is not None:
-        #     cmod.set_simple_bounds(simple_bounds)
-
         solutions = direct_solver(cmod, options)
 
         # The next 3 lines are for plotting purposes. You can ignore them.
@@ -33,13 +30,19 @@ class DirectAgent(Agent):
         # set self.ufun equal to the solution (policy) function. You can get it by looking at `solutions` computed above
         self.solutions = solutions
         # TODO: 1 lines missing.
-        raise NotImplementedError("set self.ufun = solutions[....][somethingsomething] (insert a breakpoint, it should be self-explanatory).")
+        self.ufun = solutions[-1]['fun']['u']
+        #raise NotImplementedError("set self.ufun = solutions[....][somethingsomething] (insert a breakpoint, it should be self-explanatory).")
         super().__init__(env)
 
     def pi(self, x, k, info=None): 
         """ Return the action given x and t. As a hint, you will only use t, and self.ufun computed a few lines above"""
         # TODO: 7 lines missing.
-        raise NotImplementedError("Implement function body")
+        t = info['time_seconds']
+        u = self.ufun(t)
+        udiscrete = np.asarray(self.env.discrete_model.continious_actions2discrete_actions(u))
+
+
+        #raise NotImplementedError("Implement function body")
         return u
 
 def train_direct_agent(animate=True, plot=False):
@@ -52,24 +55,14 @@ def train_direct_agent(animate=True, plot=False):
              'x': [np.asarray([0, 0]), np.asarray([np.pi, 0])],
              'u': [np.asarray([0]), np.asarray([0])]}
 
-    # options = [get_opts(N=10, ftol=1e-3, guess=guess),
-    #            get_opts(N=60, ftol=1e-6)
-    #            ]
     options = [get_opts(N=10, ftol=1e-3, guess=guess),
                get_opts(N=20, ftol=1e-3),
                get_opts(N=80, ftol=1e-6)
                ]
 
-    # model.simulate(model.bounds['x0_low'], model.)
     dmod = DiscretizedModel(model=model, dt=0.1) # Discretize the pendulum model. Used for creating the environment.
     denv = ContiniousTimeEnvironment(discrete_model=dmod, Tmax=4, render_mode='human' if animate else None)
-    # def _get_initial_state():
-    #     off_center = [np.pi - 0.01, 0.01]
-    #     return off_center
-    # denv._get_initial_state = _get_initial_state
     agent = DirectAgent(denv, guess=guess, options=options)
-    # plt.close()
-    # plot_solutions(model, agent.solutions, animate=False, pdf="direct_pendulum_agent")
     denv.Tmax = agent.solutions[-1]['fun']['tF'] # Specify max runtime of the environment. Must be based on the Agent's solution.
     stats, traj = train(denv, agent=agent, num_episodes=1, return_trajectory=True)
 

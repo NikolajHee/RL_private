@@ -48,8 +48,8 @@ if __name__ == "__main__":
     from irlc.car.car_model import CarEnvironment
     import matplotlib.pyplot as plt
 
-    env = CarEnvironment(noise_scale=0,Tmax=30, max_laps=1, render_mode='human')
-    agent = PIDCarAgent(env, v_target=1, use_both_x5_x3=True) # I recommend lowering v_target to make the problem simpler.
+    env = CarEnvironment(noise_scale=0,Tmax=30, max_laps=3, render_mode='human')
+    agent = PIDCarAgent(env, v_target=3, use_both_x5_x3=True) # I recommend lowering v_target to make the problem simpler.
 
     stats, trajectories = train(env, agent, num_episodes=1, return_trajectory=True)
     env.close()

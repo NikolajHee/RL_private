@@ -35,13 +35,13 @@ def pid_locomotive():
     m = 70
     Tmax=15
 
-    env = LocomotiveEnvironment(m=m, slope=0, dt=dt, Tmax=Tmax)#, render_mode='human')
+    env = LocomotiveEnvironment(m=m, slope=0, dt=dt, Tmax=Tmax, render_mode='human')
     Kp = 40
     agent = PIDLocomotiveAgent(env, dt=dt, Kp=Kp, Ki=0, Kd=0, target=0)
     stats, traj = train(env, agent, return_trajectory=True)
     plt.plot(traj[0].time, traj[0].state[:, 0], '-', label=f"$K_p={40}$")
     fixplt()
-    savepdf('pid_locomotive_Kp')
+    #savepdf('pid_locomotive_Kp')
     plt.show()
 
     # Now include a derivative term:
@@ -51,7 +51,7 @@ def pid_locomotive():
         stats, traj = train(env, agent, return_trajectory=True)
         plt.plot(traj[0].time, traj[0].state[:, 0], '-', label=f"$K_p={Kp}, K_d={Kd}$")
     fixplt()
-    savepdf('pid_locomotive_Kd')
+    #savepdf('pid_locomotive_Kd')
     plt.show()
     env.close()
 
@@ -64,7 +64,7 @@ def pid_locomotive():
         tt = traj[0].time
         plt.plot(tt, x[:, 0], '-', label=f"$K_p={Kp}, K_i={Ki}, K_d={Kd}$")
     fixplt()
-    savepdf('pid_locomotive_Ki')
+    #savepdf('pid_locomotive_Ki')
     plt.show()
     env.close()
 

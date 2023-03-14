@@ -177,7 +177,7 @@ def get_future_states(x, N):
         states = [u_new for k in state_spaces[i] for u in k.A() for u_new in list(p_next(k,u).keys())]
         # we append it as a set to avoid duplicates
         state_spaces.append(set(states))
-    return state_spaces
+    return [list(i) for i  in state_spaces]
 
 
 def win_probability(map, N=10): 
@@ -267,6 +267,6 @@ def two_ghosts():
     print("Two ghosts:", win_probability(SS2tiny, N=12))
 
 if __name__ == "__main__":
-    #no_ghosts()
-    #one_ghost()
+    no_ghosts()
+    one_ghost()
     two_ghosts()

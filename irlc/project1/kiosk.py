@@ -114,8 +114,12 @@ def main():
     plot_policy(pi, "Kiosk1", "Latex/figures/kiosk1")
     plt.show()
 
+    #raise NotImplementedError()
     J, pi = solve_kiosk_2() # Problem 17
+    
+    
     print("Kiosk 2: Expected profits: ", -J[0][0], " imperial credits")
+    print(pi[12][0])
     plot_policy(pi, "Kiosk2", "Latex/figures/kiosk2")
     plt.show()
 

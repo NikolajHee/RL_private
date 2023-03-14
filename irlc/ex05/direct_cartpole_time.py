@@ -21,9 +21,6 @@ def compute_solutions():
     raise NotImplementedError("Define bounds here corresponding to the minimum-time swingup problem.")
 
     cost = SymbolicQRCost(R=np.eye(1)*0, Q=np.eye(4)*0, qc=1)  # just minimum time
-    # args = {}
-    # return cost, None, args, bounds
-    # cost, sbounds, _, bounds = kelly_swingup(maxForce=50, dist=1.0)
     model = ContiniousCartpole(maxForce=50, mp=0.5, mc=2.0, g=9.81, l=0.5, cost=cost, bounds=bounds)
     options = [get_opts(N=8, ftol=1e-3, guess=model.guess()),
                get_opts(N=16, ftol=1e-6),                # This is a hard problem and we need gradual grid-refinement.

@@ -20,11 +20,14 @@ class LinearizationAgent(Agent):
         You should use the function model.f to do this, which has build-in functionality to compute Jacobians which will be equal to A, B.
         It is important that you linearize around xbar, ubar. See (Her23, Section 15.1) for further details. """
         # TODO: 2 lines missing.
-        raise NotImplementedError("Insert your solution and remove this error.")
+        xp, A, B = model.f(xbar, ubar, k=0, compute_jacobian=True) 
+        d = xp - A @ xbar - B @ ubar 
+
+        #raise NotImplementedError("Insert your solution and remove this error.")
         Q, q, R = self.model.cost.Q, self.model.cost.q, self.model.cost.R
         """ Define self.L, self.l here as the (lists of) control matrices. """
         # TODO: 1 lines missing.
-        raise NotImplementedError("Compute control matrices L, l here using LQR(...)")
+        (self.L, self.l), (V, v, vc) = LQR(A=[A]*N, B=[B]*N, d=[d]*N, Q=[Q]*N, q=[q]*N, R=[self.model.cost.R]*N) 
         super().__init__(env)
 
     def pi(self, x, k, info=None):
@@ -36,7 +39,7 @@ class LinearizationAgent(Agent):
         and this controller will be able to balance the pendulum for an infinite amount of time.
         """
         # TODO: 1 lines missing.
-        raise NotImplementedError("Compute current action here")
+        u = self.L[0] @ x + self.l[0] 
         return u
 
 

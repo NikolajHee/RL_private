@@ -99,20 +99,30 @@ class ContiniousCartpole(ContiniousTimeSymbolicModel):
         return guess
 
 
-# def kelly_swingup(maxForce=50, dist=1.0):
-#     """
-#     Return problem roughly comparable to the Kelly swingup task
-#     note we have to flip coordinate system because we are using corrected dynamics.
-#     https://github.com/MatthewPeterKelly/OptimTraj/blob/master/demo/cartPole/MAIN_minTime.m
-#
-#     Use the SymbolicQRCost to get the cost function.
-#     """
-# TODO: 6 lines missing.
-raise NotImplementedError("Insert your solution and remove this error.")
-#
-#     cost = SymbolicQRCost(R=np.eye(1)*0, Q=np.eye(4)*0, qc=1)  # just minimum time
-#     args = {}
-#     return cost, None, args, bounds
+    def kelly_swingup(maxForce=50, dist=1.0):
+        """
+        Return problem roughly comparable to the Kelly swingup task
+        note we have to flip coordinate system because we are using corrected dynamics.
+        https://github.com/MatthewPeterKelly/OptimTraj/blob/master/demo/cartPole/MAIN_minTime.m
+
+        Use the SymbolicQRCost to get the cost function.
+        """
+        # TODO: 6 lines missing.
+        bounds = dict(tF_low=0.01, tF_high=np.inf,
+                    x_low=[-2 * dist, -np.inf, -2 * np.pi, -np.inf], x_high=[2 * dist, np.inf, 2 * np.pi, np.inf],
+                    u_low=[-maxForce], u_high=[maxForce],
+                    x0_low=[0, 0, np.pi, 0], x0_high=[0, 0, np.pi, 0],
+                    xF_low=[dist, 0, 0, 0], xF_high=[dist, 0, 0, 0])  
+
+        cost = SymbolicQRCost(R=np.eye(1)*0, Q=np.eye(4)*0, qc=1)  # just minimum time
+        args = {}
+        return cost, None, args, bounds
+
+
+
+
+#raise NotImplementedError("Insert your solution and remove this error.")
+
 
 
 def _cartpole_discrete_cost(model):

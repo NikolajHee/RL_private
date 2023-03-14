@@ -14,8 +14,10 @@ Tmax = 8      # Planning horizon in seconds
 Delta = 0.04  # Time discretization constant 
 
 # TODO: 21 lines missing.
-raise NotImplementedError("Your solution here")
-
+#raise NotImplementedError("Your solution here")
+class pid_pend:
+    def __init__(self, ):
+        pass
     def _get_initial_state(self):
         return np.asarray([1, 0])
 
@@ -24,7 +26,9 @@ def get_A_B(g, L, m=0.1):
     """ Compute the two matrices A, B (see Problem 1) here and return them.
     The matrices should be numpy ndarrays. """
     # TODO: 2 lines missing.
-    raise NotImplementedError("Compute A and B here")
+    A = np.array([[0, 1], [-g/L,0]])
+    B = np.array([0,1/(m*L**2)]).T
+    #raise NotImplementedError("Compute A and B here")
     return A, B
 
 def cost_discrete(x_k, u_k): 
