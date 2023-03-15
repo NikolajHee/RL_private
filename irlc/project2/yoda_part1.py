@@ -15,23 +15,48 @@ Delta = 0.04  # Time discretization constant
 
 # TODO: 21 lines missing.
 #raise NotImplementedError("Your solution here")
-class pid_pend:
-    def __init__(self, ):
-        pass
+
+class MyContinousPendulumClass(LinearQuadraticModel):
+    def __init__(self, k=1.,L=0.4, m=m, Q=None, R=None):
+        self.k = k
+        self.m = m
+        A, B = get_A_B(g, L, m=m)
+
+        A, B = np.asarray(A), np.asarray(B)
+        if Q is None:
+            Q = np.eye(2)
+        if R is None:
+            R = np.eye(1)
+        self.viewer = None
+        super().__init__(A=A, B=B, Q=Q, R=R)
+
+
+class MyDiscretePendulumClass(DiscretizedModel):
+    def __init__(self, Q=None, R=None):
+        discrete_model = MyContinousPendulumClass(Q =Q, R = R)
+        super().__init__(model = discrete_model, dt=Delta)
+
+
+class PendulumEnvironment(ContiniousTimeEnvironment):
+    def __init__(self, Tmax = 8):
+        model = MyDiscretePendulumClass()
+        self.dt = model.dt
+        super().__init__(discrete_model=model, Tmax=Tmax, supersample_trajectory=False)
     def _get_initial_state(self):
         return np.asarray([1, 0])
 
 
-def get_A_B(g, L, m=0.1): 
+
+def get_A_B(g : float, L: float, m=0.1): 
     """ Compute the two matrices A, B (see Problem 1) here and return them.
     The matrices should be numpy ndarrays. """
     # TODO: 2 lines missing.
     A = np.array([[0, 1], [-g/L,0]])
-    B = np.array([0,1/(m*L**2)]).T
-    #raise NotImplementedError("Compute A and B here")
+    B = np.array([[0],[1/(m*L**2)]])
+    #raise NotImplementedError("Compute numpy matrices A and B here")
     return A, B
 
-def cost_discrete(x_k, u_k): 
+def cost_discrete(x_k : np.ndarray, u_k : np.ndarray): 
     """ Compute the (dicretized) cost at time k given x_k, u_k. in the Yoda-problem.
     I.e. the total cost is
 
@@ -49,10 +74,10 @@ def cost_discrete(x_k, u_k):
     If this worked, you will know you implemented the R, Q matrices correctly.
     """
     # TODO: 2 lines missing.
-    raise NotImplementedError("Implement function body")
-    return c_k
+    dmodel = MyDiscretePendulumClass(Q = 0.1*np.eye(2), R = 100*np.eye(1))
+    return 0 if (x_k == np.array([0,0])) else dmodel.cost.c(x_k, u_k)
 
-def problem1(L): 
+def problem1(L : float): 
     """ This function solve Problem 2 by defining a PID controller and making the plot. The recommended way to do this
     is by implementing a very simple environment corresponding to Yodas pendulum (note we have several examples of linear models, including
     the Harmonic Osscilator, see model_harmonic.py), and then use an appropriate agent on it to simulate the PID controller.
@@ -67,9 +92,17 @@ def problem1(L):
     plt.show()
     """
     # TODO: 7 lines missing.
-    raise NotImplementedError("Implement function body")
+    env = PendulumEnvironment()
+    Agent = PIDLocomotiveAgent(env, Delta, Kp=1.0, Ki=0.2, Kd=0.3, target=0)
+    stats, trajectories = train(env, Agent, num_episodes=1, return_trajectory=True)
+    plot_trajectory(trajectories[0], env)
+    plt.title("PID agent heuristic")
+    savepdf("yoda1")
+    plt.show()
 
-def part1(L): 
+    #raise NotImplementedError("Implement function body")
+
+def part1(L : float): 
     """ This function solve Problem 3.
     It should solve the Pendulum problem using an optimal LQ control law and return L_0, l_0 as well as the action-sequence
     obtained when controlling the system using this exact control law at all time instances k.
@@ -78,20 +111,20 @@ def part1(L):
         * Although we don't have an agent that does *exact* what we want in the problem, we have one that comes *really* close.
     """
     # TODO: 3 lines missing.
-    raise NotImplementedError("Return L0, l0, and the action sequence from the LQR controller")
+    raise NotImplementedError("Return L0, l0, and the action sequence (as a list) from the LQR controller")
     return agent.L[0], agent.l[0], traj[0].action
 
-def part2(L): 
+def part2(L : float): 
     """ This function should solve Problem 4. The function should return the action sequence
     obtained by treating the LQR control law as the parameters for a PID controller, and then simulating the system
     using that PID controller.
 
     The function should return
 
-    > K_P, K_I, K_D, x_star, action_sequence
+    > K_P, K_I, K_D, x_star, action_sequence = part2(L)
 
-    in that order, where the first 4 terms specify a PID controller and the last is the corresponding action-sequence
-    obtained by simulating the controller. The simulation can be done using the same method you used to
+    in that order, where the first 4 numbers specify a PID controller and the last is the corresponding action-sequence
+    obtained by simulating the controller (as a list). The simulation can be done using the same method you used to
     simulate your pid controller.
 
     Hints:

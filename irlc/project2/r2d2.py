@@ -1,9 +1,10 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
+import time
 import numpy as np
 import sympy as sym
-from scipy.optimize import Bounds
-from gym.spaces import Box
 import matplotlib.pyplot as plt
+import matplotlib
+# matplotlib.use('Qt5Agg') # Matplotlib is having a bad year, and this will stop it from randomly crashing on some platforms (linux), but may cause problems on other (mac).
 from irlc.ex04.continuous_time_discretized_model import DiscretizedModel
 from irlc.ex04.continuous_time_environment import ContiniousTimeEnvironment
 from irlc.ex04.continuous_time_model import ContiniousTimeSymbolicModel
@@ -11,7 +12,7 @@ from irlc.ex04.cost_continuous import SymbolicQRCost
 from irlc.ex05.direct_agent import DirectAgent
 from irlc.ex05.direct import get_opts
 from irlc.ex06.linearization_agent import LinearizationAgent
-from irlc.project2.utils import render_car
+from irlc.project2.utils import R2D2Viewer
 from irlc import Agent, train, plot_trajectory, savepdf
 
 dt = 0.05 # Time discretization Delta
@@ -29,33 +30,32 @@ class R2D2Model(ContiniousTimeSymbolicModel): # This may help you get started.
         poke through the API. The following should do the trick: """
         cost = SymbolicQRCost(Q=np.zeros(self.state_size), R=np.eye(self.action_size))
         cost += cost.goal_seeking_cost(x_target=self.x_target)*Q0
-
+        # Specify bounds
         # TODO: 6 lines missing.
-        raise NotImplementedError("Complete model body.")
-
-        bounds = dict(tF_low=Tmax, tF_high=Tmax,
-                      x0_low=[0]*3,x0_high=[0]*3,
-                      x_low=[-np.inf]*3, x_high=[np.inf]*3,
-                      u_low=[-np.inf]*2, u_high=[np.inf]*2,
-                      xF_low=x_target, xF_high=x_target
-                      )
+        raise NotImplementedError("Insert your solution and remove this error.")
         # Set up a variable for rendering (optional) and call superclass.
         self.viewer = None
         super().__init__(cost=cost, bounds=bounds)
 
-    # TODO: 6 lines missing.
+    # TODO: 3 lines missing.
     raise NotImplementedError("Complete model here.")
 
-    """ These are two helper functions. They add rendering functionality so you can use the environment as
-    > env = VideoMonitor(env) 
+    """ These are two helper functions. They add rendering functionality so you can eventually use the environment as
+    
+    > env = R2D2Environment(render_mode='human') 
+    
     and see a small animation. 
     """
     def close(self):
         if self.viewer is not None:
             self.viewer.close()
 
-    def render(self, x, mode="human"): 
-        return render_car(self, x, x_target=self.x_target, mode=mode) 
+    def render(self, x, render_mode="human"): 
+        if self.viewer is None:
+            self.viewer = R2D2Viewer(x_target=self.x_target) # Target is the red cross.
+        self.viewer.update(x)
+        time.sleep(0.05)
+        return self.viewer.blit(render_mode=render_mode) 
 
 class R2D2DiscreteModel(DiscretizedModel):
     def __init__(self, dt=0.05, Q0=0., x_target=x22, Tmax=5.):
@@ -68,7 +68,7 @@ class R2D2Environment(ContiniousTimeEnvironment):
 # TODO: 9 lines missing.
 raise NotImplementedError("Your code here.")
 
-def f_euler(x, u, Delta=0.05): 
+def f_euler(x : np.ndarray, u : np.ndarray, Delta=0.05) -> np.ndarray: 
     """ Solve Problem 13. The function should compute
     > x_next = f_k(x, u)
     """
@@ -76,16 +76,17 @@ def f_euler(x, u, Delta=0.05):
     raise NotImplementedError("return next state")
     return x_next
 
-def linearize(x_bar, u_bar, Delta=0.05): 
+def linearize(x_bar, u_bar, Delta=0.05):
     """ Linearize R2D2's dynamics around the two vectors x_bar, u_bar
     and return A, B, d so that
 
     x_{k+1} = A x_k + B u_k + d (approximately)
 
-    assuming that x_k and u_k are close to x_bar, u_bar. The function should return A, B and d.
+    assuming that x_k and u_k are close to x_bar, u_bar. The function should return linearization matrices A, B and d.
     """
+    # return A, B, d as numpy ndarrays.
     # TODO: 2 lines missing.
-    raise NotImplementedError("return A, B, d as numpy ndarrays.")
+    raise NotImplementedError("Insert your solution and remove this error.")
     return A, B, d
 
 def drive_to_linearization(x_target, plot=True): 
@@ -105,7 +106,7 @@ def drive_to_linearization(x_target, plot=True):
         * The control method is identical to one we have seen in the exercises/notes. You can re-purpose the code from that week.
         * Remember to set Q0=1
     """
-    # TODO: 8 lines missing.
+    # TODO: 9 lines missing.
     raise NotImplementedError("Implement function body")
     return traj[0].state
 
@@ -117,7 +118,7 @@ def drive_to_direct(x_target, plot=False):
     Plot is an optional parameter to control plotting, and to (optionally) visualize the environment using code such as
 
     if plot:
-        env = VideoMonitor(env)
+        env = R2D2Environment(render_mode='human')
 
     For making the actual plot, the plot_trajectory(trajectory, env) method may be useful (see examples from exercises to see how labels can be specified)
 
@@ -127,17 +128,18 @@ def drive_to_direct(x_target, plot=False):
     Hints:
         * The control method (Direct method) is identical to what we did in the exercises, but you have to specify the options
         to implement the correct grid-refinement of N=10, N=20 and N=40.
-        * The guess()-function will be automatically specified correctly assuming you implement the correct bounds. Use that function in the options.
+        * In the first iteration, you need a guess. The guess()-function in the ContiniousTimeSymbolicModel is automatically specified correctly assuming
+          you implement the correct bounds. Use that function in the options (see exercises).
     """
-    # TODO: 10 lines missing.
+    # TODO: 11 lines missing.
     raise NotImplementedError("Implement function body")
     return traj[0].state
 
 
-def drive_to_mpc(x_target, plot=True): 
+def drive_to_mpc(x_target, plot=True) -> np.ndarray: 
     """
-    Plan in a R2D2 model with specific value of x_target (in the cost function) using iterative MPC (see text).
-    In this problem, we set Q0=1.
+    Plan in a R2D2 model with specific value of x_target (in the cost function) using iterative MPC (see problem text).
+    Use Q0 = 1. in the cost function (see the R2D2 model class)
 
     Plot is an optional parameter to control plotting. the plot_trajectory(trajectory, env) method may be useful.
 
@@ -145,10 +147,14 @@ def drive_to_mpc(x_target, plot=True):
     as the default output of trajectories when you use train(...).
 
     Hints:
-    * The control method is nearly identical to the linearization control method. Think about the differences,
-    and how a solution to one can be used in another.
+     * The control method is *nearly* identical to the linearization control method. Think about the differences,
+       and how a solution to one can be used in another.
+     * A bit more specific: Linearization is handled similarly to the LinearizationAgent, however, we need to update
+       (in each step) the xbar/ubar states/actions we are linearizing about, and then just use the immediate action computed
+       by the linearization agent.
+     * My approach was to implement a variant of the LinearizationAgent.
     """
-    # TODO: 5 lines missing.
+    # TODO: 6 lines missing.
     raise NotImplementedError("Implement function body")
     return traj[0].state
 
@@ -173,7 +179,6 @@ if __name__ == "__main__":
     plt.legend()
     plt.xlabel("x")
     plt.ylabel("y")
-
     savepdf('r2d2_direct_B')
     plt.show()
 
