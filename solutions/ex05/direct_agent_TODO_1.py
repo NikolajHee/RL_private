@@ -1,0 +1,1 @@
+        self.ufun = solutions[-1]['fun']['u'] 

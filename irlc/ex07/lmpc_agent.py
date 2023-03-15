@@ -53,7 +53,8 @@ class LMPCAgent(Agent):
         self.timer = Timer()
         self.timer.start()
 
-    def pi(self, x, t=None):
+    def pi(self, x, k, info=None):
+        t = k
         x = x.copy()
         if self.step_within_lap == 0:
             self.env.seed = np.random.randint(0, 1000)
@@ -98,7 +99,7 @@ class LMPCAgent(Agent):
         self.LMPCOpenLoopData.Qfunused[:, i, self.it] = self.SSset.Qfun_SelectedTot
         return u
 
-    def train(self, x, u, cost, xp, done=False):
+    def train(self, x, u, cost, xp, done=False, info_s=None, info_sp=None):
         lap_done = x[4] > xp[4]
         i = self.step_within_lap
         self.timer.tic('SS')

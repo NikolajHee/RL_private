@@ -68,7 +68,10 @@ class GridworldEnvironment(MDP2GymEnv):
     def _get_mdp(self, grid, uniform_initial_state=False):
         return GridworldMDP(grid, living_reward=self.living_reward)
 
-    def __init__(self, grid=None, uniform_initial_state=True, living_reward=0,zoom=1, view_mode=0, render_mode=None, **kwargs):
+    def __init__(self, grid=None, uniform_initial_state=True, living_reward=0,zoom=1, view_mode=0, render_mode=None, print_states=False,
+                 frames_per_second=None,
+                 **kwargs):
+        self.print_states = print_states
         self.living_reward = living_reward
         mdp = self._get_mdp(grid)
         self.render_mode = render_mode
@@ -85,33 +88,35 @@ class GridworldEnvironment(MDP2GymEnv):
         self.display_pygame = None
         # self.screen = None
         self.zoom = zoom # Save zoom level.
-
-        # self.display_pygame.autorefresh(self, interval=0.1)
-        #
-        # # main loop
-        # while True:
-        #     # handle user input
-        #     for event in pygame.event.get():
-        #         if event.type == pygame.QUIT:
-        #             pygame.quit()
-        #             import sys
-        #             sys.exit()
-
-
-
+        self.total_reward = 0
+        self.frames_per_second = frames_per_second
         def _step(*args, **kwargs):
+            s = self.state
             o = type(self).step(self, *args, **kwargs)
             done = o[2]
+            a = args[0]
+            self.total_reward +=  o[1]
             self.render_steps += 1
             self.render_episodes += done
-            # print(o[-1])
-            # if 'mask' in o[-1] and o[-1] is None:
-            #     print("also bad.")
-            # if 'mask' in o[-1] and o[-1]['mask'].max() > 1:
-            #     print("BAd!")
-
+            if self.print_states:
+                if isinstance(self, FrozenLake):
+                    pr = f" This occurred with probability: P(s', r |  s, a) = {self.mdp.Psr(s, a)[(o[0], o[1])]:.2f}."
+                else:
+                    pr = ""
+                if done:
+                    pt = f" Total reward for this episode was {self.total_reward}."
+                else:
+                    pt = ""
+                print(f"s={s}, a={a} --> s'={o[0]}, r={o[1]}. {pr}{pt}")
             return o
         self.step = _step
+
+    def reset(self, *args, **kwargs):
+        o = super().reset(*args, **kwargs)
+        self.total_reward = 0
+        if self.print_states:
+            print(f"Starting in state s={o[0]}")
+        return o
 
     def keypress(self, key):
         if key.unicode == 'm':
@@ -126,40 +131,23 @@ class GridworldEnvironment(MDP2GymEnv):
 
 
     def render(self):
-        # print("rendering")
         if self.display_pygame is None:
-            # self.display = None
-            # self.viewer = None
-            # speed = 1
-            # gridSize =
-            # self.display = gridworld_graphics_display.GraphicsGridworldDisplay(self.mdp, gridSize)
             from irlc.gridworld.gridworld_graphics_display import GraphicsGridworldDisplay
-            self.display_pygame = GraphicsGridworldDisplay(self.mdp, size=int(150 * self.zoom)) # last item is grid size
-            # print("I made a display")
+            self.display_pygame = GraphicsGridworldDisplay(self.mdp, size=int(150 * self.zoom), frames_per_second=self.frames_per_second) # last item is grid size
 
-        # print("Render callsed")
-        # if Q is not None:
-        #     raise Exception("Oh dear")
-        # if v is not None:
-        #     raise Exception("Oh no!")
-
-        # self.agent = agent
-        # if label is None:
-        #     label = f"{method_label} AFTER {self.render_steps} STEPS"
         agent = self.agent
         label = None
-        method_label = ""
-        if label is None:
+        method_label = agent.method if hasattr(agent, 'method') else ''
+        if label is None and len(method_label) > 0:
             label = f"{method_label} AFTER {self.render_steps} STEPS"
 
         state = self.state
         avail_modes = []
         if agent != None:
-
-            label = (agent.label if hasattr(agent, 'label') else method_label) #if label is None else label
+            label = (agent.label if hasattr(agent, 'label') else label if label is not None else '') #if label is None else label
             v = agent.v if hasattr(agent, 'v') else None
             Q = agent.Q if hasattr(agent, 'Q') else None
-            policy = agent.policy if hasattr(agent, 'policy') else None
+            # policy = agent.policy if hasattr(agent, 'policy') else None
             v2Q = agent.v2Q if hasattr(agent, 'v2Q') else None
             avail_modes = []
             if Q is not None:
@@ -220,19 +208,10 @@ class GridworldEnvironment(MDP2GymEnv):
             # self.display.displayNullValues(self.mdp, currentState=state)
 
         render_out2 = self.display_pygame.blit(render_mode=self.render_mode)
-        # print("I blitted")
-        # print("> blitted")
         return render_out2
-        # if self.render_mode == 'human':
-        #
-        #
-        #     pass
-        # self.display.end_frame()
-        # render_out = self.viewer.render(return_rgb_array=self.render_mode == 'rgb_array')
-        # return render_out
 
     def close(self):
-        print("Closing time...")
+        # print("Closing time...")
         if self.display_pygame is not None:
             self.display_pygame.close()
 
@@ -318,11 +297,6 @@ grid_book_grid_ = [[' ',' ',' ',+1],
 frozen_lake_4 = [['S',' ',' ',' '],
                  [' ','#',' ',-1],
                  [ 0 , ' ', ' ',  +1]]
-# Single letter in front: 0 -> ' ' fix the problem. WHAT THE FUCK IS WRONG WITH THIS????
-
-# class FrozenLake2(GridworldEnvironment):
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(frozen_lake_4, *args, **kwargs)
 
 class FrozenLake(GridworldEnvironment):
     def _get_mdp(self, grid, uniform_initial_state=False):

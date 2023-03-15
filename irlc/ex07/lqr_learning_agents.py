@@ -6,80 +6,17 @@ References:
 from irlc.ex06.dlqr import LQR
 from irlc.ex07.regression import solve_linear_problem_simple
 from irlc.ex04.model_boing import BoingEnvironment
+from irlc.ex04.continuous_time_environment import ContiniousTimeEnvironment
 from irlc.ex01.agent import train
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.neighbors import NearestNeighbors
 from irlc import Agent
 from irlc import Timer
-import faiss
-
-class Buffer:  
-    def __init__(self):
-        self.x = []
-        self.u = []
-        self.xp = []
-
-    def push(self, x, u, xp):  
-        """ Add an observation of the form
-        > xp = f(x, u) to the buffer.
-        """
-        if len(self.x) == 0:
-            self.index = faiss.index_factory(x.size+ u.size, "Flat")
-
-        self.x.append(x)
-        self.u.append(u)
-        self.xp.append(xp)
-
-        NN_WITH_U = True
-        Z = np.concatenate([x, u]) if NN_WITH_U else x
-
-        self.index.add(Z[np.newaxis, :])
-
-        if not self.index.is_trained:
-            print("not trained?")
-
-    def __len__(self):
-        return len(self.x)
-
-    def get_data(self):
-        """ Return matrices (vertical dimension are number of samples) of the form
-
-        > XP[i,:].T = f(X[i,:].T, U[i,:].T)
-
-        The matrices will consist of all data in the buffer.
-        """
-        X = np.asarray(self.x)  # train new LQR
-        XP = np.asarray(self.xp)
-        U = np.asarray(self.u)
-        return X, U, XP 
-
-    def get_closest_observations(self, x, u, n=50):
-        """ Given x, u (as vectors) the code finds the n closest observations to (x, u), i.e. observations of the form (x_k, u_k, x_{k+1}), such that
-        the distances |(x_k, u_k)-(x_k', u_k')| is as small as possible. This can be used for local linear regression. """
-        if len(self) < n:
-            return self.get_data()
-        X, U, XP = self.get_data()
-        TT = 1
-        NN_WITH_U = True
-
-        def nnfaiss(Z, n, z):
-            distances, neighbors = self.index.search(z.reshape(1, -1).astype(np.float32), n)
-            return distances, neighbors
-
-        for _ in range(TT):
-            Z = None
-            z = (np.concatenate([x,u],axis=0) if NN_WITH_U else x).reshape( (1,-1))
-            distances, indices = nnfaiss(Z, n, z)
-
-            # distances, indices = nn.kneighbors(z)
-            indices = indices.squeeze()
-            xx, uu,xxp = X[indices], U[indices], XP[indices]
-        return xx, uu, xxp
+from irlc.ex07.control_buffer import Buffer
 
 
 class LearningLQRAgent(Agent):
-    def __init__(self, env):
+    def __init__(self, env: ContiniousTimeEnvironment):
         self.buffer = Buffer()
         self.L = None
         self.l = None
@@ -104,7 +41,7 @@ class LearningLQRAgent(Agent):
             return self.env.action_space.sample() # There are no control matrices. Use a random action.
         else:
             # Compute action u based on control matrices self.L, self.l (see the LQR agent)
-            # TODO: 5 lines missing.
+            # TODO: 1 lines missing.
             raise NotImplementedError("Compute action u here using control matrices stored in self.L, self.l.")
             return u
 
@@ -137,12 +74,12 @@ class MPCLearningAgent(Agent):
             u = self.L[0] @ x + self.l[0]
             return u
 
-    def train(self, x, u, cost, xp, done=False, metadata=None, info_s=None, info_sp=None):
+    def train(self, x, u, r, xp, done=False, metadata=None, info_s=None, info_sp=None):
         # TODO: 1 lines missing.
         raise NotImplementedError("Push current observation into the buffer. See buffer documentation for details.")
 
 class MPCLocalLearningLQRAgent(Agent):
-    def __init__(self, env, horizon_length=30, neighbourhood_size=50, min_buffer_size=40):
+    def __init__(self, env : ContiniousTimeEnvironment, horizon_length=30, neighbourhood_size=50, min_buffer_size=40):
         self.buffer = Buffer()
         self.NH = horizon_length
         self.neighbourhood_size = neighbourhood_size
@@ -209,7 +146,7 @@ class MPCLocalLearningLQRAgent(Agent):
         self.buffer.push(x=x, u=u, xp=xp)
 
 
-def boing_experiment(env, agent, num_episodes=2, plot=True, pdf=None):
+def boing_experiment(env: ContiniousTimeEnvironment, agent : Agent, num_episodes=2, plot=True, pdf=None):
     """ Train the agent for num_episodes of data and plot the result on each trajectory """
     stats, trajectories= train(env,agent,num_episodes=num_episodes, return_trajectory=True)
     def plot_trajectory(t):
@@ -227,11 +164,11 @@ def boing_experiment(env, agent, num_episodes=2, plot=True, pdf=None):
         plt.grid()
         plt.legend()
 
-    if hasattr(agent, '_t_solver'):
+    if hasattr(agent, '_t_solver'): # print debug information. I think this can be safely removed.
         tt = [agent._t_nearest, agent._t_linearizer, agent._t_solver]
         print("Nearest, linear, solver: ", [t/sum(tt) for t in tt])
     if plot:
-        f,axs = plt.subplots(len(trajectories), 1, sharey=True, figsize=(10, 10))
+        f,axs = plt.subplots(len(trajectories), 1, sharey='all', figsize=(10, 10))
 
         for k, t in enumerate(trajectories):
             plt.sca(axs[k])
@@ -243,17 +180,17 @@ def boing_experiment(env, agent, num_episodes=2, plot=True, pdf=None):
         plt.show()
     return stats, trajectories
 
-def learning_lqr(env):
+def learning_lqr(env : ContiniousTimeEnvironment):
     # Learn the dynamisc and apply LQR.
     lagent = LearningLQRAgent(env)
     boing_experiment(env, lagent, pdf="ex7_A", num_episodes=3)
 
-def learning_lqr_mpc(env):
+def learning_lqr_mpc(env : ContiniousTimeEnvironment):
     # Learning the dynamics and apply LQR, but train on a short horizon. This method implements (Her23, Algorithm 27)
     lagent2 = MPCLearningAgent(env)
     boing_experiment(env, lagent2, num_episodes=3, pdf="ex7_B")
 
-def learning_lqr_mpc_local(env):
+def learning_lqr_mpc_local(env : ContiniousTimeEnvironment):
     # Learning the dynamics and apply LQR, but train on a short horizon. This method implements (Her23, Algorithm 28)
     lagent3 = MPCLocalLearningLQRAgent(env, neighbourhood_size=50)
     boing_experiment(env, lagent3, pdf="ex7_C", num_episodes=4)

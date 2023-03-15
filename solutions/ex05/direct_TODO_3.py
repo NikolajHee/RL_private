@@ -1,0 +1,2 @@
+    z, z0, z_lb, z_ub = z+[t0], z0+[guess['t0']], z_lb+[model.bounds['t0_low']], z_ub+[model.bounds['t0_high']] 
+    z, z0, z_lb, z_ub = z+[tF], z0+[guess['tF']], z_lb+[model.bounds['tF_low']], z_ub+[model.bounds['tF_high']] 

@@ -33,30 +33,43 @@ class KuromotoTest(UTestCase):
         self.assertLinf(dfk_dx([0.1], [0.4]), tol=1e-6)
 
     def test_RK4(self):
+        from irlc.ex04.kuramoto import rk4_simulate
+
         cmodel = ContiniousKuramotoModel()
         x0 = np.asarray(cmodel.bounds['x0_low'])  # Get the starting state x=0.
         u = 1.3
-        xs, us, ts = cmodel.simulate(x0, u_fun=u , t0=0, tF=20)
+        xs, ts = rk4_simulate(x0, [u], t0=0, tF=20, N=100)
+
+        # xs, us, ts = cmodel.simulate(x0, u_fun=u , t0=0, tF=20)
         self.assertLinf(ts, tol=1e-6)
-        self.assertLinf(us, tol=1e-6)
+        # self.assertLinf(us, tol=1e-6)
         self.assertLinf(xs, tol=1e-6)
 
         # Test the same with a varying function:
-        xs, us, ts = cmodel.simulate(x0, u_fun=lambda x,t: np.sin(x + u) , t0=0, tF=10)
+        xs, ts = rk4_simulate(x0, [u+1], t0=0, tF=10, N=50)
+        # xs, us, ts = cmodel.simulate(x0, u_fun=lambda x,t: np.sin(x + u) , t0=0, tF=10)
         self.assertLinf(ts, tol=1e-6)
-        self.assertLinf(us, tol=1e-6)
+        # self.assertLinf(us, tol=1e-6)
         self.assertLinf(xs, tol=1e-6)
 
 
-class DiscretizationTest(UTestCase):
+class RK4Test(UTestCase):
     """ Simulation and discretization """
     def test_rk4(self):
         """ RK4 integration test """
-        env = GymSinCosPendulumEnvironment()
-        env.reset()
-        env.step([0.5])
-        x, _, _, _, _ = env.step([0.9])
-        self.assertL2(x, tol=1e-6)
+        from irlc.ex04.kuramoto import rk4_simulate
+        # env = GymSinCosPendulumEnvironment()
+        # env.reset()
+        # env.step([0.5])
+
+        cmodel = ContiniousKuramotoModel()
+        # print(cmodel) # Uncomment this line to print details about the environment.
+        x0 = cmodel.bounds['x0_low']  # Get the starting state x0. We exploit that the bound on x0 is an equality constraint.
+        u = 1.3
+        xs, ts = rk4_simulate(x0, [u], t0=0, tF=20, N=100)
+
+        # x, _, _, _, _ = env.step([0.9])
+        self.assertL2(xs[-1], tol=1e-6)
 
     # def test_exponential_integration(self): # This test has been removed as exponential integration is no longer an exercise.
     #     """ Exponential Integration """
@@ -128,7 +141,7 @@ class Week04Tests(Report):
     individual_imports = []
     questions = [
                 (KuromotoTest, 10),
-                (DiscretizationTest, 20),  # ok
+                (RK4Test, 20),  # ok
                 (PIDLocomotive, 20),  # ok
                 (PIDCar, 20),  # ok
                  ]

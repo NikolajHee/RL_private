@@ -18,24 +18,20 @@ class ContiniousPendulumModel(ContiniousTimeSymbolicModel):
     x_upright, x_down = np.asarray([0.0, 0.0]), np.asarray([np.pi, 0.0])
 
     def __init__(self, l=1., m=.8, g=9.82, friction=0.0, max_torque=6.0, cost=None, bounds=None): 
-        self.g, self.l, self.m = g, l, m
-        self.friction=friction
-        self.max_torque = max_torque
+        self.g, self.l, self.m, self.max_torque = g, l, m, max_torque
         if bounds is None:
             bounds = {'tF_low': 0.5,                 'tF_high': 4,  
                      't0_low': 0,                   't0_high': 0,
                      'x_low': [-2 * np.pi, -np.inf],'x_high': [2 * np.pi, np.inf],
                      'u_low': [-max_torque],        'u_high': [max_torque],
                      'x0_low': [np.pi, 0],          'x0_high': [np.pi, 0],
-                     'xF_low': [0, 0],              'xF_high': [0, 0] 
-                     }
+                     'xF_low': [0, 0],              'xF_high': [0, 0] } 
         if cost is None:
-            # Initialize a basic quadratic cost function:
-            cost = SymbolicQRCost(R=np.ones( (1,1) ), Q=np.eye(2) ) 
-
+            cost = SymbolicQRCost(R=np.ones( (1,1) ), Q=np.eye(2) )
+        super().__init__(cost=cost, bounds=bounds) 
         self.u_prev = None                        # For rendering
         self.cp_render = None
-        super().__init__(cost=cost, bounds=bounds) 
+        self.friction = friction
 
     def render(self, x, render_mode="human"):
         if self.cp_render is None:

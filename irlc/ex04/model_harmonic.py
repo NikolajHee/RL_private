@@ -108,12 +108,6 @@ class HarmonicViewer(UpgradedGraphicsUtil):
 
     def update(self, x):
         self.x = x
-#
-# # An agent that takes null (zero) actions. When is this used?
-# from irlc import Agent
-# class NullAgent(Agent):
-#     def pi(self, x, k, info=None):
-#         return np.asarray([0])
 
 if __name__ == "__main__":
     from irlc import train

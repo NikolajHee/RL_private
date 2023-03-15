@@ -5,7 +5,7 @@ from numpy.linalg import matrix_power  # Computes A^n for matrix A and integer n
 from irlc.project2.yoda_part1 import get_A_B
 
 
-def A_euler(g,L,Delta): 
+def A_euler(g : float,L : float, Delta : float) -> np.ndarray: 
     """ Compute \tilde{A}_0 (Euler discretization), see Problem 6.
 
     Hints:
@@ -15,7 +15,7 @@ def A_euler(g,L,Delta):
     raise NotImplementedError("Implement function body")
     return A0_tilde
 
-def A_ei(g,L,Delta): 
+def A_ei(g : float,L : float, Delta : float) -> np.ndarray: 
     """ Compute A_0 (Exponential discretization), see Problem 6
 
     Hints:
@@ -25,7 +25,7 @@ def A_ei(g,L,Delta):
     raise NotImplementedError("Implement function body")
     return A0
 
-def M_euler(g, L, Delta, N): 
+def M_euler(g : float, L : float, Delta : float, N : int) -> np.ndarray: 
     """ Compute \tilde{M} (Euler discretization), see Problem 7
     Hints:
         * the matrix_power(X,n) function can compute expressions such as X^n where X is a square matrix and n is a number
@@ -34,13 +34,13 @@ def M_euler(g, L, Delta, N):
     raise NotImplementedError("Implement function body")
     return M_tilde
 
-def M_ei(g,L,Delta,N): 
+def M_ei(g : float,L : float, Delta : float, N : int) -> np.ndarray: 
     """ Compute M (Exponential discretization), see Problem 7 """
     # TODO: 1 lines missing.
     raise NotImplementedError("Implement function body")
     return M
 
-def xN_bound_euler(g,L,Delta,N): 
+def xN_bound_euler(g : float,L : float,Delta : float,N : int) -> float: 
     """ Compute upper bound on |x_N| when using Euler discretization, see Problem 10.
     The function should just return a number.
 
@@ -51,7 +51,7 @@ def xN_bound_euler(g,L,Delta,N):
     raise NotImplementedError("Implement function body")
     return bound
 
-def xN_bound_ei(g,L,Delta,N): 
+def xN_bound_ei(g: float,L : float,Delta : float,N : int) -> float: 
     """ Compute upper bound on |x_N| when using exponential discretization, see Problem 11.
 
     Hints:

@@ -9,6 +9,10 @@ class GridworldMDP(MDP):
     EAST = 1
     SOUTH = 2
     WEST = 3
+    actions2labels = {NORTH: 'North',
+                      SOUTH: 'South',
+                      EAST: 'East',
+                      WEST: 'West'}  # This dictionary is useful for labelling purposes but otherwise serve no purpose.
 
     def __init__(self, grid, living_reward=0.0, noise=0.0):
         self.grid = {}

@@ -30,7 +30,7 @@ from irlc.car.car_model import CarEnvironment
 from irlc import train
 import os
 
-def setup_lmpc_controller(max_laps=9):
+def setup_lmpc_controller(max_laps=9, render_mode=None):
     np.random.seed(3)  # crash if seed = 0
     # freeze_support() # Used for optimizer and multiprocessing support (deprecated)
     # ======================================================================================================================
@@ -55,13 +55,13 @@ def setup_lmpc_controller(max_laps=9):
     R_LMPC = 1 * np.diag([1.0, 1.0])  # Input cost u = [delta, a]
     Rd_LMPC = 5 * np.array([1.0, 1.0])  # Input rate cost u
 
-    cost_slack = DiscreteQRCost(state_size=n, action_size=d, Q=Qslack)
-    cost_u_deriv = DiscreteQRCost(state_size=n, action_size=d, R=Rd_LMPC)
+    cost_slack = DiscreteQRCost(Q=Qslack, R=np.zeros((d,d)))
+    cost_u_deriv = DiscreteQRCost(Q=np.zeros((n,n)), R=Rd_LMPC)
 
     x_linear = np.array([vt, 0, 0, 0, 0, 0]) # appears irrelevant for problem.
-    cost = DiscreteQRCost(state_size=n, action_size=d, R=R_LMPC, Q=Q_LMPC, q=x_linear)  # self.env.cost.x_target
+    cost = DiscreteQRCost(R=R_LMPC, Q=Q_LMPC, q=x_linear)  # self.env.cost.x_target
 
-    car = CarEnvironment(map_width=0.8, cost=cost, max_laps=max_laps, hot_start=True)  # Initialize the bicycle model. Contains the map.
+    car = CarEnvironment(map_width=0.8, cost=cost, max_laps=max_laps, hot_start=True, render_mode=render_mode)  # Initialize the bicycle model. Contains the map.
     car.reset()
     print("Starting LMPC")
     LMPController = LMPCAgent(numSS_Points, numSS_it, N=N, shift=shift, dt=dt,
@@ -81,11 +81,11 @@ def setup_lmpc_controller(max_laps=9):
     return car, LMPController
 
 def main(show_episode=False,plot=True):
-    car, LMPController = setup_lmpc_controller(max_laps=9)
+    car, LMPController = setup_lmpc_controller(max_laps=9, render_mode='human')
     # ---- MAIN LMPC TRAINING LOOP ----
-    from irlc import VideoMonitor
-    if show_episode:
-        car = VideoMonitor(car)
+    # from irlc import VideoMonitor
+    # if show_episode:
+    # car = VideoMonitor(car)
     stats_, traj_ = train(car, LMPController, num_episodes=1)
     car.close()
     if not plot:

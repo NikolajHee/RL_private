@@ -30,14 +30,14 @@ class ContiniousCartpole(ContiniousTimeSymbolicModel):
         # c0, _, _, _ = kelly_swingup(maxForce=maxForce, dist=dist)
         c0 = SymbolicQRCost(R=np.eye(1) * 0, Q=np.eye(4) * 0, qc=1)  # just minimum time
 
-        # bounds_ = dict(tF_low=0.01, tF_high=np.inf,
-        #               x_low=[-2 * dist, -np.inf, -2 * np.pi, -np.inf], x_high=[2 * dist, np.inf, 2 * np.pi, np.inf],
-        #               u_low=[-maxForce], u_high=[maxForce],
-        #               x0_low=[0, 0, np.pi, 0], x0_high=[0, 0, np.pi, 0],
-        #               xF_low=[dist, 0, 0, 0], xF_high=[dist, 0, 0, 0])
-        bounds_ = dict(tF_low=0, tF_high=np.inf,
-                       x_low=-3, x_high=3,
-                       u_low=-maxForce, u_high=maxForce)
+        bounds_ = dict(tF_low=0.01, tF_high=np.inf,
+                      x_low=[-2 * dist, -np.inf, -2 * np.pi, -np.inf], x_high=[2 * dist, np.inf, 2 * np.pi, np.inf],
+                      u_low=[-maxForce], u_high=[maxForce],
+                      x0_low=[0, 0, np.pi, 0], x0_high=[0, 0, np.pi, 0],
+                      xF_low=[dist, 0, 0, 0], xF_high=[dist, 0, 0, 0])
+        # bounds_ = dict(tF_low=0, tF_high=np.inf,
+        #                x_low=[-3], x_high=3,
+        #                u_low=[-maxForce], u_high=[maxForce])
         if cost is None:
             cost = c0
         if bounds is None:
@@ -211,7 +211,7 @@ class GymThetaCartpoleModel(DiscretizedModel):
 
 class GymThetaCartpoleEnvironment(ContiniousTimeEnvironment):
     def __init__(self, Tmax=5, transform_actions=True, supersample_trajectory=False, render_mode='human', **kwargs):
-        discrete_model = GymThetaCartpoleModel(transform_actions=transform_actions, **kwargs)
+        discrete_model = GymThetaCartpoleModel(**kwargs)
         super().__init__(discrete_model, Tmax=Tmax, supersample_trajectory=supersample_trajectory, render_mode=render_mode)
 
     @property

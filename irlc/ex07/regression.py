@@ -1,28 +1,53 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
+"""
+References:
+  [Her23] Tue Herlau. Sequential decision making. (See 02465_Notes.pdf), 2023.
+"""
 import numpy as np
 import scipy.linalg as linalg
 
-def vec(M):
-    return M.flatten('F')
 
 def solve_linear_problem_simple(Y, X, U, lamb=0): 
-    """ Implements the solver for the basic linear regression problem.
-    The method solves a problem of the form:
-
-    > x_{k+1} = A x_k + B u_k + d
-
-    using the more familiar naming convention
-    > Y = A X + B U + d.
-
-    Assuming there are N observations, and x_k is n-dimensional, the conventions are that
-    A is n x n dimensional, Y is n x N dimensional, X is n x N dimensional, and so on (i.e. observations are in the horizontal dimension). 
     """
+    This function uses linear regression to find matrices and vectors :math:`A`, :math:`B` and :math:`d` in the linear dynamics:
+
+    .. math::
+      x_{k+1} = A x_k + B u_k + d 
+
+    This is accomplished by gathering (stacking) all observations vertically as follows:
+
+        - all :math:`N` observations of :math:`x_{k+1}` into an :math:`N \\times n` matrix :math:`Y`,
+        - all :math:`N` observations of :math:`x_{k}` into an :math:`N \\times n` matrix :math:`X`,
+        - all :math:`N` observations of :math:`u_{k}` into an :math:`N \\times d` matrix :math:`U`,
+
+    which allows us to write the problem in a more condensed format:
+
+    .. math::
+      Y^\\top = AX^\\top + BU^\\top + d
+
+    which can be solved using multi-dimensional linear regression. The method specifically implements \(Her23, Algorithm 26).
+
+    :param Y: A :math:`N \\times n` numpy ndarray
+    :param X: A :math:`N \\times n` numpy ndarray
+    :param U: A :math:`N \\times d` numpy ndarray
+    :param lamb: Regularization strength :math:`\lambda`
+    :return:
+        - A - A :math:`n\\times n` numpy ``ndarray``
+        - B - A :math:`n\\times d` numpy ``ndarray``
+        - d - A :math:`n\\times 1` numpy ``ndarray``
+    """ 
+    Y = Y.T
+    X = X.T
+    U = U.T
     n,d = X.shape[0], U.shape[0]
     P_list = [np.eye(n), np.eye(n), np.eye(n)]
     Z_list = [X, U, np.ones( (1,X.shape[1]))]
     W = solve_linear_problem(Y, Z_list=Z_list, P_list=P_list, lamb=lamb)
     A, B, d = W[0], W[1], vec(W[2])
-    return A, B, d
+    return A, B, d 
+
+def vec(M):
+    return M.flatten('F')
 
 def solve_linear_problem(Y, Z_list, P_list=None, lamb=0, weights=None):
     if P_list is None:

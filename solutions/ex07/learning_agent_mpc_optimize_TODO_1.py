@@ -1,0 +1,1 @@
+        E = sum([cost.q @ x[:, t] + 0.5 * cp.quad_form(u[:, t], cost.R) + 0.5 * cp.quad_form(x[:, t], cost.Q) for t in range(T)])  

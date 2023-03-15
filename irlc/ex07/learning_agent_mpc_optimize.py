@@ -6,10 +6,8 @@ References:
 from irlc.ex04.model_boing import BoingEnvironment
 import numpy as np
 from irlc.ex07.lqr_learning_agents import MPCLocalLearningLQRAgent, boing_experiment
-# cvxpy is only used here.
-# It can be a little annoying to install on Windows, and you don't need it for the project.
+from irlc.ex04.continuous_time_environment import ContiniousTimeEnvironment
 import cvxpy as cp
-
 
 class MPCLearningAgentLocalOptimize(MPCLocalLearningLQRAgent):
     def __init__(self, *args, **kwargs):
@@ -69,7 +67,7 @@ class MPCLocalAgentExactDynamics(MPCLearningAgentLocalOptimize):
         return A, B, d
 
 
-def learning_optimization_mpc_local(env):
+def learning_optimization_mpc_local(env : ContiniousTimeEnvironment):
     # Learning the dynamics and apply LQR, but train on a short horizon. This method implements (Her23, Algorithm 29)
     lagent3 = MPCLearningAgentLocalOptimize(env, neighbourhood_size=50)
     boing_experiment(env, lagent3, pdf="ex7_D", num_episodes=4)

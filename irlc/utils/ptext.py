@@ -645,7 +645,6 @@ class _Span:
     def getwidth(self, text):
         if text == '0':
             pass
-            print("text")
         return self.font.size(text)[0]
 
     def render(self):

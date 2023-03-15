@@ -49,7 +49,7 @@ def getEndpoints(direction, position=(0, 0)):
 class GraphicsGridworldDisplay:
     time_since_last_update = 0
     key_queue = []
-    def __init__(self, mdp, size=120):
+    def __init__(self, mdp, size=120, frames_per_second=None):
         self.mdp = mdp
         self.ga = GraphicsUtilGym()
         self.Q_old = None
@@ -60,9 +60,22 @@ class GraphicsGridworldDisplay:
         self.MARGIN = self.GRID_SIZE * 0.75
         screen_width = (mdp.width - 1) * self.GRID_SIZE + self.MARGIN * 2
         screen_height = (mdp.height - 0.5) * self.GRID_SIZE + self.MARGIN * 2
-
-        self.ga.begin_graphics(screen_width, screen_height, BACKGROUND_COLOR, title=title)
+        self.ga.begin_graphics(screen_width, screen_height, BACKGROUND_COLOR, title=title, frames_per_second=frames_per_second)
+        self.annotations = []
         # function to refresh the window
+
+
+    def draw_annotation(self):
+        for a in self.annotations:
+            if a['type'] == 'text':
+                self.ga.text(f"adf", (a['x'], a['y']), a['color'], a['message'], "Courier", anchor='c', fontsize=a['fontsize'], bold=a['bold'])
+
+    def annotate_text(self, state, symbol='o', color=(200,50, 50), dx=0, dy=0, fontsize=30, bold=False):
+        x,y = self.to_screen(state)
+        x += int(dx * self.GRID_SIZE)
+        y += int(dy * self.GRID_SIZE)
+
+        self.annotations.append({'type': 'text', 'x': x, 'y': y, 'message': symbol, 'color': color, 'fontsize': fontsize, 'bold': bold})
 
 
     def close(self):
@@ -142,6 +155,7 @@ class GraphicsGridworldDisplay:
 
         pos = self.to_screen(((mdp.width - 1.0) / 2.0, - 0.8))
         self.ga.text(f"v_text_", pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
+        self.draw_annotation()
 
     def displayNullValues(self, mdp, currentState=None, message=''):
         self.ga.draw_background()
@@ -164,11 +178,14 @@ class GraphicsGridworldDisplay:
             screen_x, screen_y = self.to_screen(currentState)
             self.draw_player((screen_x, screen_y), 0.12 * self.GRID_SIZE)
         else:
-            print("No player!")
+            pass
+            # print("No player!")
         # pos = self.to_screen(((mdp.width - 1.0) / 2.0, - 0.8))
         # self.ga.text("Q_values_text", pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
 
         self.ga.text("bottom_text", pos, TEXT_COLOR, message, "Courier", -32, "bold", "c")
+        self.draw_annotation()
+
 
     def displayQValues(self, mdp, Q, currentState=None, message="Agent Q-Values", eligibility_trace=None):
         """ Eligibility trace is an optional dictionary-like object. """
@@ -186,8 +203,8 @@ class GraphicsGridworldDisplay:
         self.Null_old = None
 
         m = [max(Q.get_Qs(s)[1]) for s in mdp.nonterminal_states]
-
-        minValue = min(m)
+        mv = [min(Q.get_Qs(s)[1]) for s in mdp.nonterminal_states]
+        minValue = min(mv)
         maxValue = max(m)
         for x in range(mdp.width):
             for y in range(mdp.height):
@@ -254,6 +271,8 @@ class GraphicsGridworldDisplay:
 
             screen_x, screen_y = self.to_screen(currentState)
             self.draw_player((screen_x, screen_y), 0.12 * self.GRID_SIZE)
+        self.draw_annotation()
+
 
     def drawNullSquare(self, name, grid, x, y, isObstacle, isTerminal, isCurrent):
         square_color = getColor(0, -1, 1)
@@ -280,6 +299,8 @@ class GraphicsGridworldDisplay:
                          TEXT_COLOR,
                          str(grid[x,y]),
                          "Courier", -24, "bold", "c")
+        self.draw_annotation()
+
 
     def drawSquare(self, name, x, y, val, min, max, valStr, all_action, isObstacle, isTerminal, isCurrent,
                    returns_count=None, returns_sum=None):

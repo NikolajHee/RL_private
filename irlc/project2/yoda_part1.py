@@ -46,14 +46,21 @@ class PendulumEnvironment(ContiniousTimeEnvironment):
         return np.asarray([1, 0])
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> tue/master
 def get_A_B(g : float, L: float, m=0.1): 
     """ Compute the two matrices A, B (see Problem 1) here and return them.
     The matrices should be numpy ndarrays. """
     # TODO: 2 lines missing.
+<<<<<<< HEAD
     A = np.array([[0, 1], [-g/L,0]])
     B = np.array([[0],[1/(m*L**2)]])
     #raise NotImplementedError("Compute numpy matrices A and B here")
+=======
+    raise NotImplementedError("Compute numpy matrices A and B here")
+>>>>>>> tue/master
     return A, B
 
 def cost_discrete(x_k : np.ndarray, u_k : np.ndarray): 
@@ -100,8 +107,11 @@ def problem1(L : float):
     savepdf("yoda1")
     plt.show()
 
+<<<<<<< HEAD
     #raise NotImplementedError("Implement function body")
 
+=======
+>>>>>>> tue/master
 def part1(L : float): 
     """ This function solve Problem 3.
     It should solve the Pendulum problem using an optimal LQ control law and return L_0, l_0 as well as the action-sequence

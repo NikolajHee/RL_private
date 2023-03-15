@@ -41,7 +41,7 @@ def compute_unconstrained_solutions():
 
 def compute_constrained_solutions():
     model_h = ContiniouBrachistochrone(h=0.1, x_dist=1)
-    options = [get_opts(N=10, ftol=1e-3, guess=model.guess0),
+    options = [get_opts(N=10, ftol=1e-3, guess=model_h.guess0),
                get_opts(N=30, ftol=1e-6)]
     solutions_h = direct_solver(model_h, options)
     return model_h, solutions_h

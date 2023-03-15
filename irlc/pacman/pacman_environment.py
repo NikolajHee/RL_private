@@ -26,7 +26,8 @@ class PacmanEnvironment(gym.Env):
         """
         return state.A()
 
-    def __init__(self, render_mode=None, animate_movement=None, layout='mediumGrid', zoom=2.0, num_ghosts=4, frames_per_second=30, ghost_agent=None, layout_str=None):
+    def __init__(self, render_mode=None, animate_movement=None, layout='mediumGrid', zoom=2.0, num_ghosts=4, frames_per_second=30, ghost_agent=None, layout_str=None,
+                 method_str=''):
         self.metadata['video_frames_per_second'] = frames_per_second
         self.ghosts = [ghost_agent(i+1) if ghost_agent is not None else RandomGhost(i+1) for i in range(num_ghosts)]
         if animate_movement is None:
@@ -57,7 +58,7 @@ class PacmanEnvironment(gym.Env):
         self.ghostbeliefs = None
         self.path = None
         self.render_mode = render_mode
-
+        self.method = method_str
 
     def reset(self, seed=None, options=None):
         self.game = self.rules.newGame(self.layout, PacAgent(index=0), self.ghosts, quiet=True, catchExceptions=False)
@@ -120,7 +121,7 @@ class PacmanEnvironment(gym.Env):
                 self.graphics_display = FirstPersonPacmanGraphics(self.game.state, self.options_zoom, showGhosts=True, frameTime=self.options_frametime, ghostbeliefs=self.ghostbeliefs)
                 # self.graphics_display.ghostbeliefs = self.ghostbeliefs
             else:
-                self.graphics_display = PacmanGraphics(self.game.state, self.options_zoom, frameTime=self.options_frametime)
+                self.graphics_display = PacmanGraphics(self.game.state, self.options_zoom, frameTime=self.options_frametime, method=self.method)
 
         if self.render_mode in ["human", 'rgb_array']:
             # if self.graphics_display is None:
