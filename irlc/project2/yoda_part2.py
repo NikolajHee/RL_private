@@ -51,7 +51,8 @@ def xN_bound_euler(g,L,Delta,N):
         * This function uses all input arguments.
     """
     # TODO: 1 lines missing.
-    raise NotImplementedError("Implement function body")
+    #raise NotImplementedError("Implement function body")
+    bound = (np.sqrt(1 + (Delta**2)*g/L))**N
     return bound
 
 def xN_bound_ei(g,L,Delta,N): 
@@ -62,7 +63,8 @@ def xN_bound_ei(g,L,Delta,N):
         * This will be the hardest problem to solve, but the easiest function to implement.
     """
     # TODO: 1 lines missing.
-    raise NotImplementedError("Implement function body")
+    #raise NotImplementedError("Implement function body")
+    bound = 1
     return bound
 
 if __name__ == '__main__':

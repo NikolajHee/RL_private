@@ -20,9 +20,13 @@ x22 = (2, 2, np.pi / 2)  # Where we want to drive to: x_target
 
 class R2D2Model(ContiniousTimeSymbolicModel): # This may help you get started.
     # TODO: 4 lines missing.
-    raise NotImplementedError("Define constants as needed here (look at other environments); Note there is an easy way to add labels!")
+    state_size = 3
+    action_size = 2
+    state_labels = ["$x$", "$y$", r"$\gamma$"]
+    action_labels = ["$v$", r"$\omega$"]
+    #raise NotImplementedError("Define constants as needed here (look at other environments); Note there is an easy way to add labels!")
 
-    def __init__(self, x_target=(2,2,np.pi/2), Tmax=5., Q0=1.): # This constructor is one possible choice.
+    def __init__(self, x_target=(2,2,np.pi/2), Tmax=5., Q0=1., dt=0.05): # This constructor is one possible choice.
         bounds = {}  # Set this variable to correspond to the simple (linear) bounds the system is subject to. See exercises for examples.
         self.x_target = np.asarray(x_target)
         """ Since we have not discussed the cost-function a lot during the exercises it feels unreasonable to have you
@@ -31,7 +35,8 @@ class R2D2Model(ContiniousTimeSymbolicModel): # This may help you get started.
         cost += cost.goal_seeking_cost(x_target=self.x_target)*Q0
 
         # TODO: 6 lines missing.
-        raise NotImplementedError("Complete model body.")
+        self.Delta = dt
+        #raise NotImplementedError("Complete model body.")
 
         bounds = dict(tF_low=Tmax, tF_high=Tmax,
                       x0_low=[0]*3,x0_high=[0]*3,
@@ -44,7 +49,12 @@ class R2D2Model(ContiniousTimeSymbolicModel): # This may help you get started.
         super().__init__(cost=cost, bounds=bounds)
 
     # TODO: 6 lines missing.
-    raise NotImplementedError("Complete model here.")
+    def sym_f(self, x, u, t=None): 
+        return [x[0] + self.Delta * u[0] * sym.cos(x[1]), x[1] + self.Delta*u[0] * sym.sin(x[1]), x[2] + self.Delta*u[1]]
+        
+         # see model_cartpole
+
+    #raise NotImplementedError("Complete model here.")
 
     """ These are two helper functions. They add rendering functionality so you can use the environment as
     > env = VideoMonitor(env) 
@@ -59,21 +69,22 @@ class R2D2Model(ContiniousTimeSymbolicModel): # This may help you get started.
 
 class R2D2DiscreteModel(DiscretizedModel):
     def __init__(self, dt=0.05, Q0=0., x_target=x22, Tmax=5.):
-        super().__init__(model=R2D2Model(x_target=x_target, Q0=Q0, Tmax=Tmax), dt=dt)
+        super().__init__(model=R2D2Model(x_target=x_target, Q0=Q0, Tmax=Tmax, dt=dt), dt=dt)
 
 class R2D2Environment(ContiniousTimeEnvironment):
     def __init__(self, Tmax=Tmax, Q0=0., x_target=x22, dt=0.5, render_mode=None):
         super().__init__(R2D2DiscreteModel(Q0=Q0, x_target=x_target, Tmax=Tmax, dt=dt), Tmax=Tmax, render_mode=render_mode)
 
 # TODO: 9 lines missing.
-raise NotImplementedError("Your code here.")
+#raise NotImplementedError("Your code here.")
 
 def f_euler(x, u, Delta=0.05): 
     """ Solve Problem 13. The function should compute
     > x_next = f_k(x, u)
     """
     # TODO: 1 lines missing.
-    raise NotImplementedError("return next state")
+    #raise NotImplementedError("return next state")
+    x_next = np.array([x[0], x[1], x[2]]) + Delta * np.array([ u[0] * np.cos(x[2]), u[0] * np.sin(x[2]), u[1]])
     return x_next
 
 def linearize(x_bar, u_bar, Delta=0.05): 
@@ -85,7 +96,10 @@ def linearize(x_bar, u_bar, Delta=0.05):
     assuming that x_k and u_k are close to x_bar, u_bar. The function should return A, B and d.
     """
     # TODO: 2 lines missing.
-    raise NotImplementedError("return A, B, d as numpy ndarrays.")
+    model = R2D2DiscreteModel(dt = Delta)
+    xp, A, B = model.f(x_bar, u_bar, k=0, compute_jacobian=True) 
+    d = xp - A @ x_bar - B @ u_bar 
+    #raise NotImplementedError("return A, B, d as numpy ndarrays.")
     return A, B, d
 
 def drive_to_linearization(x_target, plot=True): 

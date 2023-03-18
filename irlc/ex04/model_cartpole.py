@@ -108,7 +108,7 @@ class ContiniousCartpole(ContiniousTimeSymbolicModel):
 #     Use the SymbolicQRCost to get the cost function.
 #     """
 # TODO: 6 lines missing.
-raise NotImplementedError("Insert your solution and remove this error.")
+#raise NotImplementedError("Insert your solution and remove this error.")
 #
 #     cost = SymbolicQRCost(R=np.eye(1)*0, Q=np.eye(4)*0, qc=1)  # just minimum time
 #     args = {}
