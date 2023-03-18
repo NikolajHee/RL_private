@@ -12,7 +12,8 @@ def A_euler(g,L,Delta):
         * get_A_B can perhaps save you a line or two.
     """
     # TODO: 2 lines missing.
-    raise NotImplementedError("Implement function body")
+    A0_tilde = np.array([[1, Delta],  [Delta * (-g)/L, 1]])
+    #raise NotImplementedError("Implement function body")
     return A0_tilde
 
 def A_ei(g,L,Delta): 
@@ -22,7 +23,8 @@ def A_ei(g,L,Delta):
         * The special function expm(X) computes the matrix exponential e^X. See lecture notes for more information.
     """
     # TODO: 2 lines missing.
-    raise NotImplementedError("Implement function body")
+    A0 = expm(Delta * np.array([[0,1],[-g/L, 0]]))
+    #raise NotImplementedError("Implement function body")
     return A0
 
 def M_euler(g, L, Delta, N): 
@@ -31,13 +33,14 @@ def M_euler(g, L, Delta, N):
         * the matrix_power(X,n) function can compute expressions such as X^n where X is a square matrix and n is a number
     """
     # TODO: 1 lines missing.
-    raise NotImplementedError("Implement function body")
+    M_tilde = matrix_power(np.array([[1, Delta],  [Delta * (-g)/L, 1]]), N)
     return M_tilde
 
 def M_ei(g,L,Delta,N): 
     """ Compute M (Exponential discretization), see Problem 7 """
     # TODO: 1 lines missing.
-    raise NotImplementedError("Implement function body")
+    M = expm(N * Delta * np.array([[0,1],[-g/L, 0]]))
+    #raise NotImplementedError("Implement function body")
     return M
 
 def xN_bound_euler(g,L,Delta,N): 
