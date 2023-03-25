@@ -81,8 +81,26 @@ class R2D2Environment(ContiniousTimeEnvironment):
 
 # TODO: 9 lines missing.
 #raise NotImplementedError("Your code here.")
-def iMPC():
-    
+from irlc.ex06.dlqr import LQR
+class ILinearizationAgent(Agent):
+    """ Implement the simple linearization procedure described in (Her23, Algorithm 23) which expands around a single fixed point. """
+    def __init__(self, env, model, xbar_init=None, ubar_init=None):
+        self.model = model
+        self.N = 50 
+        self.us = [ubar_init]
+        # xp, A, B = model.f(xbar_init, ubar_init, k=0, compute_jacobian=True) 
+        # d = xp - A @ xbar_init - B @ ubar_init 
+        self.Q, self.q, self.R = self.model.cost.Q, self.model.cost.q, self.model.cost.R
+        # (self.L, self.l), (V, v, vc) = LQR(A=[A]*N, B=[B]*N, d=[d]*N, Q=[Q]*N, q=[q]*N, R=[self.model.cost.R]*N) 
+        super().__init__(env)
+
+    def pi(self, x, k, info=None):
+        xp, A, B = self.model.f(x, self.us[k], k=0, compute_jacobian=True) 
+        d = xp - A @ x - B @ self.us[k]
+        (L, l), (V, v, vc) = LQR(A=[A]*self.N, B=[B]*self.N, d=[d]*self.N, Q=[self.Q]*self.N, q=[self.q]*self.N, R=[self.R]*self.N) 
+        u = L[0] @ x + l[0] 
+        self.us.append(u)
+        return u
 
 
 def f_euler(x, u, Delta=0.1): 
@@ -209,7 +227,7 @@ def drive_to_mpc(x_target, plot=True):
     ubar = np.array([0,0])
     env = R2D2Environment(Q0 = 1.0, x_target=x_target, dt=dt)
     #model = R2D2DiscreteModel(Q0=1, x_target=x_target)
-    agent = LinearizationAgent(env, env.discrete_model, xbar, ubar)
+    agent = ILinearizationAgent(env, env.discrete_model, xbar, ubar)
     _, traj = train(env, agent, num_episodes=1, return_trajectory=True)#, reset=False)
     if plot:
         plot_trajectory(traj[0], env)#, xkeys=[0,2, 3], ukeys=[0])
@@ -218,37 +236,36 @@ def drive_to_mpc(x_target, plot=True):
 
 if __name__ == "__main__":
     # Check Problem 14
-    # x = np.asarray( [0, 0, 0] )
-    # u = np.asarray( [1,0])
-    # print("x_k =", x, "u_k =", u, "x_{k+1} =", f_euler(x, u, dt))
+    x = np.asarray( [0, 0, 0] )
+    u = np.asarray( [1,0])
+    print("x_k =", x, "u_k =", u, "x_{k+1} =", f_euler(x, u, dt))
 
-    # A,B,d = linearize(x_bar=x, u_bar=u, Delta=dt)
-    # print("x_{k+1} ~ A x_k + B u_k + d")
-    # print("A:", A)
-    # print("B:", B)
-    # print("d:", d)
+    A,B,d = linearize(x_bar=x, u_bar=u, Delta=dt)
+    print("x_{k+1} ~ A x_k + B u_k + d")
+    print("A:", A)
+    print("B:", B)
+    print("d:", d)
 
     # Test the simple linearization method (Problem 16)
-    # states = drive_to_direct(x22, plot=True)
-    # savepdf('r2d2_direct')
-    # plt.show()
-    # # Build plot assuming that states is in the format (samples x coordinates-of-state).
-    # plt.plot(states[:,0], states[:,1], 'k-', label="R2D2's (x, y) trajectory")
-    # plt.legend()
-    # plt.xlabel("x")
-    # plt.ylabel("y")
-
-    # savepdf('r2d2_direct_B')
-    # plt.show()
+    states = drive_to_direct(x22, plot=True)
+    savepdf('r2d2_direct')
+    plt.show()
+    # Build plot assuming that states is in the format (samples x coordinates-of-state).
+    plt.plot(states[:,0], states[:,1], 'k-', label="R2D2's (x, y) trajectory")
+    plt.legend()
+    plt.xlabel("x")
+    plt.ylabel("y")
+    savepdf('r2d2_direct_B')
+    plt.show()
 
     # Test the simple linearization method (Problem 17)
-    # drive_to_linearization((2,0,0), plot=True)
-    # savepdf('r2d2_linearization_1')
-    # plt.show()
+    drive_to_linearization((2,0,0), plot=True)
+    savepdf('r2d2_linearization_1')
+    plt.show()
 
-    # drive_to_linearization(x22, plot=True)
-    # savepdf('r2d2_linearization_2')
-    # plt.show()
+    drive_to_linearization(x22, plot=True)
+    savepdf('r2d2_linearization_2')
+    plt.show()
 
     # Test iterative LQR (Problem 18)
     state = drive_to_mpc(x22, plot=True)

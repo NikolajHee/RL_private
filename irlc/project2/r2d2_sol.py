@@ -19,9 +19,9 @@ if __name__ == '__main__':
     from irlc.project2.r2d2 import linearize
     theta = 0.911
     xbar = np.asarray([0, 0, theta])
-    ubar = np.asarray([1, 0])
+    ubar_init = np.asarray([1, 0])
     Delta = 0.1532
-    A, B, d = linearize(xbar, ubar, Delta=Delta)
+    A, B, d = linearize(xbar, ubar_init, Delta=Delta)
 
     dA = np.asarray([[1, 0, -Delta * np.sin(theta)],
                      [0, 1, Delta * np.cos(theta)],
