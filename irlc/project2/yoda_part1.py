@@ -31,7 +31,7 @@ class MyContinousPendulumClass(LinearQuadraticModel):
 
 
 class MyDiscretePendulumClass(DiscretizedModel):
-    def __init__(self, Q=None, R=None,L=0.4):
+    def __init__(self, Q=None, R=None,L=0.4, Delta=0.04):
         discrete_model = MyContinousPendulumClass(L=L, Q=Q, R=R)
         super().__init__(model = discrete_model, dt=Delta)
 
@@ -44,6 +44,15 @@ class PendulumEnvironment(ContiniousTimeEnvironment):
     def _get_initial_state(self):
         #print("den bliver brugt")
         return np.asarray([1, 0])
+    
+
+class DiscreteLQRCost(DiscreteLQRAgent):
+    def __init__(self, env, model):
+        super().__init__(env, model)
+    
+    def pi(self,x, k, info=None):
+        u = self.L[0] @ x + self.l[0]  
+        return u
 
 def get_A_B(g, L, m=0.1): 
     """ Compute the two matrices A, B (see Problem 1) here and return them.
@@ -73,9 +82,9 @@ def cost_discrete(x_k, u_k):
     """
     # TODO: 2 lines missing.
     #raise NotImplementedError("Implement function body")
-    dmodel = MyDiscretePendulumClass(Q = 0.1*np.eye(2), R = 100*np.eye(1))
+    dmodel = MyDiscretePendulumClass(Q = 0.1*np.eye(2)/Delta, R = 100*np.eye(1)/Delta, Delta=Delta) # why divide by Delta
     return dmodel.cost.c(x_k, u_k)
-    return c_k
+   
 
 def problem1(L): 
     """ This function solve Problem 2 by defining a PID controller and making the plot. The recommended way to do this
@@ -112,9 +121,9 @@ def part1(L):
     """
     # TODO: 3 lines missing.
     env = PendulumEnvironment(Q = 0.1*np.eye(2), R = 100*np.eye(1), L=L)
-    agent = DiscreteLQRAgent(env, model=env.discrete_model)
+    agent = DiscreteLQRCost(env, model=env.discrete_model)
     stats, traj = train(env, agent, return_trajectory=True)
-
+    #u = agent.L[0] @ x + agent.l[0]
     #raise NotImplementedError("Return L0, l0, and the action sequence from the LQR controller")
     return agent.L[0], agent.l[0], traj[0].action
 
@@ -139,9 +148,18 @@ def part2(L):
     #raise NotImplementedError("return x*, Kp, Kd, Ki, and the action sequence from the PID controller")
     env = PendulumEnvironment(Q = 0.1*np.eye(2), R = 100*np.eye(1), L=L)
     agent = DiscreteLQRAgent(env, model=env.discrete_model)
+    #Agent = PIDLocomotiveAgent(env, Delta, Kp=1.0, Ki=0.2, Kd=0.3, target=0)
     stats, traj = train(env, agent, return_trajectory=True)
+    L0 , l0 = agent.L[0], agent.l[0]
+    Kp = -L0[0,0]
+    Ki = 0
+    Kd = -L0[0,1]
+    x_star = 0
+    
+    Agent = PIDLocomotiveAgent(env, Delta, Kp=Kp, Ki=Ki, Kd=Kd, target=0)
+    stats, trajectories = train(env, Agent, num_episodes=1, return_trajectory=True)
 
-    return Kp, Ki, Kd, x_star, traj[0].action
+    return Kp, Ki, Kd, x_star, trajectories[0].action
 
 if __name__ == "__main__":
     L = 0.4  # Length of pendulum string; sorry that this clashes with (L_k, l_k)

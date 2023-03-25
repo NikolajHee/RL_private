@@ -19,7 +19,7 @@ class BasicAgent(Agent):
         self.epsilon = epsilon
 
     def pi(self, s, t, info=None): 
-        """ Since this is a bandit, s=None and can be ignored, while k refers to the time step in the current episode """
+        """ Since this is a bandit, s=None and can be ignored, while t refers to the time step in the current episode """
         if t == 0:
             # At step 0 of episode. Re-initialize data structure. 
             # TODO: 2 lines missing.

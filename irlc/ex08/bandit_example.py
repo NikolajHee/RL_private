@@ -17,7 +17,7 @@ if __name__ == "__main__":
     agent = Agent(bandit)  # Recall the agent takes random actions  
     for i in range(10):
         _, trajectories = train(bandit, agent, return_trajectory=True, num_episodes=1, max_steps=500)
-        regret = np.asarray([r['average_regret'] for r in trajectories[0].env_info])
+        regret = np.asarray([r['average_regret'] for r in trajectories[0].env_info[1:]])
         cum_regret = np.cumsum(regret)
         plt.plot(cum_regret, label=f"Episode {i}")
     plt.legend()

@@ -12,7 +12,8 @@ from irlc.ex05.direct_agent import DirectAgent
 from irlc.ex05.direct import get_opts
 from irlc.ex06.linearization_agent import LinearizationAgent
 from irlc.project2.utils import render_car
-from irlc import Agent, train, plot_trajectory, savepdf
+from irlc import Agent, train, plot_trajectory, savepdf#, VideoMonitor
+#from irlc import VideoMonitor
 
 dt = 0.05 # Time discretization Delta
 Tmax = 5  # Total simulation time (in all instances). This means that N = Tmax/dt = 100.
@@ -26,7 +27,7 @@ class R2D2Model(ContiniousTimeSymbolicModel): # This may help you get started.
     action_labels = ["$v$", r"$\omega$"]
     #raise NotImplementedError("Define constants as needed here (look at other environments); Note there is an easy way to add labels!")
 
-    def __init__(self, x_target=(2,2,np.pi/2), Tmax=5., Q0=1., dt=0.05): # This constructor is one possible choice.
+    def __init__(self, x_target=x22, Tmax=5., Q0=1., dt=0.05): # This constructor is one possible choice.
         bounds = {}  # Set this variable to correspond to the simple (linear) bounds the system is subject to. See exercises for examples.
         self.x_target = np.asarray(x_target)
         """ Since we have not discussed the cost-function a lot during the exercises it feels unreasonable to have you
@@ -50,7 +51,8 @@ class R2D2Model(ContiniousTimeSymbolicModel): # This may help you get started.
 
     # TODO: 6 lines missing.
     def sym_f(self, x, u, t=None): 
-        return [x[0] + self.Delta * u[0] * sym.cos(x[1]), x[1] + self.Delta*u[0] * sym.sin(x[1]), x[2] + self.Delta*u[1]]
+        #return [x[0] + self.Delta * u[0] * sym.cos(x[2]), x[1] + self.Delta * u[0] * sym.sin(x[2]), x[2] + self.Delta*u[1]]
+        return [u[0] * sym.cos(x[2]), u[0] * sym.sin(x[2]), u[1]]
         
          # see model_cartpole
 
@@ -69,22 +71,28 @@ class R2D2Model(ContiniousTimeSymbolicModel): # This may help you get started.
 
 class R2D2DiscreteModel(DiscretizedModel):
     def __init__(self, dt=0.05, Q0=0., x_target=x22, Tmax=5.):
-        super().__init__(model=R2D2Model(x_target=x_target, Q0=Q0, Tmax=Tmax, dt=dt), dt=dt)
+        model = R2D2Model(x_target=x_target, Q0=Q0, Tmax=Tmax, dt=dt)
+        super().__init__(model=model, dt=dt)
 
 class R2D2Environment(ContiniousTimeEnvironment):
     def __init__(self, Tmax=Tmax, Q0=0., x_target=x22, dt=0.5, render_mode=None):
-        super().__init__(R2D2DiscreteModel(Q0=Q0, x_target=x_target, Tmax=Tmax, dt=dt), Tmax=Tmax, render_mode=render_mode)
+        Discrete_model = R2D2DiscreteModel(Q0=Q0, x_target=x_target, Tmax=Tmax, dt=dt)
+        super().__init__(discrete_model=Discrete_model, Tmax=Tmax, render_mode=render_mode)
 
 # TODO: 9 lines missing.
 #raise NotImplementedError("Your code here.")
+def iMPC():
+    
 
-def f_euler(x, u, Delta=0.05): 
+
+def f_euler(x, u, Delta=0.1): 
     """ Solve Problem 13. The function should compute
     > x_next = f_k(x, u)
     """
     # TODO: 1 lines missing.
     #raise NotImplementedError("return next state")
-    x_next = np.array([x[0], x[1], x[2]]) + Delta * np.array([ u[0] * np.cos(x[2]), u[0] * np.sin(x[2]), u[1]])
+    #x_next = np.array([x[0], x[1], x[2]]) + Delta * np.array([ u[0] * np.cos(x[2]), u[0] * np.sin(x[2]), u[1]])
+    x_next = R2D2DiscreteModel(dt = Delta, Q0=1).f(x,u)
     return x_next
 
 def linearize(x_bar, u_bar, Delta=0.05): 
@@ -120,7 +128,16 @@ def drive_to_linearization(x_target, plot=True):
         * Remember to set Q0=1
     """
     # TODO: 8 lines missing.
-    raise NotImplementedError("Implement function body")
+    xbar = np.array([0,0,0])
+    ubar = np.array([0,0])
+    env = R2D2Environment(Q0 = 1.0, x_target=x_target, dt=dt)
+    #model = R2D2DiscreteModel(Q0=1, x_target=x_target)
+    agent = LinearizationAgent(env, env.discrete_model, xbar, ubar)
+    _, traj = train(env, agent, num_episodes=1, return_trajectory=True)#, reset=False)
+    if plot:
+        plot_trajectory(traj[0], env)#, xkeys=[0,2, 3], ukeys=[0])
+    #raise NotImplementedError("Implement function body")
+    #env = VideoMonitor(env) 
     return traj[0].state
 
 def drive_to_direct(x_target, plot=False): 
@@ -144,7 +161,31 @@ def drive_to_direct(x_target, plot=False):
         * The guess()-function will be automatically specified correctly assuming you implement the correct bounds. Use that function in the options.
     """
     # TODO: 10 lines missing.
-    raise NotImplementedError("Implement function body")
+    #guess = {'t0': 0,
+    #          'tF': 4,
+    #          'x': [np.asarray([0, 0]), np.asarray([np.pi, 0])],
+    #          'u': [np.asarray([0]), np.asarray([0])]}
+    dmodel = R2D2DiscreteModel(dt = 0.05, Q0 = 0, x_target = x_target)
+    #dmodel.continuous_model.bounds = {'tF_low': 0.5,                 'tF_high': 5,  
+    #                 't0_low': 0,                   't0_high': 0,
+    #                 'x_low': [-2 * np.pi, -np.inf],'x_high': [2 * np.pi, np.inf],
+    #                 'u_low': [-max_torque],        'u_high': [max_torque],
+    #                 'x0_low': [np.pi, 0],          'x0_high': [np.pi, 0],
+    #                 'xF_low': [0, 0],              'xF_high': [0, 0] 
+    #                 }
+    env = ContiniousTimeEnvironment(discrete_model=dmodel, Tmax = Tmax)
+    guess = env.discrete_model.continuous_model.guess()
+
+    options = [get_opts(N=10, ftol=1e-3, guess=guess),
+               get_opts(N=20, ftol=1e-3),#, guess=guess),
+               get_opts(N=40, ftol=1e-3),#, guess=guess)
+               ]
+
+    agent = DirectAgent(env)#, options=options,guess=guess)
+    env.Tmax = agent.solutions[-1]['fun']['tF'] # Specify max runtime of the environment. Must be based on the Agent's solution.
+    stats, traj = train(env, agent=agent, num_episodes=1, return_trajectory=True)
+
+    #raise NotImplementedError("Implement function body")
     return traj[0].state
 
 
@@ -163,42 +204,51 @@ def drive_to_mpc(x_target, plot=True):
     and how a solution to one can be used in another.
     """
     # TODO: 5 lines missing.
-    raise NotImplementedError("Implement function body")
+    #raise NotImplementedError("Implement function body")
+    xbar = np.array([0,0,0])
+    ubar = np.array([0,0])
+    env = R2D2Environment(Q0 = 1.0, x_target=x_target, dt=dt)
+    #model = R2D2DiscreteModel(Q0=1, x_target=x_target)
+    agent = LinearizationAgent(env, env.discrete_model, xbar, ubar)
+    _, traj = train(env, agent, num_episodes=1, return_trajectory=True)#, reset=False)
+    if plot:
+        plot_trajectory(traj[0], env)#, xkeys=[0,2, 3], ukeys=[0])
+    
     return traj[0].state
 
 if __name__ == "__main__":
     # Check Problem 14
-    x = np.asarray( [0, 0, 0] )
-    u = np.asarray( [1,0])
-    print("x_k =", x, "u_k =", u, "x_{k+1} =", f_euler(x, u, dt))
+    # x = np.asarray( [0, 0, 0] )
+    # u = np.asarray( [1,0])
+    # print("x_k =", x, "u_k =", u, "x_{k+1} =", f_euler(x, u, dt))
 
-    A,B,d = linearize(x_bar=x, u_bar=u, Delta=dt)
-    print("x_{k+1} ~ A x_k + B u_k + d")
-    print("A:", A)
-    print("B:", B)
-    print("d:", d)
+    # A,B,d = linearize(x_bar=x, u_bar=u, Delta=dt)
+    # print("x_{k+1} ~ A x_k + B u_k + d")
+    # print("A:", A)
+    # print("B:", B)
+    # print("d:", d)
 
     # Test the simple linearization method (Problem 16)
-    states = drive_to_direct(x22, plot=True)
-    savepdf('r2d2_direct')
-    plt.show()
-    # Build plot assuming that states is in the format (samples x coordinates-of-state).
-    plt.plot(states[:,0], states[:,1], 'k-', label="R2D2's (x, y) trajectory")
-    plt.legend()
-    plt.xlabel("x")
-    plt.ylabel("y")
+    # states = drive_to_direct(x22, plot=True)
+    # savepdf('r2d2_direct')
+    # plt.show()
+    # # Build plot assuming that states is in the format (samples x coordinates-of-state).
+    # plt.plot(states[:,0], states[:,1], 'k-', label="R2D2's (x, y) trajectory")
+    # plt.legend()
+    # plt.xlabel("x")
+    # plt.ylabel("y")
 
-    savepdf('r2d2_direct_B')
-    plt.show()
+    # savepdf('r2d2_direct_B')
+    # plt.show()
 
     # Test the simple linearization method (Problem 17)
-    drive_to_linearization((2,0,0), plot=True)
-    savepdf('r2d2_linearization_1')
-    plt.show()
+    # drive_to_linearization((2,0,0), plot=True)
+    # savepdf('r2d2_linearization_1')
+    # plt.show()
 
-    drive_to_linearization(x22, plot=True)
-    savepdf('r2d2_linearization_2')
-    plt.show()
+    # drive_to_linearization(x22, plot=True)
+    # savepdf('r2d2_linearization_2')
+    # plt.show()
 
     # Test iterative LQR (Problem 18)
     state = drive_to_mpc(x22, plot=True)

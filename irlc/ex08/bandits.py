@@ -30,19 +30,19 @@ class BanditEnvironment(Env):
         >>> print(f"The reward we got from taking arm a=3 was {r=}")
 
     """
-    def __init__(self, k):
+    def __init__(self, k): 
         """
         Initialize a bandit problem. The observation space is given a dummy value since bandit problems of the sort
         (SB18) discuss don't have observations.
 
         :param k: The number of arms.
         """
-        super().__init__()
+        super().__init__() 
         self.observation_space = Discrete(1)  # Dummy observation space with a single observation.
         self.action_space = Discrete(k)       # The arms labelled 0,1,...,k-1.
-        self.k = k # Number of arms
+        self.k = k  # Number of arms 
 
-    def reset(self):
+    def reset(self): 
         """
         Use this function to reset the all internal parameters of the environment and get ready for a new episode.
         In the (SB18) 10-armed bandit testbed, this would involve resetting the expected return
@@ -57,9 +57,9 @@ class BanditEnvironment(Env):
             - s - a state, for instance 0
             - info - the info dictionary, for instance {}
         """
-        raise NotImplementedError("Implement the reset method")
+        raise NotImplementedError("Implement the reset method") 
 
-    def bandit_step(self, a):
+    def bandit_step(self, a): 
         """
         This helper function simplify the definition of the environments ``step``-function.
 
@@ -85,11 +85,11 @@ class BanditEnvironment(Env):
             - r - The reward we thereby incur
             - regret - The average regret incurred by taking this action (0 for an optimal action)
         """
-        reward = 0 # Compute the reward associated with arm a
+        reward = 0 # Compute the reward associated with arm a 
         regret = 0 # Compute the regret, by comparing to the optimal arms reward.
         return reward, regret
 
-    def step(self, action):
+    def step(self, action): 
         """
         This function is automatically defind and you do not have to edit it.
         In a bandit environment, the step function is simplified greatly since there are no
@@ -105,9 +105,9 @@ class BanditEnvironment(Env):
             - info - For convenience, this includes the average regret (used by the plotting methods)
 
         """
-        reward, average_regret = self.bandit_step(action)
+        reward, average_regret = self.bandit_step(action) 
         info = {'average_regret': average_regret}
-        return None, reward, False, False, info 
+        return None, reward, False, False, info  
 
 class StationaryBandit(BanditEnvironment): 
     """
@@ -123,7 +123,6 @@ class StationaryBandit(BanditEnvironment):
     def __init__(self, k, q_star_mean=0):
         super().__init__(k)
         self.q_star_mean = q_star_mean
-        # self.reset()
 
     def reset(self): 
         """ Set q^*_k = N(0,1) + mean_value. The mean_value is 0 in most examples. I.e., implement the 10-armed testbed environment. """

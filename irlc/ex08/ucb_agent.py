@@ -18,8 +18,8 @@ class UCBAgent(Agent):
         # TODO: 2 lines missing.
         raise NotImplementedError("Train agent here")
 
-    def pi(self, s, t=None):
-        if t == 0: 
+    def pi(self, s, k, info=None):
+        if k == 0: 
             """ Initialize the agent"""
             # TODO: 3 lines missing.
             raise NotImplementedError("Reset agent (i.e., make it ready to learn in a new episode with a new optimal action)")

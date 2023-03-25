@@ -36,7 +36,7 @@ class MovingAverageAgent(BasicAgent):
         # TODO: 2 lines missing.
         raise NotImplementedError("Implement function body")
 
-    def train(self, s, a, r, sp, done=False): 
+    def train(self, s, a, r, sp, done=False, info_s=None, info_sp=None): 
         # TODO: 1 lines missing.
         raise NotImplementedError("Implement function body")
 

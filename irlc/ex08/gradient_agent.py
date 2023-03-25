@@ -20,15 +20,15 @@ class GradientAgent(Agent):
         pi_a = np.exp(self.H)
         return pi_a / np.sum(pi_a)
 
-    def pi(self, s, n=None):
-        if n == 0:
+    def pi(self, s, t, info_s=None):
+        if t == 0:
             self.R_bar = 0  # average reward baseline
             self.H *= 0 # Reset H to all-zeros.
-        self.n = n
+        self.t = t  # Sore the current time step.
         return np.random.choice( self.k, p=self.Pa() )
 
-    def train(self, s, a, r, sp, done=False): 
-        # TODO: 12 lines missing.
+    def train(self, s, a, r, sp, done=False, info_s=None, info_sp=None): 
+        # TODO: 9 lines missing.
         raise NotImplementedError("Implement function body")
 
     def __str__(self):
