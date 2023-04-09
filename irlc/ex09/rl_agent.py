@@ -70,6 +70,8 @@ class TabularAgent(Agent):
         :param info: The corresponding ``info``-dictionary returned by the gym environment
         :return: An action computed using :math:`\\varepsilon`-greedy action selection based the Q-values stored in the ``self.Q`` class.
         """
+        if info is not None and 'seed' in info: # In case info contains a seed, reset the random number generator.
+            np.random.seed(info['seed'])
         return Agent.pi(self, s, k=0, info=info) if np.random.rand() < self.epsilon else self.Q.get_optimal_action(s, info)
 
 

@@ -8,13 +8,6 @@ import numpy as np
 class ValueIterationAgent(TabularAgent):
     def __init__(self, env, mdp=None, gamma=1, epsilon=0, **kwargs):
         super().__init__(env)
-        # if mdp is None: # Try to see if MDP can easily be found from environment (if not specified):
-        #     if hasattr(env, 'mdp'):
-        #         mdp = env.mdp
-        #     elif hasattr(env, 'P'):
-        #         mdp = GymEnv2MDP(env)
-        #     else:
-        #         raise Exception("Must supply a MDP so I can plan!")
         self.epsilon = epsilon
         # TODO: 1 lines missing.
         raise NotImplementedError("Call the value_iteration function and store the policy for later.")
@@ -35,13 +28,13 @@ class ValueIterationAgent(TabularAgent):
 
 
 if __name__ == "__main__":
-    from irlc.gridworld_pyglet.gridworld_environments import SuttonCornerGridEnvironment
-    env = SuttonCornerGridEnvironment(living_reward=-1)
-    from irlc import VideoMonitor, train
+    from irlc.gridworld.gridworld_environments import SuttonCornerGridEnvironment
+    env = SuttonCornerGridEnvironment(living_reward=-1, render_mode='human')
+    from irlc import train, interactive
     # Note you can access the MDP for a gridworld using env.mdp. The mdp will be an instance of the MDP class we have used for planning so far.
     agent = ValueIterationAgent(env, mdp=env.mdp) # Make a ValueIteartion-based agent
-    # Let's have a cute little animation. Try to leave out the agent_monitor_keys line to see what happens.
-    env = VideoMonitor(env, agent=agent)
+    # Make it interactive. Press P or space to follow the policy.
+    env, agent = interactive(env, agent)
     train(env, agent, num_episodes=20)                             # Train for 100 episodes
-    env.savepdf("smallgrid.pdf") # Take a snapshot of the final configuration
+    env.savepdf(env, "smallgrid.pdf") # Take a snapshot of the final configuration
     env.close() # Whenever you use a VideoMonitor, call this to avoid a dumb openglwhatever error message on exit

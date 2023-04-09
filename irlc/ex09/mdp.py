@@ -201,12 +201,7 @@ def rng_from_dict(d):
 class MDP2GymEnv(Env):
 
     def A(self, state):
-        raise Exception("Don't use this function.")
-        # This functions return the set of actions available in this state.
-        if state not in self.mdp.nonterminal_states:
-            raise Exception("You cannot get the action set for terminal states as they don't have any actions")
-        else:
-            return self.mdp.A(state)
+        raise Exception("Don't use this function; it is here for legacy reasons")
 
     def __init__(self, mdp, render_mode=None):
         # We ignore this variable in this class, however, the Gridworld environment will check if
@@ -230,11 +225,18 @@ class MDP2GymEnv(Env):
 
 
     def reset(self, seed=None, options=None):
+        info = {}
+        if seed is not None:
+            np.random.seed(seed)
+            self.action_space.seed(seed)
+            self.observation_space.seed(seed)
+            info['seed'] = seed
+
         ps = self.mdp.initial_state_distribution()
         self.state = rng_from_dict(ps)
         if self.render_mode == "human":
             self.render()
-        info = {'mask': self._mk_mask(self.state)}
+        info['mask'] = self._mk_mask(self.state)
         return self.state, info
 
     def step(self, action):

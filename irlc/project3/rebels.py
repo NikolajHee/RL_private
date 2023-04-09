@@ -14,7 +14,7 @@ very_basic_grid = [['#',1, '#'],
 # TODO: 21 lines missing.
 raise NotImplementedError("I wrote an agent that inherited from the Q-agent, and updated the self.pi and self.train-functions to do UCB-based exploration.")
 
-def get_ucb_actions(layout, alpha, c, episodes, plot=False): 
+def get_ucb_actions(layout : list, alpha : float, c : float, episodes : int, plot=False) -> list: 
     """ Return the sequence of actions the agent tries in the environment with the given layout-string when trained over 'episodes' episodes.
     To create an environment, you can use the line:
 
@@ -25,7 +25,7 @@ def get_ucb_actions(layout, alpha, c, episodes, plot=False):
     The 'plot'-parameter is optional; you can use it to add visualization using a line such as:
 
     if plot:
-        env = VideoMonitor(env)
+        env = GridworldEnvironment(layout, render_mode='human')
 
     Or you can just ignore it. Make sure to return the truncated action list (see the rebels_demo.py-file or project description).
     In other words, the return value should be a long list of integers corresponding to actions:

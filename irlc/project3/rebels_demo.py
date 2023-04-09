@@ -1,6 +1,6 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 import numpy as np
-from irlc import train, Agent, interactive, savepdf #VideoMonitor, Agent, PlayWrapper
+from irlc import train, Agent, interactive, savepdf
 from irlc.gridworld.gridworld_environments import GridworldEnvironment, grid_bridge_grid
 from irlc.project3.rebels import very_basic_grid
 from irlc.ex11.q_agent import QAgent
@@ -10,12 +10,11 @@ matplotlib.use('qtagg')
 if __name__ == "__main__":
     np.random.seed(42) # Fix the seed for reproduciability
     env = GridworldEnvironment(very_basic_grid, render_mode='human') # Create an environment
-    # env = VideoMonitor(env) # Create a visualization
     env.reset()                   # Reset (to set up the visualization)
 
     savepdf("rebels_basic", env=env)   # Save a snapshot of the starting state
     agent = Agent(env) # A random agent.
-    # agent = PlayWrapper(agent, env) # Uncomment these three lines to play in 'env' environment:
+    # env, agent = interactive(env, agent) # Uncomment this line to play in 'env' environment. Use space to let the agent move.
     stats, trajectories = train(env, agent, num_episodes=16, return_trajectory=True)
     env.close()
     print("Trajectory 0: States traversed", trajectories[0].state, "actions taken", trajectories[0].action) 
@@ -38,10 +37,8 @@ if __name__ == "__main__":
     agent = QAgent(env, alpha=0.1, epsilon=0.2, gamma=1)
     """ Uncomment the next line to play in the environment. 
     Use the space-bar to let the agent take an action, p to unpause, and otherwise use the keyboard arrows """
-    # agent = PlayWrapper(agent, env)
     train(env, agent, num_episodes=3000) # Train for 3000 episodes. Surely the rebels must be found by now!
     bridge_env, agent = interactive(env, agent)
-    # bridge_env = VideoMonitor(env, agent=agent)
     bridge_env.reset()
     bridge_env.savepdf("rebels_bridge_Q")
     bridge_env.close()

@@ -17,7 +17,7 @@ class PolicyIterationAgent(Agent):
         self.policy, self.v = policy_iteration(mdp, gamma)
         super().__init__(self)
 
-    def pi(self, s, k=None): 
+    def pi(self, s, k, info=None): 
         """ Return the action to take in state s according to policy-iteration. Look at the __init__-function!
         If in doubt, insert a breakpoint and take a look at the self.policy-variable.
         """
@@ -25,7 +25,7 @@ class PolicyIterationAgent(Agent):
         raise NotImplementedError("Implement function body")
         return action
 
-    def train(self, s, a, r, sp, done=False):
+    def train(self, s, a, r, sp, done=False, info_s=None, info_sp=None):
         pass
 
     def __str__(self):
