@@ -61,7 +61,8 @@ def direct_solver(model, options):
             and you can get the solution by using solutions[i - 1]['fun']. (insert a breakpoint and check the fields)
             """
             # TODO: 1 lines missing.
-            raise NotImplementedError("Define guess = {'t0': ..., ...} here.")
+            guess = {k: solutions[i - 1]['fun'][k] for k in ['t0', 'tF', 'x', 'u'] } 
+            #raise NotImplementedError("Define guess = {'t0': ..., ...} here.")
         N = opt['N']
         print(f"{i}> Collocation starting with grid-size N={N}")
         sol = collocate(model, N=N, optimizer_options=optimizer_options, guess=guess, verbose=opt.get('verbose', False))
@@ -170,11 +171,14 @@ def collocate(model, N=25, optimizer_options=None, guess=None, verbose=True):
         """ In these lines, update z, z0, z_lb, and z_ub with values corresponding to xs[k], us[k]. 
         The values are all lists; i.e. z[j] (symbolic) has guess z0[j] (float) and bounds z_lb[j], z_ub[j] (floats) """
         # TODO: 2 lines missing.
-        raise NotImplementedError("Updates for x_k, u_k")
+        z, z0, z_lb, z_ub = z + xs[k], z0 + list(guess['x'](tk).flat), z_lb + x_low, z_ub + x_high 
+        z, z0, z_lb, z_ub = z + us[k], z0 + list(guess['u'](tk).flat), z_lb + u_low, z_ub + u_high 
+
 
     """ Update z, z0, z_lb, and z_ub with bounds/guesses corresponding to t0 and tF (same format as above). """
     # TODO: 2 lines missing.
-    raise NotImplementedError("Updates for t0, tF")
+    z, z0, z_lb, z_ub = z+[t0], z0+[guess['t0']], z_lb+[model.bounds['t0_low']], z_ub+[model.bounds['t0_high']] 
+    z, z0, z_lb, z_ub = z+[tF], z0+[guess['tF']], z_lb+[model.bounds['tF_low']], z_ub+[model.bounds['tF_high']] 
     assert len(z) == len(z0) == len(z_lb) == len(z_ub)
     if verbose:
         print(f"z={z}\nz0={np.asarray(z0).round(1).tolist()}\nz_lb={np.asarray(z_lb).round(1).tolist()}\nz_ub={np.asarray(z_ub).round(1).tolist()}") 
@@ -185,14 +189,20 @@ def collocate(model, N=25, optimizer_options=None, guess=None, verbose=True):
         Use the functions env.sym_f and env.sym_c """
         # fs.append( symbolic variable corresponding to f_k; see env.sym_f). similarly update cs.append(env.sym_c(...) ).
         # TODO: 2 lines missing.
-        raise NotImplementedError("Compute f[k] and c[k] here (see slides) and add them to above lists")
+        fs.append(model.sym_f(x=xs[k], u=us[k], t=ts[k])) 
+        cs.append(model.cost.sym_c(x=xs[k], u=us[k], t=ts[k])) 
+
+        #raise NotImplementedError("Compute f[k] and c[k] here (see slides) and add them to above lists")
 
     J = model.cost.sym_cf(x0=xs[0], t0=t0, xF=xs[-1], tF=tF)  # cost, to get you started, but needs more work
     eqC, ineqC = [], []  # all symbolic equality/inequality constraints are stored in these lists
     for k in range(N - 1):
         # Update cost function ((Her23, eq. (13.15))). Use the above defined symbolic expressions ts, hk and cs.
         # TODO: 2 lines missing.
-        raise NotImplementedError("Update J here")
+        #raise NotImplementedError("Update J here")
+        hk = (ts[k + 1] - ts[k])  
+        J += .5 * hk * (cs[k] + cs[k + 1])  
+
         # Set up equality constraints. See (Her23, eq. (13.18)).
         for j in range(model.state_size):
             """ Create all collocation equality-constraints here and add them to eqC. I.e.  
@@ -200,19 +210,22 @@ def collocate(model, N=25, optimizer_options=None, guess=None, verbose=True):
             Note we have to create these coordinate-wise which is why we loop over j. 
             """
             # TODO: 1 lines missing.
-            raise NotImplementedError("Update collocation constraints here")
+            eqC.append((xs[k+1][j] - xs[k][j]) - 0.5*hk*(fs[k+1][j] + fs[k][j])) 
+            #raise NotImplementedError("Update collocation constraints here")
         """
         To solve problems with dynamical path constriants like Brachiostone, update ineqC here to contain the 
         inequality constraint env.sym_h(...) <= 0. For the other problems this can simply be left blank """
         # TODO: 1 lines missing.
-        raise NotImplementedError("Update symbolic path-dependent constraint h(x,u,t)<=0 here")
+        ineqC += model.sym_h(x=xs[k], u=us[k], t=ts[k]) 
+        #raise NotImplementedError("Update symbolic path-dependent constraint h(x,u,t)<=0 here")
 
     print(">>> Creating objective and derivative...")
     timer.tic("Building symbolic objective")
     J_fun = sym.lambdify([z], J, modules='numpy')  # create a python function from symbolic expression
     # To compute the Jacobian, you can use sym.derive_by_array(J, z) to get the correct symbolic expression, then use sym.lamdify (as above) to get a numpy function.
     # TODO: 1 lines missing.
-    raise NotImplementedError("Jacobian of J. See how this is computed for equality/inequality constratins for help.")
+    J_jac = sym.lambdify([z], sym.derive_by_array(J, z), modules='numpy') 
+    #raise NotImplementedError("Jacobian of J. See how this is computed for equality/inequality constratins for help.")
     if verbose:
         print(f"eqC={eqC}\nineqC={ineqC}\nJ={J}") 
     timer.toc()
@@ -305,7 +318,8 @@ def trapezoid_interpolant(ts, xs, fs, t_new=None):
     
     """
     # TODO: 1 lines missing.
-    raise NotImplementedError("Insert your solution and remove this error.")
+    x_interp = xs[:, I] + tau * fs[:, I] + (tau ** 2 / (2 * hk)) * (fs[:, I + 1] - fs[:, I]) 
+    #raise NotImplementedError("Insert your solution and remove this error.")
     return x_interp
 
 
@@ -321,7 +335,7 @@ def constraint2dict(symb, all_vars, type='eq'):
                'jac': jac}
     return eq_cons
 
-def get_opts(N, ftol=1e-6, guess=None, verbose=False): # helper function to instantiate options objet.
+def get_opts(N, ftol=1e-6, guess=None, verbose=False): # helper function to instantiate options object.
     d = {'N': N,
          'optimizer_options': {'maxiter': 1000,
                                'ftol': ftol,

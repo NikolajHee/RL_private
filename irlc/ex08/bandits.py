@@ -140,7 +140,15 @@ class StationaryBandit(BanditEnvironment):
          Remember it is 0 if the optimal action is selected.
          """
         # TODO: 2 lines missing.
-        raise NotImplementedError("Insert your solution and remove this error.")
+        #state, dict = self.reset()
+        #self.q_star - self.optimal_action
+        
+        #q_star_temp = np.random.randn() + self.q_star_mean
+        reward = self.q_star[a] + np.random.randn()
+        #regret = self.q_star[a] - self.q_star[self.optimal_action] 
+        #reward = np.random.randn()
+        regret = self.q_star[self.optimal_action] - self.q_star[a]
+        #raise NotImplementedError("Insert your solution and remove this error.")
         # Actual logic goes here. Use self.q_star[a] to get mean reward and np.random.randn() to generate random numbers.  
         return reward, regret 
 

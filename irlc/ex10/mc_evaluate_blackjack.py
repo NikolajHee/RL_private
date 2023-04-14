@@ -1,7 +1,6 @@
 # This file may not be shared/redistributed without permission. Please read copyright notice in the git repo. If this file contains other copyright notices disregard this text.
 import matplotlib.pyplot as plt
 import numpy as np
-from irlc import savepdf
 
 def get_by_ace(V,ace=False):
     dd = V.copy()
@@ -15,7 +14,7 @@ def plot_surface_2(X,Y,Z,fig=None, ax=None, **kwargs):
     if fig is None and ax is None:
         fig = plt.figure(figsize=(20, 10))
     if ax is None:
-        ax = fig.gca(projection='3d')
+        ax = fig.add_subplot(projection='3d')
     surf = ax.plot_surface(X, Y, Z, cmap=plt.cm.coolwarm, linewidth=1, edgecolors='k', **kwargs)
     ax.view_init(ax.elev, -120)
     if fig is not None:

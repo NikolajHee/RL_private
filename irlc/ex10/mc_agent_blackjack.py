@@ -10,14 +10,14 @@ from irlc.ex10.mc_evaluate_blackjack import plot_blackjack_value, plot_blackjack
 from irlc.ex10.mc_agent import MCAgent
 
 def run_experiment(episodes, first_visit=True, **kwargs):
-    envn = 'Blackjack-v1'
-    env = gym.make(envn)
+    env_name = 'Blackjack-v1'
+    env = gym.make(env_name)
     agent = MCAgent(env, **kwargs)
     lbl = "_".join(map(str, kwargs.values()))
     fvl = "First" if first_visit else "Every"
     title = f"MC agent ({fvl} visit)"
 
-    expn = f"experiments/{envn}_MCagent_{episodes}_{first_visit}_{lbl}"
+    expn = f"experiments/{env_name}_MCagent_{episodes}_{first_visit}_{lbl}" # Name the experiment. Pass the label to the train function to store intermediate results. See the online documentation for more information.
     # TODO: 1 lines missing.
     raise NotImplementedError("call the train(...) function here.")
 
@@ -32,7 +32,7 @@ def run_experiment(episodes, first_visit=True, **kwargs):
     V = defaultdict(lambda: 0)
     A = defaultdict(lambda: 0)
     for s, av in agent.Q.to_dict().items():
-        A[s] = agent.pi(s)
+        A[s] = agent.pi(s, 0)
         V[s] = max(av.values() )
 
     plot_blackjack_value(V, title=title, pdf_out=f"blackjack_mcagent_policy{fvl}_valfun_{episodes}")
@@ -43,6 +43,6 @@ def run_experiment(episodes, first_visit=True, **kwargs):
 
 if __name__ == "__main__":
     episodes = 1000000
-    # episodes = 1000 # Set this to something much lower while debugging
+    # episodes = 1000 # Uncomment to run far fewer episodes during debugging.
     run_experiment(episodes, epsilon=0.05, first_visit=True)
     run_experiment(episodes, epsilon=0.05, first_visit=False)

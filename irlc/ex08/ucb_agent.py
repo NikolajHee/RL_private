@@ -16,15 +16,22 @@ class UCBAgent(Agent):
 
     def train(self, s, a, r, sp, done=False, info_s=None, info_sp=None): 
         # TODO: 2 lines missing.
-        raise NotImplementedError("Train agent here")
+        self.N[a] = self.N[a] + 1
+        self.Q[a] = self.Q[a] + 1/self.N[a] * (r - self.Q[a])
+        #raise NotImplementedError("Train agent here")
 
     def pi(self, s, k, info=None):
         if k == 0: 
             """ Initialize the agent"""
             # TODO: 3 lines missing.
-            raise NotImplementedError("Reset agent (i.e., make it ready to learn in a new episode with a new optimal action)")
+            k = self.env.action_space.n
+            self.Q = np.zeros((k,))
+            self.N = np.zeros((k,)) 
+
+            #raise NotImplementedError("Reset agent (i.e., make it ready to learn in a new episode with a new optimal action)")
         # TODO: 1 lines missing.
-        raise NotImplementedError("Compute (and return) optimal action")
+        return np.argmax(self.Q + self.c * np.sqrt(np.log(k+1)/(self.N+1e-8)))
+        #raise NotImplementedError("Compute (and return) optimal action")
 
     def __str__(self):
         return f"{type(self).__name__}_{self.c}"

@@ -3,7 +3,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from irlc.ex09.rl_agent import TabularAgent
 from irlc import main_plot, savepdf, train
-
+from irlc import interactive
 def get_MC_return_SA(episode, gamma, first_visit=True):
     """ Helper method for computing the MC returns.
     Given an episodes in the form [ (s0,a0,r1), (s1,a1,r2), ...]
@@ -63,25 +63,25 @@ class MCAgent(TabularAgent):
 if __name__ == "__main__":
     """ Load environment but make sure it is time-limited. Can you tell why? """
     envn = "SmallGridworld-v0"
-    from irlc.gridworld_pyglet.gridworld_environments import SuttonCornerGridEnvironment, BookGridEnvironment
+
+    from irlc.gridworld.gridworld_environments import SuttonCornerGridEnvironment, BookGridEnvironment
     env = SuttonCornerGridEnvironment(uniform_initial_state=True)
-    # env = BookGridEnvironment(living_reward=-0.05) # Try this if you ar ecurious
+    # env = BookGridEnvironment(living_reward=-0.05) # Uncomment to test an alternative environment with a negative living reward.
 
     gamma = 1 
     episodes = 20000
     experiment="experiments/mcagent_smallgrid"
     agent = MCAgent(env, gamma=gamma, first_visit=True)
-    train(env, agent, experiment_name=experiment, num_episodes=episodes)
+    train(env, agent, experiment_name=experiment, num_episodes=episodes, return_trajectory=False)
     main_plot(experiments=[experiment], resample_ticks=200) 
     plt.title("Smallgrid MC agent value function")
     plt.ylim([-10, 0])
     savepdf("mcagent_smallgrid") 
     plt.show() 
 
-    env = VideoMonitor(env, agent=agent, agent_monitor_keys=("Q",))
+    env, agent = interactive(env, agent)
+    env.reset()
     env.plot()
     plt.title(f"MC on-policy control of {envn} using first-visit")
-
-    # plot_value_function(env.env, {s: max([agent.Q[s,a] for a in env.env.P[s]]) for s in env.env.P} )
     savepdf("MC_agent_value_smallgrid")
     plt.show()

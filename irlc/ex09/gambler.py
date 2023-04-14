@@ -25,6 +25,7 @@ class GamblerEnv(MDP):
     def is_terminal(self, state): 
         """ Implement if the state is terminal (0 or self.goal) """
         # TODO: 1 lines missing.
+        return state in [0, self.goal]
         raise NotImplementedError("Return true only if state is terminal.")
 
     def A(self, s):  
@@ -33,6 +34,7 @@ class GamblerEnv(MDP):
         but not so much you will exceed the goal amount (see (SB18) for details).
         In other words, return this as a list, and the number of elements should depend on the state s. """
         # TODO: 1 lines missing.
+        return list( range(1, min(s, self.goal - s) + 1))
         raise NotImplementedError("Implement function body")
 
     def Psr(self, s, a):  
@@ -46,6 +48,12 @@ class GamblerEnv(MDP):
         one with a probability of self.p_heads (winning) and one with a probability of 1-self.p_heads (loosing). 
         """
         # TODO: 1 lines missing.
+        r = 1 if s + a == 100 else 0
+        from collections import defaultdict
+        WIN = (s+a, r)
+        LOSS = (s-a, 0)
+        return {WIN: self.p_heads, LOSS: 1-self.p_heads } if WIN != LOSS else {WIN: 1.}
+
         raise NotImplementedError("Implement function body")
         return {(s + a, r): self.p_heads, (s - a, 0): 1 - self.p_heads}
 

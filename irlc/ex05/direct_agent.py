@@ -33,13 +33,22 @@ class DirectAgent(Agent):
         # set self.ufun equal to the solution (policy) function. You can get it by looking at `solutions` computed above
         self.solutions = solutions
         # TODO: 1 lines missing.
-        raise NotImplementedError("set self.ufun = solutions[....][somethingsomething] (insert a breakpoint, it should be self-explanatory).")
+        self.ufun = solutions[-1]['fun']['u'] 
+        #raise NotImplementedError("set self.ufun = solutions[....][somethingsomething] (insert a breakpoint, it should be self-explanatory).")
         super().__init__(env)
 
     def pi(self, x, k, info=None): 
         """ Return the action given x and t. As a hint, you will only use t, and self.ufun computed a few lines above"""
         # TODO: 7 lines missing.
-        raise NotImplementedError("Implement function body")
+        t = info['time_seconds']
+        if t > self.ts_grid[-1]:
+            print("Simulation time is", t, "which exceeds the maximal planning horizon t_F =", self.ts_grid[-1])
+            raise Exception("Time exceed agents planning horizon")
+
+        u = self.ufun(t)
+        u = np.asarray(self.env.discrete_model.continious_actions2discrete_actions(u)) 
+
+        #raise NotImplementedError("Implement function body")
         return u
 
 def train_direct_agent(animate=True, plot=False):

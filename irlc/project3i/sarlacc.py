@@ -44,11 +44,38 @@ def game_rules(rules : dict, state : int, roll : int) -> int:
     The output should be -1 in case the game terminates, and otherwise the function should return the next state
     as an integer. Read the description of the project for examples on the rules. """
     # TODO: 4 lines missing.
-    raise NotImplementedError("Return the next state")
-    return state_next
+    new_state = state + roll
+    if new_state == 55: return -1
+    if new_state > 55: new_state = 55 - (new_state - 55)
+    if new_state in rules: new_state = rules[new_state]
+    return new_state
 
 # TODO: 19 lines missing.
-raise NotImplementedError("Put your code here.")
+#raise NotImplementedError("Put your code here.")
+class sarlacc(MDP):
+    def __init__(self, rules):
+        self.rules = rules
+        super().__init__(initial_state=0)
+    
+    def A(self, state):
+        return [1,2,3,4,5,6]
+    
+    def Psr(self, state, action):
+        next_state = game_rules(self.rules, state, action)
+        possible_states = [game_rules(self.rules, next_state, i) for i in self.A(next_state)]
+        rewards = [0 if i == -1 else 1 for i in possible_states]
+        return {(i,j):1/6 for i, j in zip(possible_states, rewards)}
+    
+        state = game_rules(self.rules, state, action)
+        r = 0 if state == -1 else 1
+        return {(state, r): 1}
+    
+    def is_terminal(self, state):
+        return state == 55
+    
+
+
+
 
 def sarlacc_return(rules : dict, gamma : float) -> dict: 
     """ Compute the value-function using a discount of gamma and the game rules 'rules'.
@@ -63,8 +90,14 @@ def sarlacc_return(rules : dict, gamma : float) -> dict:
         is much harder to solve by just writing your own value-iteration method as in (SB18).
     """
     # TODO: 2 lines missing.
-    raise NotImplementedError("Return the value function")
-    return v
+    #raise NotImplementedError("Return the value function")
+    mdp = sarlacc(rules)
+    v = value_iteration(mdp, gamma=gamma)
+    # sum = 0
+    # for i in range(N):
+    #     sum += gamma**i * ((-1)**(i+1) + 1)/2
+    # return sum
+    return v[1]
 
 
 if __name__ == "__main__":
@@ -86,14 +119,14 @@ if __name__ == "__main__":
     > Roll 4: Go to 38    
     """
     # Test the game rules:
-    for roll in [1, 2, 3, 4, 5, 6]:
-        print(f"In state s=0 (start), using roll {roll}, I ended up in ", game_rules(rules, 0, roll))
+    #for roll in [1, 2, 3, 4, 5, 6]:
+    #    print(f"In state s=0 (start), using roll {roll}, I ended up in ", game_rules(rules, 0, roll))
     # Test the game rules again:
-    for roll in [1, 2, 3, 4, 5, 6]:
-        print(f"In state s=54, using roll {roll}, I ended up in ", game_rules(rules, 54, roll))
+    #for roll in [1, 2, 3, 4, 5, 6]:
+    #    print(f"In state s=54, using roll {roll}, I ended up in ", game_rules(rules, 54, roll))
 
     # Compute value function with the ordinary rules.
-    V_rules = sarlacc_return(rules, gamma=1)
+    #V_rules = sarlacc_return(rules, gamma=1)
     # Compute value function with no rules, i.e. with an empty dictionary except for the winning state:
     V_norule = sarlacc_return({55: -1}, gamma=1)
     print("Time to victory when there are no snakes/ladders", V_norule[0])

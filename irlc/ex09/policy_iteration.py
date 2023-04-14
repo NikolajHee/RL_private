@@ -22,7 +22,8 @@ class PolicyIterationAgent(Agent):
         If in doubt, insert a breakpoint and take a look at the self.policy-variable.
         """
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        action=self.policy[a]
+        #raise NotImplementedError("Implement function body")
         return action
 
     def train(self, s, a, r, sp, done=False, info_s=None, info_sp=None):
@@ -62,7 +63,14 @@ def policy_iteration(mdp, gamma=1.0):
             It is not a coincidence these algorithms are very similar -- if you think about it, the maximization step closely resembles the DP algorithm!
         """
         # TODO: 6 lines missing.
-        raise NotImplementedError("Insert your solution and remove this error.")
+        for s in mdp.nonterminal_states:
+            old_action = pi[s]
+            Qs = qs_(mdp, s, gamma, V)
+            pi[s] = max(Qs, key=Qs.get)
+        
+        if old_action != pi[s]:
+            policy_stable = False
+        #raise NotImplementedError("Insert your solution and remove this error.")
     return pi, V
 
 if __name__ == "__main__":

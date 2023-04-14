@@ -4,10 +4,9 @@ import matplotlib.pyplot as plt
 from irlc.ex09.rl_agent import ValueAgent
 from collections import defaultdict
 from irlc.ex01.agent import train
-from irlc.ex02.frozen_lake_dp import plot_value_function
 import numpy as np
 import matplotlib
-matplotlib.use('qtagg') # Fix crash on linux with default backend.
+matplotlib.use('qtagg')  # Fix crash on linux with default backend.
 
 def get_MC_return_S(episode, gamma, first_visit=True):
     """ Helper method for computing the MC returns.

@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     for i, episodes in enumerate(td_episodes):
         agent = TD0ValueAgent(env, v_init_fun=v_init_fun)
-        train(env, agent, num_episodes=episodes,verbose=False)
+        train(env, agent, num_episodes=episodes,verbose=False, return_trajectory=False)
         vs = [agent.value(s) for s in states]
         ax[0].plot(vs, label=f"{episodes} episodes", marker='o')
 
@@ -78,8 +78,8 @@ if __name__ == "__main__":
     def eval_mse(agent):
         errors = []
         for i in range(episodes):
-            V_ = [agent.value(s) for s in states] #list(map(agent.value, states))
-            train(env, agent, num_episodes=1, verbose=False)
+            V_ = [agent.value(s) for s in states]
+            train(env, agent, num_episodes=1, verbose=False, return_trajectory=False)
             z = np.sqrt(np.sum(np.power(V_ - V_true, 2)) / 5.0)
             errors.append(z)
         return errors
@@ -104,7 +104,7 @@ if __name__ == "__main__":
             dfs.append(df)
 
     data = pd.concat(dfs, ignore_index=True)
-    sns.lineplot(data=data, x='Episodes', y='rmse', hue="Condition", ci=95, estimator='mean')
+    sns.lineplot(data=data, x='Episodes', y='rmse', hue="Condition", errorbar=('ci', 95), estimator='mean')
     plt.ylabel("RMS error (averaged over states)")
     plt.title("Empirical RMS error, averaged over states")
     savepdf("random_walk_example")

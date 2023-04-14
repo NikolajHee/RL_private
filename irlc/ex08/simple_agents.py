@@ -23,17 +23,24 @@ class BasicAgent(Agent):
         if t == 0:
             # At step 0 of episode. Re-initialize data structure. 
             # TODO: 2 lines missing.
-            raise NotImplementedError("Insert your solution and remove this error.")
+            self.Q = np.zeros((self.k,))
+            self.N = np.zeros((self.k,))
+            #raise NotImplementedError("Insert your solution and remove this error.")
         # compute action here 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Insert your solution and remove this error.")
+        #self.N[t] = self.N[t] + 1
+        return np.random.randint(self.k) if np.random.rand() < self.epsilon else np.argmax(self.Q) 
+        #self.Q[t] + 1/self.N[t] * (R - self.Q[t])
+        #raise NotImplementedError("Insert your solution and remove this error.")
 
     def train(self, s, a, r, sp, done=False, info_s=None, info_sp=None): 
         """ Since this is a bandit, done, s, sp, info_s, info_sp can all be ignored.
-        From the input arguments you should only use a
+        From the input arguments you should only use a and r
         """
         # TODO: 2 lines missing.
-        raise NotImplementedError("Implement function body")
+        self.N[a] = self.N[a] + 1
+        self.Q[a] = self.Q[a] + 1/self.N[a] * (r - self.Q[a])
+        #raise NotImplementedError("Implement function body")
 
     def __str__(self):
         return f"BasicAgent_{self.epsilon}"

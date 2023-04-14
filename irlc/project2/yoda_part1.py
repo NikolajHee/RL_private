@@ -41,8 +41,8 @@ class PendulumEnvironment(ContiniousTimeEnvironment):
         model = MyDiscretePendulumClass(Q=Q,R=R,L=L)
         self.dt = model.dt
         super().__init__(discrete_model=model, Tmax=Tmax, supersample_trajectory=False)
+        
     def _get_initial_state(self):
-        #print("den bliver brugt")
         return np.asarray([1, 0])
     
 
@@ -102,15 +102,13 @@ def problem1(L):
     """
     # TODO: 7 lines missing.
     env = PendulumEnvironment()
-    Agent = PIDLocomotiveAgent(env, Delta, Kp=1.0, Ki=0.2, Kd=0.3, target=0)
+    Agent = PIDLocomotiveAgent(env, Delta, Kp=1.0, Ki=0, Kd=0.3, target=0)
     stats, trajectories = train(env, Agent, num_episodes=1, return_trajectory=True)
     plot_trajectory(trajectories[0], env)
     plt.title("PID agent heuristic")
     savepdf("yoda1")
     plt.show()
     
-    #raise NotImplementedError("Implement function body")
-
 def part1(L): 
     """ This function solve Problem 3.
     It should solve the Pendulum problem using an optimal LQ control law and return L_0, l_0 as well as the action-sequence
@@ -123,8 +121,6 @@ def part1(L):
     env = PendulumEnvironment(Q = 0.1*np.eye(2), R = 100*np.eye(1), L=L)
     agent = DiscreteLQRCost(env, model=env.discrete_model)
     stats, traj = train(env, agent, return_trajectory=True)
-    #u = agent.L[0] @ x + agent.l[0]
-    #raise NotImplementedError("Return L0, l0, and the action sequence from the LQR controller")
     return agent.L[0], agent.l[0], traj[0].action
 
 def part2(L): 
@@ -168,18 +164,20 @@ if __name__ == "__main__":
     problem1(L)
 
     # Optimal LQR to stop the pendulum Problem 3. Print control law and action sequence.
-    L0, l0, u1 = part1(L)
-    print(L0, l0)
+    #L0, l0, u1 = part1(L)
+    #print(L0, l0)
     # Print the cost_term at time k, c_k(x_k, u_k), for a state/action:
-    print("Cost at time k is c_k(x_k, u_k) =", cost_discrete(np.asarray([-.1, 1]), np.asarray([-2])))
+    #print("Cost at time k is c_k(x_k, u_k) =", cost_discrete(np.asarray([-.1, 1]), np.asarray([-2])))
 
     # Solve Problem 4
     Kp, Ki, Kd, x_star, u2 = part2(L)
     print(x_star, Kp, Kd, Ki)
 
+
+
     # Plot the two action sequences (Problem 5)
     plt.plot(np.linspace(0, Tmax - Delta, len(u2)), u2, label="PID action sequence")
     plt.plot(np.linspace(0, Tmax - Delta, len(u1)), u1, label="LQR Optimal action sequence")
     plt.legend()
-    savepdf("yoda1_actions")
+    #savepdf("yoda1_actions")
     plt.show()

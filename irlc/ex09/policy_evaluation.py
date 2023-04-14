@@ -29,7 +29,17 @@ def qs_(mdp, s, gamma, v):
         * The terminal states represents a special case. Remember that v[s] = 0 if s is a terminal state (this is explained in (SB18)).
     """
     # TODO: 1 lines missing.
-    raise NotImplementedError("Implement function body")
+    Qs = defaultdict(float)
+
+    for a in mdp.A(s):
+        for (sp,r), p in mdp.Psr(s,a).items():
+            if mdp.is_terminal(sp):
+                v[sp] = 0
+        
+            Qs[a] = p * (r + gamma * v[sp])
+
+    return Qs
+    #raise NotImplementedError("Implement function body")
 
 def policy_evaluation(pi, mdp, gamma=.99, theta=0.00001):
     """ Implements the iterative policy-evaluation algorithm ((SB18, Section 4.1)).
@@ -60,7 +70,15 @@ def policy_evaluation(pi, mdp, gamma=.99, theta=0.00001):
             Don't be afraid to use a few more lines than I do.             
             """
             # TODO: 2 lines missing.
-            raise NotImplementedError("Insert your solution and remove this error.")
+            # v_ = v[s]
+            # sum = 0
+            # for a,pi_a in pi[s].items():
+            #     sum +=  pi_a * qs_(mdp, s, gamma, v)[a]
+            # v[s] = sum
+            #raise NotImplementedError("Insert your solution and remove this error.")
+            q = qs_(mdp, s, gamma, v) 
+            v_, v[s] = v[s], sum( [q[a] * pi_a for a,pi_a in pi[s].items()] ) 
+
             """ stop condition. v_ is the yafcport value of the value function (see algorithm listing in (SB18)) which you need to update. """
             Delta = max(Delta, np.abs(v_ - v[s]))
     return v
