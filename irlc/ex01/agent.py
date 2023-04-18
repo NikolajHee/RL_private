@@ -166,6 +166,7 @@ def train(env,
           resume_stats=None, # Resume stat collection from last save.
           log_interval=1, # Only log every log_interval steps. Reduces size of log files.
           delete_old_experiments=False, # Remove the old experiments folder. Useful while debugging a model (or to conserve disk space)
+          seed=None, # Attempt to set the seed of the random number generator to produce reproducible results.
           ):
     """
     Implement the main training loop, see (Her23, Subsection 4.4.4).
@@ -202,6 +203,7 @@ def train(env,
     :param resume_stats: Resume stat collection from last run (this requires the ``experiment_name`` variable to be set)
     :param log_interval: Log stats less frequently than each episode. Useful if you want to run really long experiments.
     :param delete_old_experiments: If true, old saved experiments will be deleted. This is useful during debugging.
+    :param seed: An integer. The random number generator of the environment will be reset to this seed allowing for reproducible results.
     :return: A list where each element corresponds to each (started) episode. The elements are dictionaries, and contain the statistics for that episode.
     """
 
@@ -248,7 +250,11 @@ def train(env,
                 break
             info_s = {}
             if reset or i_episode > 0:
-                s, info_s = env.reset() 
+                if seed is not None:
+                    s, info_s = env.reset(seed=seed)
+                    seed = None
+                else:
+                    s, info_s = env.reset()  
             elif hasattr(env, "s"):  # This is doing what, exactly? Perhaps save/load of agent?
                 s = env.s
             elif hasattr(env, 'state'):
@@ -304,7 +310,7 @@ def train(env,
                               "Accumulated Reward": sum(reward),
                               # "Average Reward": np.mean(reward), # Not sure we need this anymore.
                               "Length": len(reward),
-                              # "Steps": steps, # Steps is deprecated; pending removal.
+                              "Steps": steps, # Useful for deep learning applications. This should be kept, or week 13 will have issues.
                               **agent.extra_stats()})
 
             rate = int(num_episodes / 100)

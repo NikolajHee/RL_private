@@ -16,10 +16,8 @@ class FrozenAgentDownRight(Agent):
     """
     def pi(self, s, k, info=None): 
         # TODO: 3 lines missing.
-        if k % 2 == 0:
-            return DOWN
-        else:
-            return RIGHT
+        raise NotImplementedError("Implement function body")
+        return RIGHT
 
 def to_s(row, col, ncol):
     """ Converts from (row,col) to linear indexing. This function is taken from the frozen_lake environment """
@@ -35,8 +33,9 @@ def to_rc(s, ncol):
     """
     ## TODO: Half of each line of code in the following 2 lines have been replaced by garbage. Make it work and remove the error.
     #----------------------------------------------------------------------------------------------------------------------------
-    col = s % ncol 
-    row = s // ncol 
+    # col = s???????
+    # row = s????????
+    raise NotImplementedError("Insert your solution and remove this error.")
     return row, col
 
 if __name__ == "__main__":
@@ -90,12 +89,7 @@ if __name__ == "__main__":
 
     """ Last part: Generate and plot 50 trajectories from the FrozenDownRightAgent  """
     # TODO: 6 lines missing.
-    stats, trajectories = train(env, FrozenAgentDownRight(env), num_episodes=50, return_trajectory=True) 
-    for trajectory in trajectories:
-        p = [to_rc(s, ncol=env.env.ncol) for s in trajectory.state]
-        I, J = zip(*p)
-        wgl = 0.1
-        plt.plot(np.random.randn(len(I)) * wgl + I, np.random.randn(len(J)) * wgl + J, 'k.-') 
+    raise NotImplementedError("Plot 50 trajectories from the FrozenDownRightAgent")
     plt.xlabel('Row')
     plt.ylabel('Col')
     plt.gca().invert_yaxis()

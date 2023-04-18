@@ -54,24 +54,32 @@ def game_rules(rules : dict, state : int, roll : int) -> int:
 #raise NotImplementedError("Put your code here.")
 class sarlacc(MDP):
     def __init__(self, rules):
-        self.rules = rules
         super().__init__(initial_state=0)
+        #self._states = set(range(56))
+        self.rules = rules
+        
     
     def A(self, state):
         return [1,2,3,4,5,6]
     
     def Psr(self, state, action):
-        next_state = game_rules(self.rules, state, action)
-        possible_states = [game_rules(self.rules, next_state, i) for i in self.A(next_state)]
-        rewards = [0 if i == -1 else 1 for i in possible_states]
-        return {(i,j):1/6 for i, j in zip(possible_states, rewards)}
-    
-        state = game_rules(self.rules, state, action)
-        r = 0 if state == -1 else 1
-        return {(state, r): 1}
+        #return {(game_rules(self.rules, state, action), a): 1/6 for a in self.A(state)}
+        possible_states= [game_rules(self.rules, state, a) for a in self.A(state)]
+        reward = [1 for s in possible_states]
+        PSR = {}
+        for (s,r) in zip(possible_states, reward):
+            if (s,r) in PSR:
+                PSR[(s,r)] += (1/6)
+            else:
+                PSR[(s,r)] = (1/6)
+        
+        assert np.isclose(sum(PSR.values()),1)
+        return PSR
+        # return { (game_rules(self.rules, state, action), 1): 1}
+
     
     def is_terminal(self, state):
-        return state == 55
+        return state == -1 or state == 55
     
 
 
@@ -92,12 +100,12 @@ def sarlacc_return(rules : dict, gamma : float) -> dict:
     # TODO: 2 lines missing.
     #raise NotImplementedError("Return the value function")
     mdp = sarlacc(rules)
-    v = value_iteration(mdp, gamma=gamma)
+    pi, v = value_iteration(mdp, gamma=gamma)
     # sum = 0
     # for i in range(N):
     #     sum += gamma**i * ((-1)**(i+1) + 1)/2
     # return sum
-    return v[1]
+    return v
 
 
 if __name__ == "__main__":
@@ -126,7 +134,7 @@ if __name__ == "__main__":
     #    print(f"In state s=54, using roll {roll}, I ended up in ", game_rules(rules, 54, roll))
 
     # Compute value function with the ordinary rules.
-    #V_rules = sarlacc_return(rules, gamma=1)
+    V_rules = sarlacc_return(rules, gamma=1)
     # Compute value function with no rules, i.e. with an empty dictionary except for the winning state:
     V_norule = sarlacc_return({55: -1}, gamma=1)
     print("Time to victory when there are no snakes/ladders", V_norule[0])

@@ -14,12 +14,8 @@ def Q0_approximate(gamma : float, N : int) -> float:
     """ Return the (estimate) of the optimal action-value function Q^*(0,1) based on
     the first N rewards using a discount factor of gamma. Note the similarity to the n-step estimator. """
     # TODO: 1 lines missing.
-    # approximating Q0 using the first N rewards and discount factor gamma
-    # in one line of code
-    sum = 0
-    for i in range(N):
-        sum += gamma**i * ((-1)**(i+1) + 1)/2
-    return sum
+    return sum([gamma**i * int((i+1)%2==0) for i in range(N)])
+
 
 
 def Q_exact(s : int,a : int, gamma : float) -> float:
@@ -34,10 +30,8 @@ def Q_exact(s : int,a : int, gamma : float) -> float:
     *Don't* use your solution to Q0_approximate; it is an approximate (finite-horizon) approximation.
     """
     # TODO: 6 lines missing.
-    if s == 0 and a == 1:
-        return -gamma/(1-gamma**2)
-    if s == 1 and a == -1:
-        return -1/(1-gamma**2)
+    if s == 0 and a == 1: return -gamma/(1-gamma**2)
+    if s == 1 and a == -1: return -1/(1-gamma**2)
     r = -abs(s)
     s_new = s + a
     a_optimal = pi_optimal(s_new)
@@ -45,8 +39,13 @@ def Q_exact(s : int,a : int, gamma : float) -> float:
 
 
 
+
+
+
 if __name__ == "__main__":
     gamma = 0.8
+    Q0_approximate(0.7, 2000)
+    print(Q0_approximate(gamma=0.7, N=20))
 
     ss = np.asarray(range(-10, 10))
     Q_exact(2, -1, gamma)

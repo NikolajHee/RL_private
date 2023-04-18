@@ -109,7 +109,8 @@ class GraphicsUtilGym:
     _canvas_x = None      # Current position on canvas
     _canvas_y = None
 
-    def begin_graphics(self, width=640, height=480, color=formatColor(0, 0, 0), title="02465 environment", local_xmin_xmax_ymin_ymax=None, verbose=False):
+    def begin_graphics(self, width=640, height=480, color=formatColor(0, 0, 0), title="02465 environment", local_xmin_xmax_ymin_ymax=None, verbose=False,
+                       frames_per_second=None):
         """ Main interface for managing graphics.
             The local_xmin_xmax_ymin_ymax controls the (local) coordinate system which is mapped onto screen coordinates. I.e. specify this
             to work in a native x/y coordinate system. If not, it will default to screen coordinates familiar from Gridworld.
@@ -124,6 +125,8 @@ class GraphicsUtilGym:
         screen_height = height
         pygame.init()
         pygame.display.init()
+        self.frames_per_second = frames_per_second
+
 
         self.screen = pygame.display.set_mode(
             (screen_width, screen_height)
@@ -149,17 +152,11 @@ class GraphicsUtilGym:
             local_xmin_xmax_ymin_ymax = (0, width, 0, height)
         self._local_xmin_xmax_ymin_ymax = local_xmin_xmax_ymin_ymax
 
-
-        # self.demand_termination = False
-        # self.demand_termination = threading.Event()
-        # self.threading_opts = object() # persistence
-        # self.threading_opts.time_since_last_update = 0
         self.demand_termination = threading.Event()
         self.pause_refresh = False
-
         self.ask_for_pause = False
         self.is_paused = False
-
+        self.time_last_blit = -1
 
 
         def refresh_window(gutils):
@@ -200,15 +197,26 @@ class GraphicsUtilGym:
         pass
 
     def blit(self, render_mode=None):
-
         self.render()
         self.screen.blit(self.surf, (0, 0))
-
         if render_mode == "human":
+            tc = time.time()
+
+            if self.frames_per_second is not None:
+
+                if tc - self.time_last_blit < 1/self.frames_per_second:
+                    tw = 1/self.frames_per_second - (tc - self.time_last_blit )
+                    time.sleep(tw)
+                else:
+                    tw = 0
+
+                # if tw > 0:
+                #     time.sleep(tw)
+                self.time_last_blit = tc
+
             pygame.event.pump()
             pygame.display.flip()
         elif render_mode == "rgb_array":
-
             return np.transpose(np.array(pygame.surfarray.pixels3d(self.screen)), axes=(1, 0, 2))
 
     def rectangle(self, color, x, y, width, height, border=0, fill_color=None):
@@ -316,7 +324,8 @@ class GraphicsUtilGym:
         else:
             gfxdraw.filled_circle(self.surf, x, y, int(r), h2rgb255(fillColor))
 
-    def text(self, name, pos, color, contents, font='Helvetica', size=12, style='normal', anchor="w"):
+    def text(self, name, pos, color, contents, font='Helvetica', size=12, style='normal', anchor="w", fontsize=24,
+             bold=False):
         pos = self.fixxy(pos)
         ax = "center"
         ax = "left" if anchor == "w" else ax
@@ -336,7 +345,8 @@ class GraphicsUtilGym:
             opts = dict(center=pos)
         else:
             raise Exception("Unknown anchor", anchor)
-
+        opts['fontsize'] = fontsize
+        opts['bold'] = bold
         draw(contents, surf=self.surf, color=h2rgb255(color), pos=pos, **opts)
         return
 
