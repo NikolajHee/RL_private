@@ -6,7 +6,7 @@ from collections import defaultdict
 from irlc.ex01.agent import train
 import numpy as np
 import matplotlib
-matplotlib.use('qtagg')  # Fix crash on linux with default backend.
+# matplotlib.use('qtagg')  # Fix crash on linux with default backend.
 
 def get_MC_return_S(episode, gamma, first_visit=True):
     """ Helper method for computing the MC returns.
@@ -23,10 +23,15 @@ def get_MC_return_S(episode, gamma, first_visit=True):
     returns = []
     for t in reversed(range(len(episode))):
         # TODO: 2 lines missing.
-        raise NotImplementedError("Insert your solution and remove this error.")
+        #raise NotImplementedError("Insert your solution and remove this error.")
+        r= episode[t][2]
+        s_t = ss[t]
+        G = gamma*G + r
         if s_t not in ss[:t] or not first_visit: 
             # TODO: 1 lines missing.
-            raise NotImplementedError("Implement function body")
+            returns.append((s_t,G))
+            # what about V(s_t) = G_t?
+        
     return returns
 
 class MCEvaluationAgent(ValueAgent): 
@@ -46,10 +51,12 @@ class MCEvaluationAgent(ValueAgent):
             for s, G in returns:  
                 if self.alpha: 
                     # TODO: 1 lines missing.
-                    raise NotImplementedError("Implement function body")
+                    self.v[s] = self.v[s] + self.alpha * (G - self.v[s])
                 else: 
                     # TODO: 3 lines missing.
-                    raise NotImplementedError("Implement function body")
+                    self.returns_sum[s] += G
+                    self.returns_count[s] += 1.0
+                    self.v[s] = self.returns_sum[s]/self.returns_count[s]
 
             self.episode = []
 
@@ -78,7 +85,7 @@ if __name__ == "__main__":
     agent_every = MCEvaluationAgent(env, gamma=gamma, first_visit=False)
     train(env, agent_every, num_episodes=episodes)
     env.render_mode = 'human'
-    env, agent = interactive(env, agent, autoplay=True)
+    env, agent_every = interactive(env, agent_every, autoplay=True)
     env.plot()
     plt.title(f"MC evaluation of {envn} using every-visit")
     savepdf("MC_value_random_smallgrid_every")
@@ -89,7 +96,7 @@ if __name__ == "__main__":
     print(f"Mean of value functions for every visit {np.mean(list(agent_every.v.values())):3}") 
 
     ## Second part:
-    repeats = 5000  # increase to e.g. 20'000.
+    repeats = 10000  # increase to e.g. 20'000.
     episodes = 1
     ev, fv = [], []
     env = SuttonCornerGridEnvironment()
@@ -103,7 +110,19 @@ if __name__ == "__main__":
         are the desired result. 
         """
         # TODO: 8 lines missing.
-        raise NotImplementedError("Implement function body")
+        agent_first_visit = MCEvaluationAgent(env, gamma=gamma, first_visit=True)
+        agent_every_visit = MCEvaluationAgent(env, gamma=gamma, first_visit=False)
+        train(env, agent_first_visit, num_episodes=episodes, verbose=False)
+        train(env, agent_every_visit, num_episodes=episodes, verbose=False)
+        fv.append(np.mean(list(agent_first_visit.v.values())))
+        ev.append(np.mean(list(agent_every_visit.v.values())))
+
+
+        #raise NotImplementedError("Implement function body")
 
     print(f"First visit: Mean of value functions after {repeats} repeats {np.mean(fv):3}")  
     print(f"Every visit: Mean of value functions after {repeats} repeats {np.mean(ev):3}")  
+
+
+# The every-visit method is generally more biased towards zero.
+

@@ -23,7 +23,11 @@ class LinearSemiGradQAgent(QAgent):
 
     def train(self, s, a, r, sp, done=False, info_s=None, info_sp=None): 
         # TODO: 4 lines missing.
-        raise NotImplementedError("Implement function body")
+        if not done:
+            a_star = self.Q.get_optimal_action(sp, info_sp)
+        td_delta = r + (0 if done else self.gamma * self.Q(sp, a_star)) - self.Q(s, a)
+        self.Q.w += self.alpha * td_delta * self.Q.x(s, a) 
+
 
     def __str__(self):
         return f"LinearSemiGradQ{self.gamma}_{self.epsilon}_{self.alpha}"

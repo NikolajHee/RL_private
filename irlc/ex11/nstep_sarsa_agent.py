@@ -20,13 +20,14 @@ class SarsaNAgent(QAgent):
 
     def pi(self, s, k, info=None):
         self.t = k  # Save current step in episode for use in train.
-        if self.t == 0:
+        if self.t == 0: # First action is epsilon-greedy.
             self.A[self.t] = self.pi_eps(s, info)
         return self.A[self.t % (self.n+1)]
 
     def train(self, s, a, r, sp, done=False, info_s=None, info_sp=None):
         # Recall we are given S_t, A_t, R_{t+1}, S_{t+1} and done is whether t=T+1.
-        n, t = self.n, self.t
+        n = self.n  # n as in n-step sarsa.
+        t = self.t  # Current time step t as in s_t.
         if t == 0:  # We are in the initial state. Reset buffer.
             self.S[0], self.A[0] = s, a
         # Store current observations in buffer.
@@ -48,7 +49,12 @@ class SarsaNAgent(QAgent):
                 The first step is to compute the expected return G in the below section. 
                 """
                 # TODO: 4 lines missing.
-                raise NotImplementedError("Compute G= (expected return) here.")
+                #raise NotImplementedError("Compute G= (expected return) here.") 
+                G = sum([self.gamma**(i-tau-1)*self.R[i%(n+1)] for i in range(tau+1, min(tau+n, T)+1)]) 
+                S_tau_n, A_tau_n = self.S[(tau+n)%(n+1)], self.A[(tau+n)%(n+1)]
+                if tau+n < T:
+                    G += self.gamma**n * self._q(S_tau_n, A_tau_n)
+                
 
                 S_tau, A_tau = self.S[tau%(n+1)], self.A[tau%(n+1)]
                 delta = (G - self._q(S_tau, A_tau))
@@ -72,9 +78,9 @@ if __name__ == "__main__":
     from irlc.ex11.q_agent import q_exp
 
     agent = SarsaNAgent(env, n=5, epsilon=0.1,alpha=0.5)
-    exp = f"experiments/{envn}_{agent}"
+    exp = f"experiments/{envn+'2'}_{agent}"
     for _ in range(10): # Train 10 times to get an idea about the average performance.
-        train(env, agent, exp, num_episodes=200, max_runs=10)
+        train(env, agent, exp, num_episodes=200, max_runs=10, verbose=True)
     main_plot([q_exp, sarsa_exp, exp], smoothing_window=10) # plot with results from Q/Sarsa simulations.
     plt.ylim([-100,0])
     from irlc import savepdf

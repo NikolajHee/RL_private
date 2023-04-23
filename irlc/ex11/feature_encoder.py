@@ -108,13 +108,28 @@ class FeatureEncoder:
                 avail_actions = _masked_actions(self.env.action_space, info_s['mask'])
                 self.q_[state] = {a: self.q_[state][a] for a in avail_actions}
             # raise Exception()
-
+        # from irlc.utils.common import ExplicitActionSpace
+        #
         # zip(*self.q_[state].items())
+        from irlc.pacman.pacman_environment import PacmanEnvironment
+        from irlc.pacman.pacman_utils import Actions
         if isinstance(state, np.ndarray):
             actions = tuple(range(self.env.action_space.n))
+        elif isinstance(self.env, PacmanEnvironment):
+            # actions = Actions
+            actions = tuple(Actions._directions.keys())
         else:
             actions = tuple(self.q_[state].keys())
+
+        if isinstance(self.env, PacmanEnvironment):
+            # TODO: Make smarter masking.
+            actions = [a for a in actions if a in self.env.A(state)]
+
         Qs = tuple([self(state,a) for a in actions])
+        # TODO: Implement masking and masking-cache.
+
+
+
         return actions, Qs
         #
         # actions = list( self.env.P[state].keys() if hasattr(self.env, 'P') else range(self.env.action_space.n) )

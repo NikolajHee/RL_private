@@ -36,29 +36,28 @@ class ChessTournament(Env):
             - info - An empty dictionary, ``{}``
         """
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        self.s = []
         return self.s, {}
 
     def step(self, action):
         game_outcome = None # should be -1, 0, or 1 depending on outcome of single game.
         ## TODO: Oy veh, the following 7 lines below have been permuted. Uncomment, rearrange to the correct order and remove the error.
-        #-------------------------------------------------------------------------------------------------------------------------------
-        #     else:
-        # else:
-        #         game_outcome = 1
-        #     if np.random.rand() < self.p_win:
-        #         game_outcome = -1 
-        #     game_outcome = 0
-        # if np.random.rand() < self.p_draw: 
-        raise NotImplementedError("Compute game_outcome here")
+        if np.random.rand() < self.p_draw: 
+            game_outcome = 0
+        else:
+            if np.random.rand() < self.p_win:
+                game_outcome = 1
+            else:
+                game_outcome = -1
+
         self.s.append(game_outcome)
 
         #done = True if the tournament has ended otherwise false. Compute using s.
         # TODO: 1 lines missing.
-        raise NotImplementedError("Compute 'done', whether the tournament has ended.")
+        done = len(self.s) >= 2 and self.s[-1] == self.s[-2] and self.s[-1] != 0 
         # r = ... . Compute reward. Let r=1 if we won the tournament otherwise 0.
         # TODO: 1 lines missing.
-        raise NotImplementedError("Compute the reward 'r' here.")
+        r = self.s[-1] == 1 if done else 0   
         return self.s, r, done, False, {}
 
 def main():

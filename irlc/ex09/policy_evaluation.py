@@ -29,16 +29,7 @@ def qs_(mdp, s, gamma, v):
         * The terminal states represents a special case. Remember that v[s] = 0 if s is a terminal state (this is explained in (SB18)).
     """
     # TODO: 1 lines missing.
-    Qs = defaultdict(float)
-
-    for a in mdp.A(s):
-        for (sp,r), p in mdp.Psr(s,a).items():
-            if mdp.is_terminal(sp):
-                v[sp] = 0
-        
-            Qs[a] = p * (r + gamma * v[sp])
-
-    return Qs
+    return {a: sum([p*(r+ (gamma*v[sp] if not mdp.is_terminal(sp) else 0)) for (sp,r), p in mdp.Psr(s,a).items()]) for a in mdp.A(s)}
     #raise NotImplementedError("Implement function body")
 
 def policy_evaluation(pi, mdp, gamma=.99, theta=0.00001):

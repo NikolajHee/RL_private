@@ -51,40 +51,28 @@ def game_rules(rules : dict, state : int, roll : int) -> int:
     return new_state
 
 # TODO: 19 lines missing.
-#raise NotImplementedError("Put your code here.")
-class sarlacc(MDP):
+class Sarlacc(MDP):
     def __init__(self, rules):
         super().__init__(initial_state=0)
-        #self._states = set(range(56))
         self.rules = rules
-        
     
     def A(self, state):
-        return [1,2,3,4,5,6]
+        return set(range(1,7))
     
     def Psr(self, state, action):
-        #return {(game_rules(self.rules, state, action), a): 1/6 for a in self.A(state)}
         possible_states= [game_rules(self.rules, state, a) for a in self.A(state)]
-        reward = [1 for s in possible_states]
         PSR = {}
-        for (s,r) in zip(possible_states, reward):
-            if (s,r) in PSR:
-                PSR[(s,r)] += (1/6)
+        for (s) in possible_states:
+            if (s,1) in PSR:
+                PSR[(s,1)] += (1/6)
             else:
-                PSR[(s,r)] = (1/6)
-        
-        assert np.isclose(sum(PSR.values()),1)
+                PSR[(s,1)] = (1/6)
         return PSR
-        # return { (game_rules(self.rules, state, action), 1): 1}
 
-    
     def is_terminal(self, state):
-        return state == -1 or state == 55
+        return state == -1
     
-
-
-
-
+    
 def sarlacc_return(rules : dict, gamma : float) -> dict: 
     """ Compute the value-function using a discount of gamma and the game rules 'rules'.
     Result should be reasonable accurate.
@@ -98,13 +86,8 @@ def sarlacc_return(rules : dict, gamma : float) -> dict:
         is much harder to solve by just writing your own value-iteration method as in (SB18).
     """
     # TODO: 2 lines missing.
-    #raise NotImplementedError("Return the value function")
-    mdp = sarlacc(rules)
-    pi, v = value_iteration(mdp, gamma=gamma)
-    # sum = 0
-    # for i in range(N):
-    #     sum += gamma**i * ((-1)**(i+1) + 1)/2
-    # return sum
+    mdp = Sarlacc(rules)
+    _, v = value_iteration(mdp, gamma=gamma)
     return v
 
 

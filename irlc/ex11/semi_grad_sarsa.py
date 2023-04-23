@@ -15,20 +15,23 @@ class LinearSemiGradSarsa(LinearSemiGradQAgent):
     def __init__(self, env, gamma=0.99, epsilon=0.1, alpha=0.5, q_encoder=None):
         """ Implement the Linear semi-gradient Sarsa method from (SB18, Section 10.1)"""
         super().__init__(env, gamma, epsilon=epsilon, alpha=alpha, q_encoder=q_encoder)
-        self.t = 0
 
     def pi(self, s, k, info=None): 
         # TODO: 1 lines missing.
-        raise NotImplementedError("Implement function body")
+        action = super().pi(s, k, info) if k == 0 else self.a
+        #raise NotImplementedError("Implement function body")
+        return action
 
     def train(self, s, a, r, sp, done=False, info_s=None, info_sp=None):
         # TODO: 4 lines missing.
-        raise NotImplementedError("Insert your solution and remove this error.")
+
+        a_prime = super().pi(s, k=0, info=info_sp) 
+        delta = r + (0 if done else self.gamma * self.Q(sp, a_prime)) - self.Q(s, a)
+        self.Q.w += self.alpha * delta * self.Q.x(s, a) 
+        self.a = a_prime
+        #raise NotImplementedError("Insert your solution and remove this error.")
 
         if sum(np.abs(self.Q.w)) > 1e5: raise Exception("Weights diverged. Decrease alpha")
-        self.t += 1
-        if done:
-            self.t = 0
 
     def __str__(self):
         return f"LinSemiGradSarsa{self.gamma}_{self.epsilon}_{self.alpha}"
