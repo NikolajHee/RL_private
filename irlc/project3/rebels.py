@@ -20,41 +20,24 @@ class UCBQAgent(QAgent):
         self.Q = TabularQ(env)
         self.N = np.zeros((env.action_space.n))
         #self.Q.get_optimal_action = self.get_optimal_action
-    
-    def _get_mask(self, info):
-        mask = [info['mask']][0].copy()
-        mask.dtype = bool
-        possible_actions = np.arange(4)[mask]
-        if type(possible_actions) == int: possible_actions = [possible_actions]
-        return possible_actions
-
 
     def pi(self, s, k, info=None): 
         t = sum(self.N)
-        # handling when a n is equal 0
-        possible_actions = self._get_mask(info)
-        if len(possible_actions) == 1: return 0
-
+    
         if not self.N.all(): 
             action = np.argmin(self.N)
-            self.N[action] += 1
             return action
-        ats = []
 
-        for a in possible_actions:
-            value = self.Q[s,a] + self.c * np.sqrt(np.log(t)/self.N[a])
-            ats.append(value)
-        mini = possible_actions[np.argmax(ats)]
-        self.N[mini] += 1
-        return mini
+        _, Qa = self.Q.get_Qs(s, info_s=info)
+        return np.argmax(np.array(Qa) + self.c * np.sqrt(np.log(t)/(self.N+1e-8)))
 
     def train(self, s, a, r, sp, done=False, info_s=None, info_sp=None): 
         if not done:
             a_star = self.Q.get_optimal_action(sp, info_sp)
-            #a_star = self.pi(sp,k=0,info=info_sp)
+            self.N[a] += 1
+        if done: a = 0
 
         self.Q[s,a] +=  self.alpha * (r + self.gamma *(0 if done else self.Q[sp,a_star]) - self.Q[s,a])
-        print(self.Q.to_dict())
 
 def get_ucb_actions(layout : list, alpha : float, c : float, episodes : int, plot=False) -> list: 
     """ Return the sequence of actions the agent tries in the environment with the given layout-string when trained over 'episodes' episodes.
