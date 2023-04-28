@@ -12,8 +12,7 @@ class LinearSemiGradSarsaN(SarsaNAgent, LinearSemiGradSarsa):
         Alternatively, just inherit from Agent and set up data structure as required.
         """
         SarsaNAgent.__init__(self, env, gamma, alpha=alpha, epsilon=epsilon, n=n)
-        LinearSemiGradSarsa.__init__(self, env, gamma, alpha=alpha, epsilon=epsilon, q_encoder=q_encoder)
-        # self.Q = None  # Inherited from SarsaNAgent but of no use to us 
+        LinearSemiGradSarsa.__init__(self, env, gamma, alpha=alpha, epsilon=epsilon, q_encoder=q_encoder) 
 
     def pi(self, s, k, info=None):
         return SarsaNAgent.pi(self, s, k, info)

@@ -8,6 +8,7 @@ from irlc.ex09.mdp import MDP
 from irlc.ex09.value_iteration import value_iteration
 import matplotlib.pyplot as plt
 import numpy as np
+from collections import defaultdict
 
 # These are the game rules of the sarlac: If you land on a state s in the dictionary, you are teleported to rules[s].
 rules = {
@@ -60,13 +61,8 @@ class Sarlacc(MDP):
         return set(range(1,7))
     
     def Psr(self, state, action):
-        possible_states= [game_rules(self.rules, state, a) for a in self.A(state)]
-        PSR = {}
-        for (s) in possible_states:
-            if (s,1) in PSR:
-                PSR[(s,1)] += (1/6)
-            else:
-                PSR[(s,1)] = (1/6)
+        PSR = defaultdict(lambda: 0)
+        for (s) in [game_rules(self.rules, state, a) for a in self.A(state)]: PSR[(s,1)] += (1/6)
         return PSR
 
     def is_terminal(self, state):
@@ -86,8 +82,7 @@ def sarlacc_return(rules : dict, gamma : float) -> dict:
         is much harder to solve by just writing your own value-iteration method as in (SB18).
     """
     # TODO: 2 lines missing.
-    mdp = Sarlacc(rules)
-    _, v = value_iteration(mdp, gamma=gamma)
+    _, v = value_iteration(mdp = Sarlacc(rules), gamma=gamma)
     return v
 
 

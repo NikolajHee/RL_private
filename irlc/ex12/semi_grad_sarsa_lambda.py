@@ -20,7 +20,7 @@ class LinearSemiGradSarsaLambda(LinearSemiGradSarsa):
         self.lamb = lamb # lambda in Sarsa(lambda). We cannot use the reserved keyword 'lambda'.
 
     def pi(self, s, k, info=None):
-        if self.t == 0:
+        if k == 0: # If beginning of episode.
             self.a = self.pi_eps(s, info)
             self.x = self.Q.x(s,self.a)
             self.Q_old = 0
@@ -37,11 +37,9 @@ class LinearSemiGradSarsaLambda(LinearSemiGradSarsa):
         # TODO: 5 lines missing.
         raise NotImplementedError("Update z, w")
         if done: # Reset eligibility trace and time step t as in Sarsa.
-            self.t = 0
             self.z = self.z * 0
         else:
             self.Q_old, self.x, self.a = Q_prime, x_prime, a_prime
-            self.t += 1
 
     def __str__(self):
         return f"LinearSarsaLambda_{self.gamma}_{self.epsilon}_{self.alpha}_{self.lamb}"

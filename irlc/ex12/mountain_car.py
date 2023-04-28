@@ -91,7 +91,7 @@ def figure_10_3():
     main_plot(experiments=experiments, y_key="Length")
     plt.xlabel('Episode')
     plt.ylabel('Steps per episode')
-    plt.title(env.spec._env_name + " - Semigrad N-step Sarsa - Figure 10.3")
+    plt.title(env.spec.name + " - Semigrad N-step Sarsa - Figure 10.3")
     savepdf("mountaincar_10-3")
     plt.show()
 

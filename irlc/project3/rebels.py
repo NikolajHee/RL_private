@@ -12,32 +12,32 @@ very_basic_grid = [['#',1, '#'],
 
 
 # TODO: 21 lines missing.
-#raise NotImplementedError("I wrote an agent that inherited from the Q-agent, and updated the self.pi and self.train-functions to do UCB-based exploration.")
-class UCBQAgent(QAgent):
-    def __init__(self, env, gamma=1.0, alpha=0.5, epsilon=0.1, c=1):
+class UCBAgent(QAgent):
+    def __init__(self, env, gamma=1.0, c = 0.1, alpha=0.5, epsilon=0.1):
+        self.alpha = alpha
+        super().__init__(env, gamma, epsilon)
+        self.N = TabularQ(env)
         self.c = c
-        super().__init__(env, gamma=gamma, alpha=alpha, epsilon=epsilon)
-        self.Q = TabularQ(env)
-        self.N = np.zeros((env.action_space.n))
-        #self.Q.get_optimal_action = self.get_optimal_action
 
-    def pi(self, s, k, info=None): 
-        t = sum(self.N)
-    
-        if not self.N.all(): 
-            action = np.argmin(self.N)
-            return action
-
-        _, Qa = self.Q.get_Qs(s, info_s=info)
-        return np.argmax(np.array(Qa) + self.c * np.sqrt(np.log(t)/(self.N+1e-8)))
+    def pi(self, s, k, info=None):         
+        actions, QA = self.Q.get_Qs(s, info_s = info)
+        _, Ns = self.N.get_Qs(s, info_s = info)
+        t = np.sum(Ns)
+        QA = np.array(QA)
+        Ns = np.array(Ns)
+        a_ = []
+        for a in actions:
+            if self.N[s,a] == 0: return a
+            a_.append(QA[a] + self.c * np.sqrt(np.log(t)/(Ns[a])))
+        a_star = actions[np.argmax(a_)]
+        return a_star
 
     def train(self, s, a, r, sp, done=False, info_s=None, info_sp=None): 
         if not done:
             a_star = self.Q.get_optimal_action(sp, info_sp)
-            self.N[a] += 1
-        if done: a = 0
-
+            self.N[s,a] += 1
         self.Q[s,a] +=  self.alpha * (r + self.gamma *(0 if done else self.Q[sp,a_star]) - self.Q[s,a])
+
 
 def get_ucb_actions(layout : list, alpha : float, c : float, episodes : int, plot=False) -> list: 
     """ Return the sequence of actions the agent tries in the environment with the given layout-string when trained over 'episodes' episodes.
@@ -57,12 +57,13 @@ def get_ucb_actions(layout : list, alpha : float, c : float, episodes : int, plo
     actions = [0, 1, 2, ..., 1, 3, 2, 1, 0, ...]
     """
     # TODO: 6 lines missing.
-    env = GridworldEnvironment(layout) # Create an environment
-    if plot: env = GridworldEnvironment(layout, render_mode='human')
-    env.reset()    
-    agent = UCBQAgent(env, gamma=1, alpha=alpha, c=c) # Create an agent
+    env = GridworldEnvironment(layout)
+    env.reset()
+    if plot:
+        env = GridworldEnvironment(layout, render_mode='human')    
+    agent = UCBAgent(env, alpha=alpha, c=c)
     _, trajectories = train(env, agent, num_episodes=episodes, return_trajectory=True)
-    actions = [a for t in trajectories for a in t.action[:-1]] # Extract the actions from the trajectories excluding the last action.
+    actions = [t for traj in trajectories for t in traj.action[:-1]]
     return actions
 
 if __name__ == "__main__":
@@ -70,7 +71,7 @@ if __name__ == "__main__":
     #print("Number of actions taken", len(actions))
     #print("List of actions taken over 4 episodes", actions)
 
-    from irlc.gridworld.gridworld_environments import grid_bridge_grid
+    #from irlc.gridworld.gridworld_environments import grid_bridge_grid
     actions = get_ucb_actions(grid_bridge_grid, alpha=0.1, episodes=2, c=2, plot=False)
     print("Number of actions taken", len(actions))
     print("List of actions taken over 2 episodes", actions)

@@ -42,10 +42,8 @@ class SarsaLambdaAgent(SarsaAgent):
             raise NotImplementedError("Update Q values and eligibility trace")
         if done: # Clear eligibility trace after each episode and update variables for Sarsa
             self.e.clear()
-            # self.t = 0
         else:
             self.a = a_prime
-            # self.t += 1
 
     def __str__(self):
         return f"SarsaLambda_{self.gamma}_{self.epsilon}_{self.alpha}_{self.lamb}"
